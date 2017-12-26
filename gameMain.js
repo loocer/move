@@ -141,24 +141,23 @@ function drawPlayGrand(){
 function drawAcPlayGrand(){
 
 }
-function gameMain{
-	pushOnReady(){
+var gamePushMsg = {
+	pushOnReady:function(){
 		return {
 			stepType: stepType.ON_READY
 		}
 	}
-	pushOnRaise(){
+	pushOnRaise:function(data){
 		return {
 			stepType: stepType.DEAL_PLAYING,
 			raiseStatus:true,
-			raiseMoney: 323
+			raiseMoney: data.moneyNum
 		}
 	}
-	pushOngiveUp(){
+	pushOnGiveUp:function{
 		return {
 			stepType: stepType.DEAL_PLAYING,
-			raiseStatus:false,
-			raiseMoney: 323
+			raiseStatus:false
 		}	
 	}
  	pullGetPoker(){
@@ -176,23 +175,33 @@ class Zhajinhua{
 	deal(){
 
 	}
-	sendMsg(){
-
-	}
-	drawAction(){
-		drawAcPlayGrand()
-	}
 	draw(){
-		drawPlayGrand() 
+		drawPlayGrand()
+		drawAcPlayGrand() 
 	}
 	receiveMsg(obj){
-		if(obj.stepType === stepType.DEAL_STATUS){
-			var objs = obj.players
-			for (let i in objs) {
-				if (objs[i].id === this.id){
-					this.players = objs.slice(i,objs.length).concat(objs.slice[0,i])
-				}
+		var objs = obj.players
+		for (let i in objs) {
+			if (objs[i].id === this.id){
+				this.players = objs.slice(i,objs.length).concat(objs.slice[0,i])
 			}
+		}
+		this.draw()
+	}
+	sendMsg(type,data){
+		var sendObj = {id: this.id}
+		switch (type) {
+		  case stepType.ON_READY:
+		    Object.assign(sendObj,gamePushMsg.pushOnReady())
+		   	break;
+		  case stepType.DEAL_STATUS:
+		  	Object.assign(sendObj,gamePushMsg.pushOnRaise(data))
+		    break;
+		  case stepType.DEAL_PLAYING:
+		 	Object.assign(sendObj,gamePushMsg.pushOnGiveUp())
+		    break;
+		  default:
+		    break;
 		}
 	}
 	destroy(){
