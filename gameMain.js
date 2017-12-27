@@ -151,7 +151,7 @@ var gamePushMsg = {
 		return {
 			stepType: stepType.DEAL_PLAYING,
 			raiseStatus:true,
-			raiseMoney: data.moneyNum
+			raiseMoney: moneyNum
 		}
 	}
 	pushOnGiveUp:function{
