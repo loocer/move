@@ -2,6 +2,7 @@ const stepType = {
 	ON_READY : 'ON_READY',
 	OK_READY : 'OK_READY',
 	DEAL_PLAYING : 'DEAL_PLAYING',
+	PK_PLAYERS: 'PK_PLAYERS'
 }
 const peopleNumType = {
 	TYPE_TWO : 'TYPE_TWO',
@@ -45,10 +46,31 @@ class ZhajinhuaServer{
 	constructor(id,peopleNum){
 		this.id = id
 		this.peopleNum = peopleNum
-		this.stepType:stepType.ON_READY,
+		this.stepType:stepType.ON_READY
+		this.status = true
+		this.totalRaiseMoney = 0
+		this.fireId: null
 		this.players = []
 	}
-	
+	_getAcPlayer(acObj){
+		for(let p in this.player){
+			if(this.player[p].id = acObj.id){
+				return this.player[p]
+			}
+		}
+	}
+	_pkPlayers(o1,o2){
+
+	}
+	_checkStatus(){
+		var count = 0
+		for(let p in this.player){
+			if(this.player[p].gameStatus = true){
+				count++
+			}
+		}
+		this.status = count > 1 ? true:false
+	}
 	addPlayer(id){
 		var player = new ZhajinhuaPlayer(id)
 		this.players.push(player)
@@ -83,13 +105,6 @@ class ZhajinhuaServer{
 		    break;
 		}
 	}
-	_getAcPlayer(acObj){
-		for(let p in this.player){
-			if(this.player[p].id = acObj.id){
-				return this.player[p]
-			}
-		}
-	}
 	getDeal(){
 		var values = getValues()
 		for(let p in this.player){
@@ -100,6 +115,7 @@ class ZhajinhuaServer{
 	}
 	playAnction(acObj){
 		this.stepType = acObj.stepTypeValue
+		this.fireId = acObj.fireId
 		if(acObj.stepTypeValue === stepType.ON_READY){
 			this.addPlayer(acObj.id)
 		}
@@ -111,6 +127,13 @@ class ZhajinhuaServer{
 			var acPlayer = this._getAcPlayer(acObj)
 			acPlayer.raiseStatus = acObj.raiseStatus
 			acPlayer.raiseMoney = acObj.raiseMoney
+			acObj.raiseStatus && (this.totalRaiseMoney+= acObj.raiseMoney)
+		}
+		if(acObj.stepTypeValue === stepType.PK_PLAYERS){
+			acObj.raiseStatus && (this.totalRaiseMoney+= acObj.raiseMoney)
+			this._pkPlayers(acObj.o1,acObj.o2)
+			this._checkStatus()
 		}
 	}
 }
+module.exports=ZhajinhuaServer
