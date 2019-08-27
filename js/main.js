@@ -36,8 +36,8 @@ export default class Main {
     this.bg       = new BackGround(ctx)
     this.player   = new Player(ctx)
     this.gameinfo = new GameInfo()
-    this.handShank = new HandShank()
     this.righthandshank = new Righthandshank()
+    this.handShank = new HandShank(this.righthandshank)
     this.music    = new Music()
 
     this.bindLoop     = this.loop.bind(this)

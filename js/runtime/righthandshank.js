@@ -41,13 +41,13 @@ export default class RightHandShank {
   _formatMovePosition(x, y) {
     // x = databus.transX + x
     // y = databus.transY + y
-    let centerX = ~~(this.x - databus.transX + this.width / 2)
-    let centerY = ~~(this.y - databus.transY + this.height / 2)
-    let tempx = Math.abs((x - centerX) / 20) > 2 ? 2 : 1
-    let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : 1
-    databus.moveX = x > centerX ? tempx : -tempx
-    databus.moveY = y > centerY ? tempy : -tempy
-    console.log(centerX, this.x, databus.transX, '-------------------')
+    // let centerX = ~~(this.x - databus.transX + this.width / 2)
+    // let centerY = ~~(this.y - databus.transY + this.height / 2)
+    // let tempx = Math.abs((x - centerX) / 20) > 2 ? 2 : 1
+    // let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : 1
+    // databus.moveX = x > centerX ? tempx : -tempx
+    // databus.moveY = y > centerY ? tempy : -tempy
+    console.log(x,y, '-------------------')
   }
   /**
     * 当手指触摸屏幕的时候

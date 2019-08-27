@@ -1,4 +1,6 @@
 import DataBus from '../databus'
+// import rightHandShank from './righthandshank'
+
 
 const screenWidth = window.innerWidth
 const screenHeight = window.innerHeight
@@ -12,9 +14,10 @@ const PLAYER_HEIGHT = 120
 atlas.src = 'images/Common.png'
 
 export default class HandShank {
-  constructor() {
+  constructor(rightHandShank) {
     // 玩家默认处于屏幕底部居中位置
     // this.x = 100
+    this.rightHandShank = rightHandShank
     this.x = 100
     this.y = screenHeight - PLAYER_HEIGHT - 40
     // this.x = 0
@@ -75,34 +78,44 @@ export default class HandShank {
    */
   initEvent() {
     canvas.addEventListener('touchstart', ((e) => {
+      console.log(e)
       e.preventDefault()
-
-      let x = e.touches[0].clientX
-      let y = e.touches[0].clientY
-      console.log(x, y, '-------触碰到的坐标---------')
-      console.log(this.x, this.y, '-------飞机的坐标---------')
-      console.log(screenWidth, screenHeight, '----------屏幕大小---------')
-      //
-      if (this.checkIsFingerOnAir(x, y)) {
-        this.touched = true
-        console.log('我按下了')
-        this._formatMovePosition(x, y)
+      for (let p of e.touches){
+        let x = p.clientX
+        let y = p.clientY
+        console.log(x, y, '-------触碰到的坐标---------')
+        console.log(this.x, this.y, '-------飞机的坐标---------')
+        console.log(screenWidth, screenHeight, '----------屏幕大小---------')
+        //
+        if (this.checkIsFingerOnAir(x, y)) {
+          this.touched = true
+          console.log('我按下了')
+          this._formatMovePosition(x, y)
+        }
+        if (this.rightHandShank.checkIsFingerOnAir(x,y)){
+          this.rightHandShank._formatMovePosition(x, y)
+        }
       }
 
     }).bind(this))
 
     canvas.addEventListener('touchmove', ((e) => {
       e.preventDefault()
+      console.log(e.touches[0].clientX, e.touches[0].clientY,'============================')
+      for (let p of e.touches) {
+        let x = p.clientX
+        let y = p.clientY
 
-      let x = e.touches[0].clientX
-      let y = e.touches[0].clientY
-
-      if (this.touched)
-        console.log(x,y)
-        this._formatMovePosition(x,y)
+        if (this.touched)
+          console.log(x, y)
+        this._formatMovePosition(x, y)
+      }
+      
     }).bind(this))
 
     canvas.addEventListener('touchend', ((e) => {
+      // console.log(e.touches[0].clientX, e.touches[0].clientY, '===----------------=====')
+      console.log(e)
       e.preventDefault()
       console.log('松开了')
       this.touched = false
