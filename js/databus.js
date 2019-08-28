@@ -15,6 +15,12 @@ export default class DataBus {
     this.transX = 0
     this.transY = 0
 
+    this.shootX = 0
+    this.shootY = 0
+
+    this.x = 0
+    this.y = 0
+
     this.playTempX = screenWidth/2
     this.playTempY = screenHeight/2
 
@@ -33,22 +39,27 @@ export default class DataBus {
     this.reset()
   }
 
-  reset() {
-    this.transX = 0 
-    this.transY = 0
-
+  reset(ctx) {
+  
     this.moveX = 0//手柄操作位移
     this.moveY = 0
 
+    this.x = 0//鼠标位置
+    this.y = 0
+
     this.shootX = 0
     this.shootY = 0
-
+    this.playTempX = screenWidth / 2
+    this.playTempY = screenHeight / 2
     this.frame      = 0
     this.score      = 0
     this.bullets    = []
     this.enemys     = []
     this.animations = []
     this.gameOver   = false
+    ctx&&ctx.translate(this.transX, this.transY)
+    this.transX = 0//canvas平移距离
+    this.transY = 0
   }
 
   /**

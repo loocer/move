@@ -20,8 +20,11 @@ export default class RightHandShank {
     this.y = screenHeight - PLAYER_HEIGHT - 40
     // this.x = 0
     // this.y = 0
-    this.touchedx = 0
-    this.touchedy = 0
+    this.tx = screenWidth - PLAYER_WIDTH - 40
+    this.ty = screenHeight - PLAYER_HEIGHT - 40
+
+    this.touchedx = screenWidth - PLAYER_WIDTH - 40
+    this.touchedy = screenHeight - PLAYER_HEIGHT - 40
 
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT

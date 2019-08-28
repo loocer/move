@@ -13,7 +13,7 @@ let y = 30
 const PLAYER_WIDTH = 120
 const PLAYER_HEIGHT = 120
 atlas.src = 'images/handshank.png'
-atlas2.src = 'images/move.png'
+atlas2.src = 'images/on-fire.png'
 export default class HandShank {
   constructor(rightHandShank) {
     // 玩家默认处于屏幕底部居中位置
@@ -22,27 +22,35 @@ export default class HandShank {
     this.x = 100
     this.y = screenHeight - PLAYER_HEIGHT - 40
 
-    this.tx = 0//按钮位置
-    this.ty = 0
-
-
     this.touchedx = 0
     this.touchedy = 0
 
-
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT
+
+    this.isInsite = false
+
+    this.tx = 100
+    this.ty = screenHeight - PLAYER_HEIGHT - 40
     // 用于在手指移动的时候标识手指是否已经在飞机上了
     this.touched = false
 
     this.bullets = []
 
-    this.touchstartEvent = 
+    this.touchstartEvent = null
+    this.touchmoveEvent = null
     // 初始化事件监听
     this.initEvent()
   }
 
   renderHandShank(ctx, score) {
+    ctx.drawImage(
+      atlas,
+      0, 0, 300, 300,
+      this.x,
+      this.y,
+      this.width, this.height
+    )
     ctx.drawImage(
       atlas,
       0, 0, 300, 300,
@@ -59,15 +67,14 @@ export default class HandShank {
     )
   }
   _formatMovePosition(x,y){
-    // x = databus.transX + x
-    // y = databus.transY + y
+    databus.x = x
+    databus.y = y
     let centerX = ~~(this.x - databus.transX + this.width / 2)
     let centerY = ~~(this.y - databus.transY + this.height / 2)
     let tempx = Math.abs((x - centerX) / 20) > 2 ? 2 : 1
     let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : 1
     databus.moveX = x > centerX ? tempx : -tempx
     databus.moveY = y > centerY ? tempy : -tempy
-    // console.log(centerX, this.x, databus.transX,'-------------------')
   }
   /**
     * 当手指触摸屏幕的时候
@@ -77,13 +84,10 @@ export default class HandShank {
     * @return {Boolean}: 用于标识手指是否在飞机上的布尔值
     */
   checkIsFingerOnAir(x, y) {
+    console.log(console.log(x,y,'++++++++++++++++++++++'))
     let thisx = this.x - databus.transX
     let thisy = this.y - databus.transY
     const deviation = 30
-    console.log(x >= thisx - deviation)
-    console.log(y >= thisy - deviation)
-    console.log(x <= thisx + this.width + deviation)
-    console.log(y <= thisy + this.height + deviation)
     return !!(x >= thisx - deviation
       && y >= thisy - deviation
       && x <= thisx + this.width + deviation
@@ -96,20 +100,21 @@ export default class HandShank {
    * 改变战机的位置
    */
   initEvent() {
-    canvas.addEventListener('touchstart', ((e) => {
+    this.touchstartEvent = (e) => {
       console.log(e)
       e.preventDefault()
-      for (let p of e.touches){
+      for (let p of e.touches) {
         let x = p.clientX
         let y = p.clientY
         //
         if (this.checkIsFingerOnAir(x, y)) {
           this.touched = true
+          this.isInsite = true
           this.touchedx = x
           this.touchedy = y
           this._formatMovePosition(x, y)
         }
-        if (this.rightHandShank.checkIsFingerOnAir(x,y)){
+        if (this.rightHandShank.checkIsFingerOnAir(x, y)) {
           this.rightHandShank.touched = true
           this.rightHandShank._formatMovePosition(x, y)
           this.rightHandShank.touchedx = x
@@ -117,7 +122,29 @@ export default class HandShank {
         }
       }
 
-    }).bind(this))
+    }
+    // canvas.addEventListener('touchstart', ((e) => {
+    //   console.log(e)
+    //   e.preventDefault()
+    //   for (let p of e.touches){
+    //     let x = p.clientX
+    //     let y = p.clientY
+    //     //
+    //     if (this.checkIsFingerOnAir(x, y)) {
+    //       this.touched = true
+    //       this.touchedx = x
+    //       this.touchedy = y
+    //       this._formatMovePosition(x, y)
+    //     }
+    //     if (this.rightHandShank.checkIsFingerOnAir(x,y)){
+    //       this.rightHandShank.touched = true
+    //       this.rightHandShank._formatMovePosition(x, y)
+    //       this.rightHandShank.touchedx = x
+    //       this.rightHandShank.touchedy = y
+    //     }
+    //   }
+
+    // }).bind(this))
 
     canvas.addEventListener('touchmove', ((e) => {
       e.preventDefault()
@@ -127,7 +154,20 @@ export default class HandShank {
         let lleft = (x - this.touchedx) * (x - this.touchedx) + (y - this.touchedy) * (y - this.touchedy)
         let lright = (x - this.rightHandShank.touchedx) * (x - this.rightHandShank.touchedx) + (y - this.rightHandShank.touchedy) * (y - this.rightHandShank.touchedy)
         if(lleft < lright){
+          // this.tx = x
+          // this.ty = y
           this._formatMovePosition(x,y)
+          let l = Math.pow(160 - x, 2) + Math.pow(screenHeight - PLAYER_HEIGHT +20 - y, 2)
+          console.log(140 - x, screenHeight - 120 - y,l)
+          if (l<3600) {
+            // this.handShank.tx = databus.x + databus.transX - 30
+            // this.handShank.ty = databus.y + databus.transY - 30
+            this.isInsite = true
+            // this.handShank.tx = databus.x + databus.transX - 30
+          }else{
+            console.log(this.tx,'出去了。。。。。')
+            this.isInsite = false
+          }
         }else{
           this.rightHandShank._formatMovePosition(x,y)
         }
@@ -143,55 +183,15 @@ export default class HandShank {
         let lleft = (x - this.touchedx) * (x - this.touchedx) + (y - this.touchedy) * (y - this.touchedy)
         let lright = (x - this.rightHandShank.touchedx) * (x - this.rightHandShank.touchedx) + (y - this.rightHandShank.touchedy) * (y - this.rightHandShank.touchedy)
         if (lleft < lright) {
+          this.tx = 100 + databus.transX
+          this.ty = screenHeight - PLAYER_HEIGHT - 40 + databus.transY
+          this.isInsite = false
           this.touched = false
         }else{
           this.rightHandShank.touched = false
         }
       }
     }).bind(this))
-  }
-  renderGameOver(ctx, score) {
-    ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150, screenHeight / 2 - 100, 300, 300)
-
-    ctx.fillStyle = "#ffffff"
-    ctx.font = "20px Arial"
-
-    ctx.fillText(
-      '游戏结束',
-      screenWidth / 2 - 40,
-      screenHeight / 2 - 100 + 50
-    )
-
-    ctx.fillText(
-      '得分: ' + score,
-      screenWidth / 2 - 40,
-      screenHeight / 2 - 100 + 130
-    )
-
-    ctx.drawImage(
-      atlas,
-      120, 6, 39, 24,
-      screenWidth / 2 - 60,
-      screenHeight / 2 - 100 + 180,
-      120, 40
-    )
-
-    ctx.fillText(
-      '重新开始',
-      screenWidth / 2 - 40,
-      screenHeight / 2 - 100 + 205
-    )
-
-    /**
-     * 重新开始按钮区域
-     * 方便简易判断按钮点击
-     */
-    this.btnArea = {
-      startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 - 100 + 180,
-      endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2 - 100 + 255
-    }
   }
 }
 

@@ -12,7 +12,7 @@ const screenHeight = window.innerHeight
 const wground = 1200
 const hground = 800
 let ctx   = canvas.getContext('2d')
-let databus = new DataBus()
+let databus = new DataBus(ctx)
 
 /**
  * 游戏主函数
@@ -26,7 +26,7 @@ export default class Main {
   }
 
   restart() {
-    databus.reset()
+    databus.reset(ctx)
 
     canvas.removeEventListener(
       'touchstart',
@@ -43,6 +43,7 @@ export default class Main {
     this.bindLoop     = this.loop.bind(this)
     this.hasEventBind = false
 
+    canvas.addEventListener('touchstart', this.handShank.touchstartEvent)
     // 清除上一局的动画
     window.cancelAnimationFrame(this.aniId);
 
@@ -57,7 +58,7 @@ export default class Main {
    * 帧数取模定义成生成的频率
    */
   enemyGenerate() {
-    if (databus.frame % 10 === 0 ) {
+    if (databus.frame % 1e10 === 0 ) {
       let enemy = databus.pool.getItemByClass('enemy', Enemy)
       enemy.init(6)
       databus.enemys.push(enemy)
@@ -100,7 +101,11 @@ export default class Main {
     this.handShank.x += tempX
     this.righthandshank.x += tempX
     databus.transX = this.handShank.x - 100
+    console.log(this.handShank.isInsite)
     ctx.translate(-tempX, 0)
+    if (this.handShank.touched && !this.handShank.isInsite) {//
+      this.handShank.tx += tempX
+    }
   }
   colMove(ctx){
     let tempY = this.player.y > databus.playTempY ? Math.abs(this.player.y - databus.playTempY) : -Math.abs(this.player.y - databus.playTempY)
@@ -109,6 +114,9 @@ export default class Main {
     this.righthandshank.y += tempY
     databus.transY = this.handShank.y - (screenHeight - 160)
     ctx.translate(0, -tempY)
+    if (this.handShank.touched && !this.handShank.isInsite) {
+      this.handShank.ty += tempY
+    }
   }
   //视觉移动 不至于第一人称跑出屏幕
   cameraMove(ctx){
@@ -126,12 +134,18 @@ export default class Main {
       && (this.player.x + databus.moveX) < wground - screenWidth / 2
     ) {
       this.rowMove(ctx)
+      
     }
     if (this.handShank.touched
       && (this.player.y + databus.moveY) > screenHeight/2 
       && (this.player.y + databus.moveY) < hground - screenHeight / 2
     ){
       this.colMove(ctx)
+      
+    } 
+    if (this.handShank.isInsite) {//点击是否在手柄内
+      this.handShank.tx = databus.x + databus.transX - 60
+      this.handShank.ty = databus.y + databus.transY - 60
     }
   }
   // 游戏结束后的触摸事件处理逻辑
@@ -184,6 +198,7 @@ export default class Main {
       if ( !this.hasEventBind ) {
         this.hasEventBind = true
         this.touchHandler = this.touchEventHandler.bind(this)
+        canvas.removeEventListener('touchstart',this.handShank.touchstartEvent)
         canvas.addEventListener('touchstart', this.touchHandler)
       }
     }
