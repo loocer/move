@@ -57,7 +57,7 @@ export default class Main {
    * 帧数取模定义成生成的频率
    */
   enemyGenerate() {
-    if ( databus.frame == 3 ) {
+    if (databus.frame % 10 === 0 ) {
       let enemy = databus.pool.getItemByClass('enemy', Enemy)
       enemy.init(6)
       databus.enemys.push(enemy)
@@ -206,7 +206,7 @@ export default class Main {
 
     this.collisionDetection()
 
-    if ( databus.frame % 100 === 0 ) {
+    if ( databus.frame % 10 === 0 ) {
       this.player.shoot()
       this.music.playShoot()
     }

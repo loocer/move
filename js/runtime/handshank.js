@@ -22,6 +22,8 @@ export default class HandShank {
     this.y = screenHeight - PLAYER_HEIGHT - 40
     // this.x = 0
     // this.y = 0
+    this.touchedx = 0
+    this.touchedy = 0
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT
     // 用于在手指移动的时候标识手指是否已经在飞机上了
@@ -50,7 +52,7 @@ export default class HandShank {
     let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : 1
     databus.moveX = x > centerX ? tempx : -tempx
     databus.moveY = y > centerY ? tempy : -tempy
-    console.log(centerX, this.x, databus.transX,'-------------------')
+    // console.log(centerX, this.x, databus.transX,'-------------------')
   }
   /**
     * 当手指触摸屏幕的时候
@@ -83,17 +85,18 @@ export default class HandShank {
       for (let p of e.touches){
         let x = p.clientX
         let y = p.clientY
-        console.log(x, y, '-------触碰到的坐标---------')
-        console.log(this.x, this.y, '-------飞机的坐标---------')
-        console.log(screenWidth, screenHeight, '----------屏幕大小---------')
         //
         if (this.checkIsFingerOnAir(x, y)) {
           this.touched = true
-          console.log('我按下了')
+          this.touchedx = x
+          this.touchedy = y
           this._formatMovePosition(x, y)
         }
         if (this.rightHandShank.checkIsFingerOnAir(x,y)){
+          this.rightHandShank.touched = true
           this.rightHandShank._formatMovePosition(x, y)
+          this.rightHandShank.touchedx = x
+          this.rightHandShank.touchedy = y
         }
       }
 
@@ -101,24 +104,33 @@ export default class HandShank {
 
     canvas.addEventListener('touchmove', ((e) => {
       e.preventDefault()
-      console.log(e.touches[0].clientX, e.touches[0].clientY,'============================')
       for (let p of e.touches) {
         let x = p.clientX
         let y = p.clientY
-
-        if (this.touched)
-          console.log(x, y)
-        this._formatMovePosition(x, y)
+        let lleft = (x - this.touchedx) * (x - this.touchedx) + (y - this.touchedy) * (y - this.touchedy)
+        let lright = (x - this.rightHandShank.touchedx) * (x - this.rightHandShank.touchedx) + (y - this.rightHandShank.touchedy) * (y - this.rightHandShank.touchedy)
+        if(lleft < lright){
+          this._formatMovePosition(x,y)
+        }else{
+          this.rightHandShank._formatMovePosition(x,y)
+        }
       }
       
     }).bind(this))
 
     canvas.addEventListener('touchend', ((e) => {
-      // console.log(e.touches[0].clientX, e.touches[0].clientY, '===----------------=====')
       console.log(e)
-      e.preventDefault()
-      console.log('松开了')
-      this.touched = false
+      for (let obj of e.changedTouches){
+        let x = obj.clientX
+        let y = obj.clientY
+        let lleft = (x - this.touchedx) * (x - this.touchedx) + (y - this.touchedy) * (y - this.touchedy)
+        let lright = (x - this.rightHandShank.touchedx) * (x - this.rightHandShank.touchedx) + (y - this.rightHandShank.touchedy) * (y - this.rightHandShank.touchedy)
+        if (lleft < lright) {
+          this.touched = false
+        }else{
+          this.rightHandShank.touched = false
+        }
+      }
     }).bind(this))
   }
   renderGameOver(ctx, score) {

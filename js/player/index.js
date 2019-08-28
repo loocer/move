@@ -114,9 +114,8 @@ export default class Player extends Sprite {
    * 射击时机由外部决定
    */
   shoot() {
-    
-    let mx = databus.moveX
-    let my = databus.moveY
+    let mx = databus.shootX
+    let my = databus.shootY
     if (mx == 0 && my==0){}else{
       let bullet = databus.pool.getItemByClass('bullet', Bullet)
       bullet.init(

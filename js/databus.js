@@ -40,6 +40,9 @@ export default class DataBus {
     this.moveX = 0//手柄操作位移
     this.moveY = 0
 
+    this.shootX = 0
+    this.shootY = 0
+
     this.frame      = 0
     this.score      = 0
     this.bullets    = []

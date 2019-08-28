@@ -19,6 +19,9 @@ export default class RightHandShank {
     this.y = screenHeight - PLAYER_HEIGHT - 40
     // this.x = 0
     // this.y = 0
+    this.touchedx = 0
+    this.touchedy = 0
+
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT
     // 用于在手指移动的时候标识手指是否已经在飞机上了
@@ -39,15 +42,12 @@ export default class RightHandShank {
     )
   }
   _formatMovePosition(x, y) {
-    // x = databus.transX + x
-    // y = databus.transY + y
-    // let centerX = ~~(this.x - databus.transX + this.width / 2)
-    // let centerY = ~~(this.y - databus.transY + this.height / 2)
-    // let tempx = Math.abs((x - centerX) / 20) > 2 ? 2 : 1
-    // let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : 1
-    // databus.moveX = x > centerX ? tempx : -tempx
-    // databus.moveY = y > centerY ? tempy : -tempy
-    console.log(x,y, '-------------------')
+    let centerX = ~~(this.x - databus.transX + this.width / 2)
+    let centerY = ~~(this.y - databus.transY + this.height / 2)
+    let tempx = Math.abs((x - centerX) / 20) > 2 ? 2 : Math.abs((x - centerX) / 20)
+    let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : Math.abs((y - centerY) / 20)
+    databus.shootX = x > centerX ? tempx : -tempx
+    databus.shootY = y > centerY ? tempy : -tempy
   }
   /**
     * 当手指触摸屏幕的时候
