@@ -5,12 +5,13 @@ const screenHeight = window.innerHeight
 
 
 let atlas = new Image()
+let atlas2 = new Image()
 let databus = new DataBus()
 let y = 30
 const PLAYER_WIDTH = 120
 const PLAYER_HEIGHT = 120
-atlas.src = 'images/Common.png'
-
+atlas.src = 'images/handshank.png'
+atlas2.src = 'images/on-fire.png'
 export default class RightHandShank {
   constructor() {
     // 玩家默认处于屏幕底部居中位置
@@ -35,7 +36,14 @@ export default class RightHandShank {
   renderHandShank(ctx) {
     ctx.drawImage(
       atlas,
-      0, 0, 100, 100,
+      0, 0, 300, 300,
+      this.x,
+      this.y,
+      this.width, this.height
+    )
+    ctx.drawImage(
+      atlas2,
+      0, 0, 300, 300,
       this.x,
       this.y,
       this.width, this.height

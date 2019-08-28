@@ -7,12 +7,13 @@ const screenHeight = window.innerHeight
 
 
 let atlas = new Image()
+let atlas2 = new Image()
 let databus = new DataBus()
 let y = 30
 const PLAYER_WIDTH = 120
 const PLAYER_HEIGHT = 120
-atlas.src = 'images/Common.png'
-
+atlas.src = 'images/handshank.png'
+atlas2.src = 'images/move.png'
 export default class HandShank {
   constructor(rightHandShank) {
     // 玩家默认处于屏幕底部居中位置
@@ -20,16 +21,23 @@ export default class HandShank {
     this.rightHandShank = rightHandShank
     this.x = 100
     this.y = screenHeight - PLAYER_HEIGHT - 40
-    // this.x = 0
-    // this.y = 0
+
+    this.tx = 0//按钮位置
+    this.ty = 0
+
+
     this.touchedx = 0
     this.touchedy = 0
+
+
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT
     // 用于在手指移动的时候标识手指是否已经在飞机上了
     this.touched = false
 
     this.bullets = []
+
+    this.touchstartEvent = 
     // 初始化事件监听
     this.initEvent()
   }
@@ -37,9 +45,16 @@ export default class HandShank {
   renderHandShank(ctx, score) {
     ctx.drawImage(
       atlas,
-      0, 0, 100, 100,
+      0, 0, 300, 300,
       this.x,
       this.y,
+      this.width, this.height
+    )
+    ctx.drawImage(
+      atlas2,
+      0, 0, 300, 300,
+      this.tx,
+      this.ty,
       this.width, this.height
     )
   }
@@ -74,6 +89,8 @@ export default class HandShank {
       && x <= thisx + this.width + deviation
       && y <= thisy + this.height + deviation)
   }
+
+
   /**
    * 玩家响应手指的触摸事件
    * 改变战机的位置
