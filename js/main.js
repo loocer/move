@@ -101,7 +101,6 @@ export default class Main {
     this.handShank.x += tempX
     this.righthandshank.x += tempX
     databus.transX = this.handShank.x - 100
-    console.log(this.handShank.isInsite)
     ctx.translate(-tempX, 0)
     if (this.handShank.touched && !this.handShank.isInsite) {//
       this.handShank.tx += tempX
@@ -143,10 +142,37 @@ export default class Main {
       this.colMove(ctx)
       
     } 
-    if (this.handShank.isInsite) {//点击是否在手柄内
+    if (this.handShank.isInsite) {//点击在手柄内
       this.handShank.tx = databus.x + databus.transX - 60
       this.handShank.ty = databus.y + databus.transY - 60
+    }else{
+      //触摸地方不在手柄里
+      // let opx = 100 + databus.transX
+      // let opy = screenHeight - PLAYER_HEIGHT - 40 + databus.transY
+      // let scop = Math.sqrt(Math.pow((databus.x + databus.transX - opx), 2) + Math.pow((databus.y + databus.transY - opy),2))
+      // let x = 
     }
+    let atanrotate = (databus.y + databus.transY - (this.handShank.y + 60)) / (databus.x + databus.transX - this.handShank.x - 60)
+    let x1 = databus.x + databus.transX//点击
+    let x2 = this.handShank.x + 60
+    let y1 = (databus.y + databus.transY)
+    let y2 = this.handShank.y + 60
+    // console.log(x1,x2)
+    if(x1>x2){
+      // this.player.rotate+=90
+      this.player.rotate = ~~(Math.atan(atanrotate) / Math.PI * 180) + 90
+      // console.log(~~(Math.atan(atanrotate) / Math.PI * 180)+90)
+    } else if (x1 < x2){
+      this.player.rotate = ~~(Math.atan(atanrotate) / Math.PI * 180) + 270
+      // console.log(~~(Math.atan(atanrotate) / Math.PI * 270))
+    }
+    
+    // ctx.rotate(Math.atan(this.rotate) / (Math.PI*2) *360)  
+    // let temp = ~~(Math.atan(this.rotate) / Math.PI * 180)
+    // if ((databus.y + databus.transY) < (this.handShank.y + 60)){
+
+    // }
+    // console.log((databus.x + databus.transX - this.handShank.x - 60),this.player.rotate)
   }
   // 游戏结束后的触摸事件处理逻辑
   touchEventHandler(e) {
@@ -176,10 +202,12 @@ export default class Main {
     databus.bullets
           .concat(databus.enemys)
           .forEach((item) => {
+              item.rotate = this.player.rotate
               item.drawToCanvas(ctx)
             })
 
     this.cameraMove(ctx)
+    
     this.player.drawToCanvas(ctx)
 
     databus.animations.forEach((ani) => {

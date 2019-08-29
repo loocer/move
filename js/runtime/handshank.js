@@ -52,13 +52,6 @@ export default class HandShank {
       this.width, this.height
     )
     ctx.drawImage(
-      atlas,
-      0, 0, 300, 300,
-      this.x,
-      this.y,
-      this.width, this.height
-    )
-    ctx.drawImage(
       atlas2,
       0, 0, 300, 300,
       this.tx,
@@ -75,6 +68,7 @@ export default class HandShank {
     let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : 1
     databus.moveX = x > centerX ? tempx : -tempx
     databus.moveY = y > centerY ? tempy : -tempy
+
   }
   /**
     * 当手指触摸屏幕的时候
@@ -101,6 +95,11 @@ export default class HandShank {
    */
   initEvent() {
     this.touchstartEvent = (e) => {
+      // wx.showToast({
+      //   title: '成功',
+      //   icon: 'success',
+      //   duration: 2000
+      // })
       console.log(e)
       e.preventDefault()
       for (let p of e.touches) {
@@ -158,14 +157,14 @@ export default class HandShank {
           // this.ty = y
           this._formatMovePosition(x,y)
           let l = Math.pow(160 - x, 2) + Math.pow(screenHeight - PLAYER_HEIGHT +20 - y, 2)
-          console.log(140 - x, screenHeight - 120 - y,l)
+          // console.log(140 - x, screenHeight - 120 - y,l)
           if (l<3600) {
             // this.handShank.tx = databus.x + databus.transX - 30
             // this.handShank.ty = databus.y + databus.transY - 30
             this.isInsite = true
             // this.handShank.tx = databus.x + databus.transX - 30
           }else{
-            console.log(this.tx,'出去了。。。。。')
+            // console.log(this.tx,'出去了。。。。。')
             this.isInsite = false
           }
         }else{

@@ -19,6 +19,8 @@ export default class Player extends Sprite {
     // 玩家默认处于屏幕底部居中位置
     this.x = databus.playTempX
     this.y = databus.playTempY
+    // this.x = 0
+    // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了
     this.touched = false
 
