@@ -1,5 +1,5 @@
 import Sprite   from '../base/sprite'
-import Bullet   from './bullet'
+import Bullet from './bullet2'
 import DataBus  from '../databus'
 
 const screenWidth    = window.innerWidth
@@ -81,10 +81,6 @@ export default class Player extends Sprite {
 
       let x = e.touches[0].clientX
       let y = e.touches[0].clientY
-      console.log(x,y,'-------触碰到的坐标---------')
-      console.log(this.x, this.y, '-------飞机的坐标---------')
-      console.log(screenWidth, screenHeight,'----------屏幕大小---------')
-      //
       if ( this.checkIsFingerOnAir(x, y) ) {
         this.touched = true
 
@@ -121,9 +117,9 @@ export default class Player extends Sprite {
     if (mx == 0 && my==0){}else{
       let bullet = databus.pool.getItemByClass('bullet', Bullet)
       bullet.init(
-        this.x + this.width / 2 - bullet.width / 2,
-        this.y - 10,
-        10,
+        this.x,
+        this.y,
+        1,
         mx,
         my
       )

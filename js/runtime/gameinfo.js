@@ -17,7 +17,6 @@ export default class GameInfo {
   }
 
   renderGameOver(ctx, score) {
-    console.log(databus.moveX, databus.moveY,999999999999999)
     ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150 + databus.transX, screenHeight / 2 - 100 + databus.transY, 300, 300)
 
     ctx.fillStyle = "#ffffff"

@@ -8,12 +8,18 @@ const screenHeight = window.innerHeight
 
 let atlas = new Image()
 let atlas2 = new Image()
+let atlas3 = new Image()
+let atlas4 = new Image()
 let databus = new DataBus()
 let y = 30
 const PLAYER_WIDTH = 120
 const PLAYER_HEIGHT = 120
 atlas.src = 'images/handshank.png'
 atlas2.src = 'images/on-fire.png'
+atlas3.src = 'images/32.png'
+atlas4.src = 'images/on-way.png'
+// atlas4.src = 'images/bg1.jpg'
+
 export default class HandShank {
   constructor(rightHandShank) {
     // 玩家默认处于屏幕底部居中位置
@@ -43,7 +49,7 @@ export default class HandShank {
     this.initEvent()
   }
 
-  renderHandShank(ctx, score) {
+  renderHandShank(ctx, player) {
     ctx.drawImage(
       atlas,
       0, 0, 300, 300,
@@ -58,6 +64,29 @@ export default class HandShank {
       this.ty,
       this.width, this.height
     )
+    ctx.save()
+    ctx.translate(this.x + this.width/2, this.y + this.height/2)
+    // console.log(player.rotate)
+    ctx.rotate(player.rotate * Math.PI / 180)
+    ctx.drawImage(
+      atlas4,
+      0, 0, 300, 184,
+      -60,
+      -74,
+      120, 94
+    )
+    ctx.restore()
+   
+    if (this.touched && databus.x){
+      ctx.drawImage(
+        atlas3,
+        0, 0, 300, 300,
+        100 + databus.transX,
+        screenHeight - PLAYER_HEIGHT - 40 + databus.transY,
+        this.width, this.height
+      )
+    }
+    
   }
   _formatMovePosition(x,y){
     databus.x = x

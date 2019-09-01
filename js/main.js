@@ -5,13 +5,20 @@ import GameInfo   from './runtime/gameinfo'
 import HandShank from './runtime/handshank'
 import Righthandshank from './runtime/righthandshank.js'
 import Music      from './runtime/music'
+import { getRoteImg }  from './utils/index'
 import DataBus    from './databus'
 
 const screenWidth = window.innerWidth 
 const screenHeight = window.innerHeight
 const wground = 1200
 const hground = 800
+canvas.width = screenWidth
+canvas.height = screenHeight
 let ctx   = canvas.getContext('2d')
+let openDataContext = wx.getOpenDataContext()
+let sharedCanvas = openDataContext.canvas
+
+
 let databus = new DataBus(ctx)
 
 /**
@@ -21,7 +28,8 @@ export default class Main {
   constructor() {
     // 维护当前requestAnimationFrame的id
     this.aniId    = 0
-
+    
+    
     this.restart()
   }
 
@@ -58,7 +66,7 @@ export default class Main {
    * 帧数取模定义成生成的频率
    */
   enemyGenerate() {
-    if (databus.frame % 1e10 === 0 ) {
+    if (databus.frame % 10000 === 0 ) {
       let enemy = databus.pool.getItemByClass('enemy', Enemy)
       enemy.init(6)
       databus.enemys.push(enemy)
@@ -102,9 +110,9 @@ export default class Main {
     this.righthandshank.x += tempX
     databus.transX = this.handShank.x - 100
     ctx.translate(-tempX, 0)
-    if (this.handShank.touched && !this.handShank.isInsite) {//
-      this.handShank.tx += tempX
-    }
+    // if (this.handShank.touched && !this.handShank.isInsite) {//
+    //   this.handShank.tx += tempX
+    // }
   }
   colMove(ctx){
     let tempY = this.player.y > databus.playTempY ? Math.abs(this.player.y - databus.playTempY) : -Math.abs(this.player.y - databus.playTempY)
@@ -113,19 +121,22 @@ export default class Main {
     this.righthandshank.y += tempY
     databus.transY = this.handShank.y - (screenHeight - 160)
     ctx.translate(0, -tempY)
-    if (this.handShank.touched && !this.handShank.isInsite) {
-      this.handShank.ty += tempY
-    }
+    // if (this.handShank.touched && !this.handShank.isInsite) {
+    //   this.handShank.ty += tempY
+    // }
   }
   //视觉移动 不至于第一人称跑出屏幕
   cameraMove(ctx){
     if (this.handShank.touched
       && (this.player.x + databus.moveX) > 0
       && (this.player.x + databus.moveX) < wground - 40
+    ) {
+      this.player.x += databus.moveX
+    }
+    if (this.handShank.touched
       && (this.player.y + databus.moveY) > 0
       && (this.player.y + databus.moveY) < hground - 40
     ){
-      this.player.x += databus.moveX
       this.player.y += databus.moveY
     }
     if (this.handShank.touched
@@ -142,37 +153,32 @@ export default class Main {
       this.colMove(ctx)
       
     } 
-    if (this.handShank.isInsite) {//点击在手柄内
+    // if (this.handShank.isInsite) {//点击在手柄内
+    if (this.handShank.touched&&databus.x){
       this.handShank.tx = databus.x + databus.transX - 60
       this.handShank.ty = databus.y + databus.transY - 60
-    }else{
+    }
+    // } else if (this.handShank.touched && !this.handShank.isInsite){
       //触摸地方不在手柄里
-      // let opx = 100 + databus.transX
-      // let opy = screenHeight - PLAYER_HEIGHT - 40 + databus.transY
+      // let opx = this.handShank.x + this.handShank.width / 2
+      // let opy = this.handShank.y + this.handShank.height / 2
+      // let tachX = databus.x + databus.transX
+      // let tachY = databus.y + databus.transX
+      // let l = Math.sqrt(Math.pow(opx - tachX, 2) + Math.pow(opy - tachY, 2))/60;
+      // let x = (tachX - opx + l * opx) / l
+      // let y = (tachY - opy + l * opy) / l
+      // console.log('0000000000000000000',x,y)
+      // this.handShank.tx = x
+      // this.handShank.ty = y
       // let scop = Math.sqrt(Math.pow((databus.x + databus.transX - opx), 2) + Math.pow((databus.y + databus.transY - opy),2))
       // let x = 
-    }
-    let atanrotate = (databus.y + databus.transY - (this.handShank.y + 60)) / (databus.x + databus.transX - this.handShank.x - 60)
-    let x1 = databus.x + databus.transX//点击
-    let x2 = this.handShank.x + 60
-    let y1 = (databus.y + databus.transY)
-    let y2 = this.handShank.y + 60
-    // console.log(x1,x2)
-    if(x1>x2){
-      // this.player.rotate+=90
-      this.player.rotate = ~~(Math.atan(atanrotate) / Math.PI * 180) + 90
-      // console.log(~~(Math.atan(atanrotate) / Math.PI * 180)+90)
-    } else if (x1 < x2){
-      this.player.rotate = ~~(Math.atan(atanrotate) / Math.PI * 180) + 270
-      // console.log(~~(Math.atan(atanrotate) / Math.PI * 270))
-    }
-    
-    // ctx.rotate(Math.atan(this.rotate) / (Math.PI*2) *360)  
-    // let temp = ~~(Math.atan(this.rotate) / Math.PI * 180)
-    // if ((databus.y + databus.transY) < (this.handShank.y + 60)){
-
     // }
-    // console.log((databus.x + databus.transX - this.handShank.x - 60),this.player.rotate)
+    let pobj = {}
+    pobj.x1 = databus.x + databus.transX//点击
+    pobj.x2 = this.handShank.x + 60
+    pobj.y1 = (databus.y + databus.transY)
+    pobj.y2 = this.handShank.y + 60
+    getRoteImg(pobj, this.player)
   }
   // 游戏结束后的触摸事件处理逻辑
   touchEventHandler(e) {
@@ -196,13 +202,15 @@ export default class Main {
    */
   render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    
+    
+    
     // ctx.translate(0, -1)
     this.bg.render(ctx)
     
     databus.bullets
           .concat(databus.enemys)
           .forEach((item) => {
-              item.rotate = this.player.rotate
               item.drawToCanvas(ctx)
             })
 
@@ -217,8 +225,18 @@ export default class Main {
     })
 
     this.gameinfo.renderGameScore(ctx, databus.score)
-    this.handShank.renderHandShank(ctx, databus.score)
+    this.handShank.renderHandShank(ctx, this.player)
     this.righthandshank.renderHandShank(ctx)
+    ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
+    // 主域绘制
+    // openDataContext.postMessage({
+    //   type: 'friends',
+    //   text: 'tgregt',
+    // });
+    openDataContext.postMessage({
+      data: databus,
+      command: 'render'
+    })
     // 游戏结束停止帧循环
     if ( databus.gameOver ) {
       this.gameinfo.renderGameOver(ctx, databus.score)
@@ -244,12 +262,13 @@ export default class Main {
            .forEach((item) => {
              item.update(this.player)
             })
-
+    
     this.enemyGenerate()
 
     this.collisionDetection()
 
-    if ( databus.frame % 10 === 0 ) {
+    if (databus.frame % 10 === 0 && this.righthandshank.touched ) {
+
       this.player.shoot()
       this.music.playShoot()
     }

@@ -1,11 +1,11 @@
-import Sprite   from '../base/sprite'
-import DataBus  from '../databus'
+import Sprite from '../base/sprite'
+import DataBus from '../databus'
 import { getRoteImg } from '../utils/index'
 const BULLET_IMG_SRC = 'images/bullet.png'
-const BULLET_WIDTH   = 16
-const BULLET_HEIGHT  = 30
-const screenWidth = window.innerWidth 
-const screenHeight = window.innerHeight 
+const BULLET_WIDTH = 16
+const BULLET_HEIGHT = 30
+const screenWidth = window.innerWidth
+const screenHeight = window.innerHeight
 const __ = {
   speed: Symbol('speed')
 }
@@ -15,7 +15,7 @@ export default class Bullet extends Sprite {
   constructor() {
     super(BULLET_IMG_SRC, BULLET_WIDTH, BULLET_HEIGHT)
   }
-  _movePosition(){
+  _movePosition() {
     let centerX = this.x + this.width / 2
     let centerY = this.y + this.height / 2
     let tempx = Math.abs((x - centerX) / 20) > 2 ? 1 : .5
@@ -23,7 +23,7 @@ export default class Bullet extends Sprite {
     databus.moveX = x > centerX ? tempx : -tempx
     databus.moveY = y > centerY ? tempy : -tempy
   }
-  init(x, y, speed,mx,my) {
+  init(x, y, speed, mx, my) {
     this.x = x
     this.y = y
     this.moveX = mx
@@ -32,7 +32,22 @@ export default class Bullet extends Sprite {
 
     this.visible = true
   }
+  drawToCanvas(ctx) {
+    if (!this.visible)
+      return
+    ctx.save()
+    ctx.translate(this.x, this.y)
+    ctx.rotate(this.rotate * Math.PI / 180)
+    ctx.beginPath()
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = '#f30e0e'
+    ctx.fillStyle = '#fff' // 矩形颜色
+    ctx.fillRect(-3, -30, 3, 30)
+    ctx.stroke()
 
+    ctx.restore()
+
+  }
   // 每一帧更新子弹位置
   update() {
     getRoteImg({
@@ -45,15 +60,14 @@ export default class Bullet extends Sprite {
     )
     this.y += this.moveY * this[__.speed]
     this.x += this.moveX * this[__.speed]
-    
+
     // 超出屏幕外回收自身
-    // console.log(this.y, this.moveY,'====================')
     if (this.y < 0
       || this.y > screenHeight
-      ||this.x < 0
-      ||this.x > screenWidth
-     )
-    // databus.removeBullets(this)
-    delete this
+      || this.x < 0
+      || this.x > screenWidth
+    )
+      // databus.removeBullets(this)
+      delete this
   }
 }
