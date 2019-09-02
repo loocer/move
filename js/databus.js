@@ -29,6 +29,8 @@ export default class DataBus {
 
     this.moveX = 0//手柄操作位移
     this.moveY = 0
+
+    this.createEnemysStatus = 1//关卡
     if ( instance )
       return instance
 

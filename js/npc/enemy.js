@@ -1,9 +1,7 @@
 import Animation from '../base/animation'
 import DataBus   from '../databus'
 import { getRoteImg } from '../utils/index'
-const ENEMY_IMG_SRC = 'images/enemy.png'
-const ENEMY_WIDTH   = 80
-const ENEMY_HEIGHT  = 80
+
 
 const __ = {
   speed: Symbol('speed')
@@ -11,19 +9,19 @@ const __ = {
 
 let databus = new DataBus()
 
-function rnd(start, end){
-  return Math.floor(Math.random() * (end - start) + start)
-}
+
 
 export default class Enemy extends Animation {
-  constructor() {
+  constructor(ENEMY_IMG_SRC, ENEMY_WIDTH, ENEMY_HEIGHT) {
     super(ENEMY_IMG_SRC, ENEMY_WIDTH, ENEMY_HEIGHT)
     this.initExplosionAnimation()
   }
 
-  init(speed) {
-    this.x = rnd(0, window.innerWidth - ENEMY_WIDTH)
-    this.y = 0
+  init(speed, lifeValue,x ,y ) {
+    this.x = x
+    this.y = y
+    this.score = lifeValue
+    this.lifeValue = lifeValue
     this[__.speed] = speed
     this.visible = true
   }
@@ -46,14 +44,15 @@ export default class Enemy extends Animation {
     let tempx = 0
     let tempy = 0
     if(lpx>lpy){
-      tempx = player.x > this.x ? this.x+1:this.x-1
+      tempx = player.x > this.x ? this.x+this[__.speed]:this.x-this[__.speed]
       tempy = player.y > this.y ? this.y + lpy / lpx : this.y - lpy / lpx
     }else{
-      tempy= player.y > this.y ? this.y+1 : this.y-1
+      tempy= player.y > this.y ? this.y+this[__.speed] : this.y-this[__.speed]
       tempx = player.x > this.x ? this.x + lpx / lpy : this.x - lpx / lpy
     }
-    this.x = tempx
-    this.y = tempy
+    this.x = tempx 
+    this.y = tempy 
+    // console.log(this.x, tempx * this[__.speed], tempx, this[__.speed],'+++++++++++++++++++')
     getRoteImg({
       x1 : this.x,
       x2 : player.x,
@@ -67,7 +66,6 @@ export default class Enemy extends Animation {
   update(player) {
     this.getPosition(player)
     // this.y += this[__.speed]
-
     // 对象回收
     if ( this.y > window.innerHeight + this.height )
       delete this

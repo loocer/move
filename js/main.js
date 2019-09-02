@@ -1,5 +1,5 @@
 import Player     from './player/index'
-import Enemy      from './npc/enemy'
+import CreateEnemyt from './npc/createEnemyt'
 import BackGround from './runtime/background'
 import GameInfo   from './runtime/gameinfo'
 import HandShank from './runtime/handshank'
@@ -20,7 +20,7 @@ let sharedCanvas = openDataContext.canvas
 
 
 let databus = new DataBus(ctx)
-
+let createEnemy = new CreateEnemyt(ctx)
 /**
  * 游戏主函数
  */
@@ -66,11 +66,26 @@ export default class Main {
    * 帧数取模定义成生成的频率
    */
   enemyGenerate() {
-    if (databus.frame % 10000 === 0 ) {
-      let enemy = databus.pool.getItemByClass('enemy', Enemy)
-      enemy.init(6)
-      databus.enemys.push(enemy)
+    if (databus.frame % 10 === 0 ) {
+      
+      createEnemy.createEnemy()
+      // enemy.init(6)
+     
     }
+    console.log(databus.frame)
+    if (databus.frame == 1e4) {
+      databus.frame = 0
+    }
+    if (databus.frame == 2*1e3) {
+      databus.createEnemysStatus = 3
+    }
+    if (databus.frame == 1e3 ){
+      databus.createEnemysStatus =2
+    }
+    if (databus.frame == 0) {
+      databus.createEnemysStatus = 1
+    }
+    
   }
 
   // 全局碰撞检测
@@ -82,11 +97,16 @@ export default class Main {
         let enemy = databus.enemys[i]
 
         if ( !enemy.isPlaying && enemy.isCollideWith(bullet) ) {
-          enemy.playAnimation()
+          
+          if (--enemy.lifeValue==0){
+            enemy.playAnimation()
+            databus.score += enemy.score
+          }
+          
           // that.music.playExplosion()
 
           bullet.visible = false
-          databus.score  += 1
+          
 
           break
         }
@@ -227,16 +247,11 @@ export default class Main {
     this.gameinfo.renderGameScore(ctx, databus.score)
     this.handShank.renderHandShank(ctx, this.player)
     this.righthandshank.renderHandShank(ctx)
-    ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
-    // 主域绘制
+    // ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
     // openDataContext.postMessage({
-    //   type: 'friends',
-    //   text: 'tgregt',
-    // });
-    openDataContext.postMessage({
-      data: databus,
-      command: 'render'
-    })
+    //   data: databus,
+    //   command: 'render'
+    // })
     // 游戏结束停止帧循环
     if ( databus.gameOver ) {
       this.gameinfo.renderGameOver(ctx, databus.score)
