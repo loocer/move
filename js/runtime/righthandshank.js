@@ -1,17 +1,19 @@
 import DataBus from '../databus'
-
+import { getRoteImg } from '../utils/index'
 const screenWidth = window.innerWidth
 const screenHeight = window.innerHeight
 
 
 let atlas = new Image()
 let atlas2 = new Image()
+let atlas3 = new Image()
 let databus = new DataBus()
 let y = 30
 const PLAYER_WIDTH = 120
 const PLAYER_HEIGHT = 120
 atlas.src = 'images/handshank.png'
 atlas2.src = 'images/on-fire.png'
+// atlas3.src = 'images/on-way.png'
 export default class RightHandShank {
   constructor() {
     // 玩家默认处于屏幕底部居中位置
@@ -26,6 +28,7 @@ export default class RightHandShank {
     this.touchedx = screenWidth - PLAYER_WIDTH - 40
     this.touchedy = screenHeight - PLAYER_HEIGHT - 40
 
+    this.rotate = 0
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT
     // 用于在手指移动的时候标识手指是否已经在飞机上了
@@ -44,13 +47,26 @@ export default class RightHandShank {
       this.y,
       this.width, this.height
     )
+    ctx.save()
+    ctx.translate(this.x + this.width / 2, this.y + this.height / 2)
+    // console.log(player.rotate)
+    ctx.rotate(this.rotate * Math.PI / 180)
+    // ctx.drawImage(
+    //   atlas3,
+    //   0, 0, 300, 184,
+    //   -60,
+    //   -74,
+    //   120, 94
+    // )
     ctx.drawImage(
       atlas2,
       0, 0, 300, 300,
-      this.x,
-      this.y,
+      -this.width / 2,
+      -this.height / 2,
       this.width, this.height
     )
+    ctx.restore()
+    
   }
   _formatMovePosition(x, y) {
     let centerX = ~~(this.x - databus.transX + this.width / 2)
@@ -59,6 +75,14 @@ export default class RightHandShank {
     let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : Math.abs((y - centerY) / 20)
     databus.shootX = x > centerX ? tempx : -tempx
     databus.shootY = y > centerY ? tempy : -tempy
+    getRoteImg({
+      x1: databus.shootX,
+      x2: 0,
+      y1: databus.shootY,
+      y2: 0,
+    },
+      this
+    )
   }
   /**
     * 当手指触摸屏幕的时候

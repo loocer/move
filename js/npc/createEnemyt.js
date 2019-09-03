@@ -91,14 +91,14 @@ export default class CreateEnemyt {
       if (Math.round(Math.random())){
         enemy.init(
           .3,
-          1,
+          5,
           Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
           temp
         )
       }else{
         enemy.init(
           .3,
-          1,
+          3,
           temp1,
           Math.round(Math.random()) ? window.innerHeight + ENEMY_HEIGHT + databus.transY : 0,
         )

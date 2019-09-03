@@ -7,6 +7,7 @@ import Righthandshank from './runtime/righthandshank.js'
 import Music      from './runtime/music'
 import { getRoteImg }  from './utils/index'
 import DataBus    from './databus'
+import Gamecreate from './gameTools/create'
 
 const screenWidth = window.innerWidth 
 const screenHeight = window.innerHeight
@@ -50,7 +51,7 @@ export default class Main {
 
     this.bindLoop     = this.loop.bind(this)
     this.hasEventBind = false
-
+    this.gamecreate = new Gamecreate()
     canvas.addEventListener('touchstart', this.handShank.touchstartEvent)
     // 清除上一局的动画
     window.cancelAnimationFrame(this.aniId);
@@ -66,13 +67,12 @@ export default class Main {
    * 帧数取模定义成生成的频率
    */
   enemyGenerate() {
-    if (databus.frame % 10 === 0 ) {
+    if (databus.frame % 2 === 0 ) {
       
       createEnemy.createEnemy()
       // enemy.init(6)
      
     }
-    console.log(databus.frame)
     if (databus.frame == 1e4) {
       databus.frame = 0
     }
@@ -91,28 +91,32 @@ export default class Main {
   // 全局碰撞检测
   collisionDetection() {
     let that = this
-
+   
     databus.bullets.forEach((bullet) => {
+      let temp = []
       for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
         let enemy = databus.enemys[i]
-
+         let flag = false
         if ( !enemy.isPlaying && enemy.isCollideWith(bullet) ) {
           
           if (--enemy.lifeValue==0){
+            flag = true
             enemy.playAnimation()
             databus.score += enemy.score
+            bullet.visible = false
           }
-          
           // that.music.playExplosion()
 
-          bullet.visible = false
-          
-
-          break
+          // break
+        }
+        if (!flag){
+          flag = false
+          temp.push(databus.enemys[i])
         }
       }
+      databus.enemys = temp
     })
-
+    console.log(databus.enemys)
     for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
       let enemy = databus.enemys[i]
 
@@ -233,7 +237,9 @@ export default class Main {
           .forEach((item) => {
               item.drawToCanvas(ctx)
             })
-
+    databus.gameTools.forEach((item)=>{
+      item.drawToCanvas(ctx)
+    })
     this.cameraMove(ctx)
     
     this.player.drawToCanvas(ctx)
@@ -277,7 +283,9 @@ export default class Main {
            .forEach((item) => {
              item.update(this.player)
             })
-    
+    databus.gameTools.forEach((item) => {
+      item.update(this.player)
+    })
     this.enemyGenerate()
 
     this.collisionDetection()
@@ -285,7 +293,7 @@ export default class Main {
     if (databus.frame % 10 === 0 && this.righthandshank.touched ) {
 
       this.player.shoot()
-      this.music.playShoot()
+      // this.music.playShoot()
     }
   }
 

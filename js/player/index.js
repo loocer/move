@@ -119,7 +119,7 @@ export default class Player extends Sprite {
       bullet.init(
         this.x,
         this.y,
-        10,
+        databus.shootSpeed,
         mx,
         my
       )

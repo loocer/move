@@ -55,8 +55,10 @@ export default class DataBus {
     this.playTempY = screenHeight / 2
     this.frame      = 0
     this.score      = 0
+    this.shootSpeed =2
     this.bullets    = []
     this.enemys     = []
+    this.gameTools = []
     this.animations = []
     this.gameOver   = false
     ctx&&ctx.translate(this.transX, this.transY)
