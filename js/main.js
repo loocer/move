@@ -116,7 +116,6 @@ export default class Main {
       }
       databus.enemys = temp
     })
-    console.log(databus.enemys)
     for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
       let enemy = databus.enemys[i]
 

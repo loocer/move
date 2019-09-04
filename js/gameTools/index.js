@@ -51,13 +51,11 @@ export default class GameTools {
 
   checkIsFingerOnAir(player) {
     let l = Math.sqrt(Math.pow((this.x - player.x), 2) + Math.pow((this.y - player.y ), 2))
-    console.log(l > Math.abs(this.width - player.width), l, Math.abs(this.width - player.width))
     return l > Math.abs(this.width - player.width); 
   }
   update(player) {
     if (!this.checkIsFingerOnAir(player)){
       databus.shootSpeed =10
-      console.log(878787)
       databus.gameTools = []
       delete this
     }

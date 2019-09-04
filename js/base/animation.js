@@ -59,13 +59,21 @@ export default class Animation extends Sprite {
 
   // 将播放中的帧绘制到canvas上
   aniRender(ctx) {
+    console.log(this.width,'lllllllllllllllllllll')
     ctx.drawImage(
       this.imgList[this.index],
-      this.x,
-      this.y,
-      this.width  * 1.2,
-      this.height * 1.2
+      0, 0, 100, 100,
+      this.x-20,
+      this.y - 20,
+      40, 40
     )
+    // ctx.drawImage(
+    //   this.imgList[this.index],
+    //   this.x,
+    //   this.y,
+    //   this.width  * 10,
+    //   this.height * 10
+    // )
   }
 
   // 播放预定的帧动画
