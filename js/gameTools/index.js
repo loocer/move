@@ -23,7 +23,9 @@ export default class GameTools {
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT
   }
-
+  checkIsFingerOnEnemy(enemy) {
+    return false
+  }
   drawToCanvas(ctx) {
     // if (!this.visible)
     //   return

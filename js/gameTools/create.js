@@ -1,6 +1,7 @@
 import Animation from '../base/animation'
 import DataBus from '../databus'
 import GameTool from './index'
+import Boom from './boom'
 const ENEMY_IMG_SRC = 'images/enemy.png'
 const ENEMY_IMG_SRC2 = 'images/hero.png'
 const ENEMY_WIDTH = 40
@@ -15,9 +16,9 @@ export default class Create {
   }
   createEnemy1() {
     let enemy = new GameTool()
-    
+    let boom = new Boom()
       // let enemy = databus.pool.getItemByClass('enemy', enemy)
     databus.gameTools.push(enemy)
-    
+    databus.gameTools.push(boom)
   }
 }

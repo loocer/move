@@ -8,9 +8,8 @@ const __ = {
 }
 
 let databus = new DataBus()
-
-
-
+let atlas = new Image()
+atlas.src = 'images/on-fire.png'
 export default class Enemy extends Animation {
   constructor(ENEMY_IMG_SRC, ENEMY_WIDTH, ENEMY_HEIGHT) {
     super(ENEMY_IMG_SRC, ENEMY_WIDTH, ENEMY_HEIGHT)
@@ -20,6 +19,8 @@ export default class Enemy extends Animation {
   init(speed, lifeValue,x ,y ) {
     this.x = x
     this.y = y
+    this.frame = 0
+    this.showLong = 1e3
     this.score = lifeValue
     this.lifeValue = lifeValue
     this[__.speed] = speed
@@ -29,13 +30,28 @@ export default class Enemy extends Animation {
   // 预定义爆炸的帧动画
   initExplosionAnimation() {
     let frames = []
-    const EXPLO_IMG_PREFIX  = 'images/explosion'
-    const EXPLO_FRAME_COUNT = 400
-    for ( let i = 0;i < EXPLO_FRAME_COUNT;i++ ) {
-      // frames.push(EXPLO_IMG_PREFIX + 1 + '.png')
-      frames.push('images/bg1.jpg')
-    }
+    // const EXPLO_IMG_PREFIX  = 'images/explosion'
+    // const EXPLO_FRAME_COUNT = 400
+    // for ( let i = 0;i < EXPLO_FRAME_COUNT;i++ ) {
+    //   // frames.push(EXPLO_IMG_PREFIX + 1 + '.png')
+    //   frames.push('images/bg1.jpg')
+    // }
+    frames.push('images/bg1.jpg')
     this.initFrames(frames)
+  }
+  playOvers(ctx){
+    if (this.frame < this.showLong){
+      ctx.drawImage(
+        atlas,
+        0, 0, 100, 100,
+        this.x - 20,
+        this.y - 20,
+        40, 40
+      )
+    }else{
+      this.visible = false
+    }
+    this.frame++
   }
   getPosition(player){
     let px = player.x + player.width/2
@@ -63,6 +79,7 @@ export default class Enemy extends Animation {
       this
     )
   }
+
   // 每一帧更新子弹位置
   update(player) {
     this.getPosition(player)

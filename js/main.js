@@ -101,7 +101,7 @@ export default class Main {
           
           if (--enemy.lifeValue==0){
             flag = true
-            enemy.playAnimation()
+            enemy.playOvers(ctx)
             databus.score += enemy.score
             bullet.visible = false
           }
@@ -118,7 +118,12 @@ export default class Main {
     })
     for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
       let enemy = databus.enemys[i]
-
+      databus.gameTools.forEach((item) => {
+        if(item.checkIsFingerOnEnemy(enemy)){
+          enemy.visible = false
+        }
+      })
+    
       if ( this.player.isCollideWith(enemy) ) {
         databus.gameOver = true
 
@@ -181,21 +186,7 @@ export default class Main {
       this.handShank.tx = databus.x + databus.transX - 60
       this.handShank.ty = databus.y + databus.transY - 60
     }
-    // } else if (this.handShank.touched && !this.handShank.isInsite){
-      //触摸地方不在手柄里
-      // let opx = this.handShank.x + this.handShank.width / 2
-      // let opy = this.handShank.y + this.handShank.height / 2
-      // let tachX = databus.x + databus.transX
-      // let tachY = databus.y + databus.transX
-      // let l = Math.sqrt(Math.pow(opx - tachX, 2) + Math.pow(opy - tachY, 2))/60;
-      // let x = (tachX - opx + l * opx) / l
-      // let y = (tachY - opy + l * opy) / l
-      // console.log('0000000000000000000',x,y)
-      // this.handShank.tx = x
-      // this.handShank.ty = y
-      // let scop = Math.sqrt(Math.pow((databus.x + databus.transX - opx), 2) + Math.pow((databus.y + databus.transY - opy),2))
-      // let x = 
-    // }
+  
     let pobj = {}
     pobj.x1 = databus.x + databus.transX//点击
     pobj.x2 = this.handShank.x + 60
@@ -225,8 +216,6 @@ export default class Main {
    */
   render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    
-    
     
     // ctx.translate(0, -1)
     this.bg.render(ctx)
