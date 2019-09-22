@@ -54,6 +54,7 @@ export default class Bullet extends Sprite {
       ||this.x > screenWidth
      )
     // databus.removeBullets(this)
+      databus.pools.recover('bullet', this)
     delete this
   }
 }

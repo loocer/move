@@ -55,7 +55,26 @@ function initEle(data) {
   //   context.drawImage(returnImage, 80, 1120, 100, 100);
   // };
 }
-
+let addNewScore= (data)=>{
+  var kvDataList = new Array();
+  kvDataList.push({
+    key: "score",
+    value: data.score+''
+  });
+  wx.setUserCloudStorage({
+    KVDataList: kvDataList
+  })
+  console.log('-------1111111111111111');
+  console.log(data.score);
+  wx.getFriendCloudStorage({
+    keyList: ['score'],
+    success: function (res) {
+      console.log('---------===============');
+      console.log(res);
+      //TODO:进行数据绑定更新
+    }
+  });
+}
 function initRanklist(list) {
   // 至少绘制6个
   let length = Math.max(list.length, 6);
@@ -242,7 +261,9 @@ function getGroupRanking(ticket) {
 }
 // getGroupRanking();
 wx.onMessage(data => {
-  initEle(data);
+  console.log('---------------------------------')
+  console.log(data)
+  addNewScore(data.data);
   // if (data.type === 'friends') {
   //   // sharedCanvas.height = screenHeight;
   //   getFriendsRanking();

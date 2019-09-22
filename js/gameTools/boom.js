@@ -20,7 +20,7 @@ export default class Boom {
     this.y = 400
     this.isBoom = false
     this.boomTime = 1
-    this.maxBoomTime = 30
+    this.maxBoomTime = 300//最大爆炸范围
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT
   }
@@ -28,7 +28,7 @@ export default class Boom {
   drawToCanvas(ctx) {
     // if (!this.visible)
     //   return
-    if (!this.isBoom){
+    if (!this.isBoom){//will booming
       ctx.save()
       ctx.translate(this.x, this.y)
       if (databus.frame % 40 < 20) {
@@ -42,11 +42,11 @@ export default class Boom {
         this.height
       )
       
-    }else{
+    } else {////be booming
       ctx.save()
       ctx.translate(this.x, this.y)
       
-      for(let i=0;i<20;i++){
+      for(let i=0;i<40;i++){
         let aplte = i/40
         ctx.beginPath();
         ctx.strokeStyle = "rgba(206, 118, 46, " + aplte+")";
@@ -60,10 +60,10 @@ export default class Boom {
       }
       ctx.drawImage(
         atlas4,
-        -this.width / 2 - (this.boomTime / 2 + 5)/2,
-        -this.height/2 - (this.boomTime / 2 + 5) / 2,
-        this.boomTime / 2 + 5,
-        this.boomTime / 2 + 5
+        -this.width / 2 - (this.boomTime + 5)/2,
+        -this.height/2 - (this.boomTime  + 5) / 2,
+        this.boomTime  + 5,
+        this.boomTime  + 5
       )
     }
     ctx.restore()
@@ -78,11 +78,10 @@ export default class Boom {
   checkIsFingerOnEnemy(enemy) {
     if (this.isBoom){
       let l = Math.sqrt(Math.pow((this.x - enemy.x), 2) + Math.pow((this.y - enemy.y), 2))
-      return l < this.boomTime+20;
+      return l < this.boomTime + 25 + enemy.width/2;
     }else{
       return false
     }
-    
   }
 
   checkIsFingerOnAir(player) {
@@ -94,7 +93,7 @@ export default class Boom {
       this.isBoom = true
     }
     if(this.isBoom){
-      this.boomTime+=0.2
+      this.boomTime+=1
     }
     if (this.boomTime > this.maxBoomTime){
       this.visible = true

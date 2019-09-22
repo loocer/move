@@ -2,8 +2,13 @@ import Animation from '../base/animation'
 import DataBus from '../databus'
 import Enemy from './enemy'
 import { getRoteImg } from '../utils/index'
-const ENEMY_IMG_SRC = 'images/enemy.png'
-const ENEMY_IMG_SRC2 = 'images/hero.png'
+import {
+  enImgs1,
+  enImgs2,
+  enImgs3,
+  del1s1,
+  del1s2,
+} from '../utils/common.js'
 const ENEMY_WIDTH = 40
 const ENEMY_HEIGHT = 40
 let databus = new DataBus()
@@ -19,94 +24,90 @@ export default class CreateEnemyt {
     ]
   }
   createEnemy(){
+    // this.createEnemy1()
+    // this.createEnemy1()
+    // this.createEnemy1()
     for (let i in this.createEnemys){
-      if (databus.createEnemysStatus == +i+1) {
-        if (databus.frame % 100 == 0) {
-          this.createEnemys[i]()
-        }
-      }
+      // if (databus.createEnemysStatus == +i+1) {
+        this.createEnemys[i]()
+        // if (databus.frame % 1e3 == 0) {
+        //   this.createEnemys[i]()
+        // }
+      // }
     }
   }
   createEnemy1() {
-    for (let i = 0; i < ~~(Math.random() * 10);i++){
-      let enemy = new Enemy(
-        ENEMY_IMG_SRC,
-        ENEMY_WIDTH,
-        ENEMY_HEIGHT
-      )
+    for (let i = 0; i < ~~(Math.random() * 3);i++){
+      let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
       enemy.init(
-        .3,
         1,
+        4,
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
-        temp
+        temp,
+        enImgs1,
+        del1s1
       )
-      // let enemy = databus.pool.getItemByClass('enemy', enemy)
-
       databus.enemys.push(enemy)
     }
   }
   createEnemy2() {
-    for (let i = 0; i < ~~(Math.random() * 10); i++) {
-      let enemy = new Enemy(
-        ENEMY_IMG_SRC2,
-        ENEMY_WIDTH,
-        ENEMY_HEIGHT
-      )
+    for (let i = 0; i < ~~(Math.random() * 3); i++) {
+      let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
       enemy.init(
-        .3,
-        2,
+        1,
+        4,
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
-        temp
+        temp,
+        enImgs2,
+        del1s2
       )
-      // let enemy = databus.pool.getItemByClass('enemy', enemy)
-
       databus.enemys.push(enemy)
     }
-
-    // let enemy = new Enemy(
-    //   ENEMY_IMG_SRC,
-    //   ENEMY_WIDTH,
-    //   ENEMY_HEIGHT
-    // )
-    // let temp = rnd(0, window.innerWidth - ENEMY_WIDTH)
-    // // console.log(temp,'--------------------')
-    // enemy.init(
-    //   .3,
-    //   1,
-    //   temp + databus.transX,
-    //   Math.round(Math.random()) ? window.innerHeight + ENEMY_WIDTH + databus.transY : 0
-    // )
   }
   createEnemy3() {
-    for (let i = 0; i < ~~(Math.random() * 10); i++) {
-      let enemy = new Enemy(
-        ENEMY_IMG_SRC,
-        ENEMY_WIDTH,
-        ENEMY_HEIGHT
-      )
+    for (let i = 0; i < ~~(Math.random() * 3); i++) {
+      let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
-      let temp1 = rnd(databus.transX, window.innerWidth + ENEMY_WIDTH + databus.transX)
-      if (Math.round(Math.random())){
-        enemy.init(
-          .3,
-          5,
-          Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
-          temp
-        )
-      }else{
-        enemy.init(
-          .3,
-          3,
-          temp1,
-          Math.round(Math.random()) ? window.innerHeight + ENEMY_HEIGHT + databus.transY : 0,
-        )
-      }
-      
-      // let enemy = databus.pool.getItemByClass('enemy', enemy)
-
+      enemy.init(
+        1,
+        4,
+        Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
+        temp,
+        enImgs3,
+        del1s2
+      )
       databus.enemys.push(enemy)
     }
   }
+  // createEnemy3() {
+  //   for (let i = 0; i < ~~(Math.random() * 30); i++) {
+  //     let enemy = new Enemy(
+  //       ENEMY_IMG_SRC,
+  //       ENEMY_WIDTH,
+  //       ENEMY_HEIGHT
+  //     )
+  //     let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
+  //     let temp1 = rnd(databus.transX, window.innerWidth + ENEMY_WIDTH + databus.transX)
+  //     if (Math.round(Math.random())){
+  //       enemy.init(
+  //         .3,
+  //         5,
+  //         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
+  //         temp,
+  //         enImgs3
+  //       )
+  //     }else{
+  //       enemy.init(
+  //         .3,
+  //         3,
+  //         temp1,
+  //         Math.round(Math.random()) ? window.innerHeight + ENEMY_HEIGHT + databus.transY : 0,
+  //       )
+  //     }
+      
+  //     databus.enemys.push(databus.pools.getItemByClass('enemy', Enemy))
+  //   }
+  // }
 }

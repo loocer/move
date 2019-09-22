@@ -67,7 +67,7 @@ export default class HandShank {
     ctx.save()
     ctx.translate(this.x + this.width/2, this.y + this.height/2)
     // console.log(player.rotate)
-    ctx.rotate(player.rotate * Math.PI / 180)
+    ctx.rotate(this.rotate * Math.PI / 180)
     ctx.drawImage(
       atlas4,
       0, 0, 300, 184,

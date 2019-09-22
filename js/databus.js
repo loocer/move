@@ -1,7 +1,6 @@
 import Pool from './base/pool'
-
+import Pools from './base/pools'
 let instance
-
 const screenWidth = window.innerWidth 
 const screenHeight = window.innerHeight 
 /**
@@ -9,9 +8,6 @@ const screenHeight = window.innerHeight
  */
 export default class DataBus {
   constructor() {
-    console.log('------------555555555-------------')
-    console.log(screenWidth)
-    console.log(screenHeight)
     this.transX = 0
     this.transY = 0
 
@@ -37,7 +33,7 @@ export default class DataBus {
     instance = this
 
     this.pool = new Pool()
-
+    this.pools = new Pools()
     this.reset()
   }
 
@@ -55,10 +51,11 @@ export default class DataBus {
     this.playTempY = screenHeight / 2
     this.frame      = 0
     this.score      = 0
-    this.shootSpeed =2
+    this.shootSpeed =10
     this.bullets    = []
     this.enemys     = []
     this.gameTools = []
+    this.corpses = []
     this.animations = []
     this.gameOver   = false
     ctx&&ctx.translate(this.transX, this.transY)
@@ -77,7 +74,12 @@ export default class DataBus {
 
     this.pool.recover('enemy', enemy)
   }
+  removeEnemeyPlus(enemy) {
 
+    enemy.visible = false
+
+    this.pools.recover('enemy', enemy)
+  }
   /**
    * 回收子弹，进入对象池
    * 此后不进入帧循环

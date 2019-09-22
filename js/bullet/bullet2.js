@@ -2,13 +2,15 @@ import Sprite from '../base/sprite'
 import DataBus from '../databus'
 import { getRoteImg } from '../utils/index'
 const BULLET_IMG_SRC = 'images/bullet.png'
+import {
+  groundWidth,
+  groundHeight,
+  screenWidth,
+  screenHeight
+} from '../utils/common'
 const BULLET_WIDTH = 16
 const BULLET_HEIGHT = 30
-const screenWidth = window.innerWidth
-const screenHeight = window.innerHeight
-const __ = {
-  speed: Symbol('speed')
-}
+
 
 let databus = new DataBus()
 export default class Bullet extends Sprite {
@@ -20,34 +22,39 @@ export default class Bullet extends Sprite {
     let centerY = this.y + this.height / 2
     let tempx = Math.abs((x - centerX) / 20) > 2 ? 1 : .5
     let tempy = Math.abs((y - centerY) / 20) > 2 ? 1 : .5
+    if(tempx == tempy&&tempx == .5){
+      tempx = 1
+      tempy = 1
+    }
     databus.moveX = x > centerX ? tempx : -tempx
     databus.moveY = y > centerY ? tempy : -tempy
+    
   }
   init(x, y, speed, mx, my) {
     this.x = x
     this.y = y
     this.moveX = mx
     this.moveY = my
-    this[__.speed] = speed
+    this.speed = speed
 
     this.visible = true
   }
-  drawToCanvas(ctx) {
-    if (!this.visible)
-      return
-    ctx.save()
-    ctx.translate(this.x, this.y)
-    ctx.rotate(this.rotate * Math.PI / 180)
-    ctx.beginPath()
-    ctx.shadowBlur = 2;
-    ctx.shadowColor = '#f30e0e'
-    ctx.fillStyle = '#fff' // 矩形颜色
-    ctx.fillRect(-3, -30, 3, 30)
-    ctx.stroke()
+  // drawToCanvas(ctx) {
+  //   if (!this.visible)
+  //     return
+  //   ctx.save()
+  //   ctx.translate(this.x, this.y)
+  //   ctx.rotate(this.rotate * Math.PI / 180)
+  //   ctx.beginPath()
+  //   ctx.shadowBlur = 2;
+  //   ctx.shadowColor = '#f30e0e'
+  //   ctx.fillStyle = '#fff' // 矩形颜色
+  //   ctx.fillRect(-3, -30, 3, 30)
+  //   ctx.stroke()
 
-    ctx.restore()
+  //   ctx.restore()
 
-  }
+  // }
   // 每一帧更新子弹位置
   update() {
     getRoteImg({
@@ -58,16 +65,17 @@ export default class Bullet extends Sprite {
     },
       this
     )
-    this.y += this.moveY * this[__.speed]
-    this.x += this.moveX * this[__.speed]
+    this.y += this.moveY * this.speed
+    this.x += this.moveX * this.speed
 
     // 超出屏幕外回收自身
     if (this.y < 0
-      || this.y > screenHeight
+      || this.y > groundHeight
       || this.x < 0
-      || this.x > screenWidth
+      || this.x > groundWidth
     )
+      databus.pools.recover('bullet', this)
       // databus.removeBullets(this)
-      delete this
+      // delete this
   }
 }

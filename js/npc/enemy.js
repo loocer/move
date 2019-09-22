@@ -1,57 +1,49 @@
 import Animation from '../base/animation'
 import DataBus   from '../databus'
+import Corpses from './corpses.js'
 import { getRoteImg } from '../utils/index'
 
-
-const __ = {
-  speed: Symbol('speed')
-}
+const ENEMY_IMG_SRC = 'images/iPhone XS.png'
+const ENEMY_WIDTH = 50
+const ENEMY_HEIGHT = 50
 
 let databus = new DataBus()
 let atlas = new Image()
 atlas.src = 'images/on-fire.png'
 export default class Enemy extends Animation {
-  constructor(ENEMY_IMG_SRC, ENEMY_WIDTH, ENEMY_HEIGHT) {
+  constructor() {
     super(ENEMY_IMG_SRC, ENEMY_WIDTH, ENEMY_HEIGHT)
     this.initExplosionAnimation()
   }
 
-  init(speed, lifeValue,x ,y ) {
+  init(speed, lifeValue, x, y, srcImg, del1s ) {
     this.x = x
     this.y = y
+    this.srcImg = srcImg
+    this.del1s = del1s
     this.frame = 0
-    this.showLong = 1e3
     this.score = lifeValue
     this.lifeValue = lifeValue
-    this[__.speed] = speed
+    this.speed = speed
     this.visible = true
+    this.onlive = true
   }
   
   // 预定义爆炸的帧动画
   initExplosionAnimation() {
-    let frames = []
+    // let frames = []
     // const EXPLO_IMG_PREFIX  = 'images/explosion'
     // const EXPLO_FRAME_COUNT = 400
     // for ( let i = 0;i < EXPLO_FRAME_COUNT;i++ ) {
     //   // frames.push(EXPLO_IMG_PREFIX + 1 + '.png')
     //   frames.push('images/bg1.jpg')
     // }
-    frames.push('images/bg1.jpg')
-    this.initFrames(frames)
+    // // frames.push('images/bg1.jpg')
+    // this.initFrames(frames)
   }
-  playOvers(ctx){
-    if (this.frame < this.showLong){
-      ctx.drawImage(
-        atlas,
-        0, 0, 100, 100,
-        this.x - 20,
-        this.y - 20,
-        40, 40
-      )
-    }else{
-      this.visible = false
-    }
-    this.frame++
+  playOvers(){
+    let c = new Corpses(atlas, this.x - 20, this.y - 20, this.del1s)
+    databus.corpses.push(c)
   }
   getPosition(player){
     let px = player.x + player.width/2
@@ -61,15 +53,14 @@ export default class Enemy extends Animation {
     let tempx = 0
     let tempy = 0
     if(lpx>lpy){
-      tempx = player.x > this.x ? this.x+this[__.speed]:this.x-this[__.speed]
+      tempx = player.x > this.x ? this.x+this.speed:this.x-this.speed
       tempy = player.y > this.y ? this.y + lpy / lpx : this.y - lpy / lpx
     }else{
-      tempy= player.y > this.y ? this.y+this[__.speed] : this.y-this[__.speed]
+      tempy= player.y > this.y ? this.y+this.speed : this.y-this.speed
       tempx = player.x > this.x ? this.x + lpx / lpy : this.x - lpx / lpy
     }
     this.x = tempx 
     this.y = tempy 
-    // console.log(this.x, tempx * this[__.speed], tempx, this[__.speed],'+++++++++++++++++++')
     getRoteImg({
       x1 : this.x,
       x2 : player.x,
@@ -82,11 +73,15 @@ export default class Enemy extends Animation {
 
   // 每一帧更新子弹位置
   update(player) {
+    this.img.src = this.srcImg[this.lifeValue]
+    this.width = ENEMY_WIDTH + this.lifeValue*10
+    this.height = ENEMY_HEIGHT + this.lifeValue * 10
     this.getPosition(player)
-    // this.y += this[__.speed]
+    // this.y += this.speed
     // 对象回收
-    if ( this.y > window.innerHeight + this.height )
-      delete this
-      // databus.removeEnemey(this)
+    // if ( this.y > window.innerHeight + this.height )
+    //   // databus.pools.recover('enemy', this)
+    //   delete this
+    //   // databus.removeEnemey(this)
   }
 }

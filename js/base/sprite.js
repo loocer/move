@@ -44,6 +44,10 @@ export default class Sprite {
       this.width,
       this.height
     )
+    // ctx.beginPath();
+    // ctx.lineWidth = 5;
+    // ctx.arc(0, 0, 15+2 * this.lifeValue , 0, 2 * Math.PI);
+    // ctx.stroke();
     ctx.restore()
 
   }

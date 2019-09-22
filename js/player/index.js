@@ -1,14 +1,15 @@
 import Sprite   from '../base/sprite'
-import Bullet from './bullet2'
+import Bullet from '../bullet/bullet2'
 import DataBus  from '../databus'
+import Halo from './halo'
 
 const screenWidth    = window.innerWidth
 const screenHeight   = window.innerHeight
 
 // 玩家相关常量设置
-const PLAYER_IMG_SRC = 'images/hero.png'
-const PLAYER_WIDTH   = 80
-const PLAYER_HEIGHT  = 80
+const PLAYER_IMG_SRC = 'images/player.png'
+const PLAYER_WIDTH   = 50
+const PLAYER_HEIGHT  = 50
 
 let databus = new DataBus()
 
@@ -19,11 +20,13 @@ export default class Player extends Sprite {
     // 玩家默认处于屏幕底部居中位置
     this.x = databus.playTempX
     this.y = databus.playTempY
+
+    this.lifeValue = 5
     // this.x = 0
     // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了
     this.touched = false
-
+    
     this.bullets = []
 
     // 初始化事件监听
@@ -115,7 +118,18 @@ export default class Player extends Sprite {
     let mx = databus.shootX
     let my = databus.shootY
     if (mx == 0 && my==0){}else{
-      let bullet = databus.pool.getItemByClass('bullet', Bullet)
+      // let bullet = databus.pools.getItemByClass('bullet', Bullet)
+      // bullet.init(
+      //   this.x,
+      //   this.y,
+      //   databus.shootSpeed,
+      //   mx,
+      //   my
+      // )
+      // databus.bullets.push(bullet)
+      // let bullet = databus.pool.getItemByClass('bullet', Bullet)
+      // let bullet = databus.pools.getItemByClass('bullet', Bullet)
+      let bullet = new Bullet()
       bullet.init(
         this.x,
         this.y,

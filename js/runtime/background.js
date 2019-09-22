@@ -1,11 +1,13 @@
 import Sprite from '../base/sprite'
+import { 
+  groundWidth,
+  groundHeight,
+  } from '../utils/common.js'
 
-const screenWidth  = 1200
-const screenHeight = 800
 
 const BG_IMG_SRC   = 'images/bg.jpg'
-const BG_WIDTH     = 3000
-const BG_HEIGHT    = 3000
+const BG_WIDTH = groundWidth
+const BG_HEIGHT = groundHeight
 
 /**
  * 游戏背景类
@@ -23,7 +25,7 @@ export default class BackGround extends Sprite {
   update() {
     this.top += 5
 
-    if ( this.top >= screenHeight )
+    if (this.top >= groundHeight )
       this.top = 0
   }
 
@@ -61,12 +63,12 @@ export default class BackGround extends Sprite {
       this.img,
       0,
       0,
-      screenWidth,
-      screenHeight,
+      groundWidth,
+      groundHeight,
       0,
       0,
-      screenWidth,
-      screenHeight
+      groundWidth,
+      groundHeight
     )
   }
 }

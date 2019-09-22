@@ -8,20 +8,37 @@ import Music      from './runtime/music'
 import { getRoteImg }  from './utils/index'
 import DataBus    from './databus'
 import Gamecreate from './gameTools/create'
+import {
+  groundWidth,
+  groundHeight,
+  screenWidth,
+  screenHeight
+} from './utils/common'
 
-const screenWidth = window.innerWidth 
-const screenHeight = window.innerHeight
-const wground = 1200
-const hground = 800
-canvas.width = screenWidth
-canvas.height = screenHeight
-let ctx   = canvas.getContext('2d')
+
+let ctx = canvas.getContext('2d')
+const wground = groundWidth
+const hground = groundHeight
+// canvas.width = screenWidth
+// canvas.height = screenHeight
+
+let sysInfo = wx.getSystemInfoSync(), width = sysInfo.windowWidth, height = sysInfo.windowHeight;
+
+canvas.style.width = width + "px";
+canvas.style.height = height + "px";
+canvas.height = height * window.devicePixelRatio;
+canvas.width = width * window.devicePixelRatio;
+ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+
+
 let openDataContext = wx.getOpenDataContext()
 let sharedCanvas = openDataContext.canvas
 
 
 let databus = new DataBus(ctx)
 let createEnemy = new CreateEnemyt(ctx)
+let showUserStorageFlag = true
 /**
  * 游戏主函数
  */
@@ -48,7 +65,6 @@ export default class Main {
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this.righthandshank)
     this.music    = new Music()
-
     this.bindLoop     = this.loop.bind(this)
     this.hasEventBind = false
     this.gamecreate = new Gamecreate()
@@ -67,7 +83,7 @@ export default class Main {
    * 帧数取模定义成生成的频率
    */
   enemyGenerate() {
-    if (databus.frame % 2 === 0 ) {
+    if (databus.frame % 1e2 ===0 ) {
       
       createEnemy.createEnemy()
       // enemy.init(6)
@@ -96,37 +112,30 @@ export default class Main {
       let temp = []
       for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
         let enemy = databus.enemys[i]
-         let flag = false
         if ( !enemy.isPlaying && enemy.isCollideWith(bullet) ) {
-          
+          bullet.visible = false
+          databus.pools.recover('bullet', bullet)
           if (--enemy.lifeValue==0){
-            flag = true
-            enemy.playOvers(ctx)
             databus.score += enemy.score
-            bullet.visible = false
+            enemy.visible = false
+            enemy.playOvers()
+            databus.pools.recover('enemy',enemy)
           }
-          // that.music.playExplosion()
-
-          // break
-        }
-        if (!flag){
-          flag = false
-          temp.push(databus.enemys[i])
         }
       }
-      databus.enemys = temp
     })
     for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
       let enemy = databus.enemys[i]
       databus.gameTools.forEach((item) => {
         if(item.checkIsFingerOnEnemy(enemy)){
           enemy.visible = false
+          enemy.playOvers()
+          databus.pools.recover('enemy', enemy)
         }
       })
     
       if ( this.player.isCollideWith(enemy) ) {
         databus.gameOver = true
-
         break
       }
     }
@@ -159,13 +168,13 @@ export default class Main {
       && (this.player.x + databus.moveX) > 0
       && (this.player.x + databus.moveX) < wground - 40
     ) {
-      this.player.x += databus.moveX
+      this.player.x += (databus.moveX*2)
     }
     if (this.handShank.touched
       && (this.player.y + databus.moveY) > 0
       && (this.player.y + databus.moveY) < hground - 40
     ){
-      this.player.y += databus.moveY
+      this.player.y += (databus.moveY*2)
     }
     if (this.handShank.touched
       && (this.player.x + databus.moveX) > screenWidth / 2
@@ -192,7 +201,7 @@ export default class Main {
     pobj.x2 = this.handShank.x + 60
     pobj.y1 = (databus.y + databus.transY)
     pobj.y2 = this.handShank.y + 60
-    getRoteImg(pobj, this.player)
+    getRoteImg(pobj, this.handShank)
   }
   // 游戏结束后的触摸事件处理逻辑
   touchEventHandler(e) {
@@ -231,7 +240,7 @@ export default class Main {
     this.cameraMove(ctx)
     
     this.player.drawToCanvas(ctx)
-
+    
     databus.animations.forEach((ani) => {
       if ( ani.isPlaying ) {
         ani.aniRender(ctx)
@@ -241,16 +250,23 @@ export default class Main {
     this.gameinfo.renderGameScore(ctx, databus.score)
     this.handShank.renderHandShank(ctx, this.player)
     this.righthandshank.renderHandShank(ctx)
+    databus.corpses.forEach((item) => {
+      if (item.visible) {
+        item.render(ctx)
+      }
+    })
     // ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
     // openDataContext.postMessage({
     //   data: databus,
     //   command: 'render'
     // })
     // 游戏结束停止帧循环
+    // this.gameinfo.renderGameOver(ctx, databus.score)
     if ( databus.gameOver ) {
       this.gameinfo.renderGameOver(ctx, databus.score)
-
+      showUserStorageFlag&&this.addNewScore()
       if ( !this.hasEventBind ) {
+        showUserStorageFlag = true
         this.hasEventBind = true
         this.touchHandler = this.touchEventHandler.bind(this)
         canvas.removeEventListener('touchstart',this.handShank.touchstartEvent)
@@ -258,14 +274,23 @@ export default class Main {
       }
     }
   }
-
+  addNewScore(){
+    showUserStorageFlag = false
+    ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
+    openDataContext.postMessage({
+      data: databus,
+      command: 'addNewScore'
+    })
+  }
   // 游戏逻辑更新主函数
   update() {
     if ( databus.gameOver )
       return;
 
     this.bg.update()
-
+    databus.corpses.forEach((item) => {
+      item.update()
+    })
     databus.bullets
            .concat(databus.enemys)
            .forEach((item) => {
@@ -277,18 +302,41 @@ export default class Main {
     this.enemyGenerate()
 
     this.collisionDetection()
-
+    
     if (databus.frame % 10 === 0 && this.righthandshank.touched ) {
 
       this.player.shoot()
       // this.music.playShoot()
     }
+    this.player.rotate = this.righthandshank.rotate
+    //--------------回收----------
+    let temp = []
+    databus.corpses.forEach((item) => {
+      if (item.visible) {
+        temp.push(item)
+      }
+    })
+    databus.corpses = temp
+    temp = []
+    databus.enemys.forEach((item) => {
+      if (item.visible) {
+        temp.push(item)
+      }
+    })
+    databus.enemys = temp
+    temp = []
+    databus.bullets.forEach((item) => {
+      if (item.visible) {
+        temp.push(item)
+      }
+    })
+    databus.bullets = temp
   }
 
   // 实现游戏帧循环
   loop() {
     databus.frame++
-
+    wx.triggerGC()
     this.update()
     this.render()
 
