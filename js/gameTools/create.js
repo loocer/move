@@ -18,7 +18,12 @@ export default class Create {
     let enemy = new GameTool()
     let boom = new Boom()
       // let enemy = databus.pool.getItemByClass('enemy', enemy)
-    databus.gameTools.push(enemy)
+   
     databus.gameTools.push(boom)
+    databus.gameTools.push(enemy)
+    for(let i=0;i<40;i++){
+      let boom = new Boom(rnd(0,1500),rnd(0,800))
+      databus.gameTools.push(boom)
+    }
   }
 }

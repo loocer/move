@@ -8,8 +8,8 @@ import {
   screenWidth,
   screenHeight
 } from '../utils/common'
-const BULLET_WIDTH = 16
-const BULLET_HEIGHT = 30
+const BULLET_WIDTH = 3
+const BULLET_HEIGHT = 20
 
 
 let databus = new DataBus()

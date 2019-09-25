@@ -18,7 +18,7 @@ export default class GameTools {
     // this.x = 100
     this.x = 100
     this.y = 100
-
+    this.visible = true
     
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT

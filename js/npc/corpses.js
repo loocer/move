@@ -3,20 +3,15 @@ import DataBus from '../databus'
 import { getRoteImg } from '../utils/index'
 
 
-const __ = {
-  speed: Symbol('speed')
-}
 
 let databus = new DataBus()
-let atlas = new Image()
-atlas.src = 'images/bg1.jpg'
 export default class Corpses {
   constructor(ATLAS, X, Y, del1s) {
-    console.log(del1s)
+    // console.log(del1s)
     this.frame = 0
     this.del1s = del1s
     this.atlas = del1s[0]
-    this.showLong = 24
+    this.showLong = 1600
     this.visible = true
     this.x = X
     this.y = Y
@@ -35,7 +30,7 @@ export default class Corpses {
     // // ctx.shadowColor = "#ce762ea1";
     // ctx.arc(this.x - 20,  this.y - 20,20, 0, 2 * Math.PI);
     ctx.save()
-    // ctx.translate(this.x, this.y)
+    ctx.translate(this.x, this.y)
     // ctx.rotate(this.rotate * Math.PI / 180)
     // ctx.drawImage(
     //   atlas,
@@ -53,17 +48,17 @@ export default class Corpses {
     // ctx.stroke();
       ctx.drawImage(
         this.atlas ,
-        0, 0, 160,160,
-        this.x,
-        this.y,
-        100,100
+        0, 0, 100,100,
+        0,
+        0,
+        40,40
       )
     ctx.restore()
   }
   update() {
     this.frame++
     // console.log(this.del1s, ~~(this.frame / 10), '-------------', this.del1s[~~(this.frame / 10)])
-    this.atlas = this.del1s[~~(this.frame/8)]
+    // this.atlas = this.del1s[~~(this.frame/8)]
     if (this.frame > this.showLong) {
       this.visible = false
     } 

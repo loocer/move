@@ -9,8 +9,8 @@ import {
   del1s1,
   del1s2,
 } from '../utils/common.js'
-const ENEMY_WIDTH = 40
-const ENEMY_HEIGHT = 40
+const ENEMY_WIDTH = 50
+const ENEMY_HEIGHT = 50
 let databus = new DataBus()
 function rnd(start, end) {
   return Math.floor(Math.random() * (end - start) + start)
@@ -19,8 +19,8 @@ export default class CreateEnemyt {
   constructor() {
     this.createEnemys = [
       this.createEnemy1,
-      this.createEnemy2,
-      this.createEnemy3
+      // this.createEnemy2,
+      // this.createEnemy3
     ]
   }
   createEnemy(){
@@ -37,15 +37,15 @@ export default class CreateEnemyt {
     }
   }
   createEnemy1() {
-    for (let i = 0; i < ~~(Math.random() * 3);i++){
+    for (let i = 0; i < ~~(Math.random() * 30);i++){
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
       enemy.init(
         1,
-        4,
+        1,
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
         temp,
-        enImgs1,
+        [enImgs1[0], enImgs2[0]],
         del1s1
       )
       databus.enemys.push(enemy)
@@ -56,7 +56,7 @@ export default class CreateEnemyt {
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
       enemy.init(
-        1,
+        .3,
         4,
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
         temp,
@@ -71,7 +71,7 @@ export default class CreateEnemyt {
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
       enemy.init(
-        1,
+        .2,
         4,
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
         temp,

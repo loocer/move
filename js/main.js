@@ -168,13 +168,13 @@ export default class Main {
       && (this.player.x + databus.moveX) > 0
       && (this.player.x + databus.moveX) < wground - 40
     ) {
-      this.player.x += (databus.moveX*2)
+      this.player.x += (databus.moveX)
     }
     if (this.handShank.touched
       && (this.player.y + databus.moveY) > 0
       && (this.player.y + databus.moveY) < hground - 40
     ){
-      this.player.y += (databus.moveY*2)
+      this.player.y += (databus.moveY)
     }
     if (this.handShank.touched
       && (this.player.x + databus.moveX) > screenWidth / 2
@@ -211,12 +211,31 @@ export default class Main {
     let y = e.touches[0].clientY
 
     let area = this.gameinfo.btnArea
-
+    
     if (   x >= area.startX
         && x <= area.endX
         && y >= area.startY
-        && y <= area.endY  )
+        && y <= area.endY  ){
       this.restart()
+    }
+      
+    let share = this.gameinfo.btnShare
+    if (x >= share.startX
+      && x <= share.endX
+      && y >= share.startY
+      && y <= share.endY){
+      this.restart()
+      wx.shareAppMessage({
+        title: '转发标题',
+        imageUrl: canvas.toTempFilePathSync({
+          destWidth: 500,
+          destHeight: 400
+        })
+        // imageUrl: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=606551735,1600986175&fm=26&gp=0.j'
+      })
+      
+      }
+      
   }
 
   /**
@@ -235,11 +254,13 @@ export default class Main {
               item.drawToCanvas(ctx)
             })
     databus.gameTools.forEach((item)=>{
-      item.drawToCanvas(ctx)
+      if (item.visible) {
+        item.drawToCanvas(ctx)
+      }
     })
     this.cameraMove(ctx)
     
-    this.player.drawToCanvas(ctx)
+    
     
     databus.animations.forEach((ani) => {
       if ( ani.isPlaying ) {
@@ -255,6 +276,7 @@ export default class Main {
         item.render(ctx)
       }
     })
+    this.player.drawToCanvas(ctx)
     // ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
     // openDataContext.postMessage({
     //   data: databus,
@@ -331,6 +353,14 @@ export default class Main {
       }
     })
     databus.bullets = temp
+
+    temp = []
+    databus.gameTools.forEach((item) => {
+      if (item.visible) {
+        temp.push(item)
+      }
+    })
+    databus.gameTools = temp
   }
 
   // 实现游戏帧循环

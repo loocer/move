@@ -11,7 +11,7 @@ const __ = {
  * 简易的帧动画类实现
  */
 export default class Animation extends Sprite {
-  constructor(imgSrc, width, height) {
+  constructor(imgSrc='', width, height) {
     console.log(imgSrc, width, height)
     super(imgSrc, width, height)
 

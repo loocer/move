@@ -70,5 +70,8 @@ export default class BackGround extends Sprite {
       groundWidth,
       groundHeight
     )
+    // ctx.rect(0, 0, groundWidth, groundHeight);
+    // ctx.fillStyle = "#fff";
+    // ctx.fill();
   }
 }
