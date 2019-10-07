@@ -6,12 +6,15 @@ import { getRoteImg } from '../utils/index'
 
 let databus = new DataBus()
 export default class Corpses {
-  constructor(ATLAS, X, Y, del1s) {
+  constructor() {
     // console.log(del1s)
+   
+  }
+  init(ATLAS, X, Y, del1s){
     this.frame = 0
     this.del1s = del1s
     this.atlas = del1s[0]
-    this.showLong = 1600
+    this.showLong = 1000
     this.visible = true
     this.x = X
     this.y = Y
@@ -61,6 +64,7 @@ export default class Corpses {
     // this.atlas = this.del1s[~~(this.frame/8)]
     if (this.frame > this.showLong) {
       this.visible = false
+      databus.pools.recover('corpses', this)
     } 
   }
 }

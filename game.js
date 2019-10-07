@@ -2,7 +2,7 @@ import './js/libs/weapp-adapter'
 import './js/libs/symbol'
 
 import Main from './js/main'
-
+wx.setPreferredFramesPerSecond(60)
 new Main()
 // let context = canvas.getContext('2d')
 // let openDataContext = wx.getOpenDataContext()

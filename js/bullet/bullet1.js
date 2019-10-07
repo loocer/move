@@ -4,11 +4,13 @@ import { getRoteImg } from '../utils/index'
 const BULLET_IMG_SRC = 'images/bullet.png'
 const BULLET_WIDTH   = 16
 const BULLET_HEIGHT  = 30
-const screenWidth = window.innerWidth 
-const screenHeight = window.innerHeight 
-const __ = {
-  speed: Symbol('speed')
-}
+import {
+  groundWidth,
+  groundHeight,
+  screenWidth,
+  screenHeight
+} from '../utils/common'
+
 
 let databus = new DataBus()
 export default class Bullet extends Sprite {
@@ -24,15 +26,50 @@ export default class Bullet extends Sprite {
     databus.moveY = y > centerY ? tempy : -tempy
   }
   init(x, y, speed,mx,my) {
+    this.name='bullet1'
+    this.zx = x
+    this.zy = y 
     this.x = x
     this.y = y
+    databus.createSpeed = 15
     this.moveX = mx
     this.moveY = my
-    this[__.speed] = speed
-
+    this.speed = speed
+    this.points = []
     this.visible = true
   }
-
+  drawToCanvas(ctx) {
+   
+  ctx.save()
+    if (!this.visible)
+      return
+    
+    ctx.strokeStyle = '#fff';
+    for (let i=0;i<this.points.length;i++){
+      let rb = i / this.points.length *1
+      ctx.lineCap = "butt";
+      ctx.lineWidth = 2;
+      if(i==0){
+        ctx.beginPath();
+        ctx.moveTo(this.zx, this.zy)
+        ctx.globalAlpha = rb;
+        ctx.lineTo(this.points[0].x, this.points[0].y)
+        ctx.stroke();
+      }else{
+        if (i == this.points.length - 1) {
+          ctx.lineCap = "round";
+        }
+        ctx.beginPath();
+        ctx.globalAlpha = rb;
+        ctx.moveTo(this.points[i-1].x, this.points[i-1].y)
+        ctx.lineTo(this.points[i].x, this.points[i].y)
+        ctx.stroke();
+      }
+      
+    }
+    // ctx.globalAlpha = "1";
+    ctx.restore()
+  }
   // 每一帧更新子弹位置
   update() {
     getRoteImg({
@@ -43,18 +80,21 @@ export default class Bullet extends Sprite {
     },
       this
     )
-    this.y += this.moveY * this[__.speed]
-    this.x += this.moveX * this[__.speed]
-    
+    this.y += this.moveY * this.speed
+    this.x += this.moveX * this.speed
+    this.points.push({x:this.x,y:this.y})
     // 超出屏幕外回收自身
     // console.log(this.y, this.moveY,'====================')
     if (this.y < 0
-      || this.y > screenHeight
+      || this.y > groundHeight
       ||this.x < 0
-      ||this.x > screenWidth
-     )
-    // databus.removeBullets(this)
+      || this.x > groundWidth
+     ){
+      this.visible = false
       databus.pools.recover('bullet', this)
-    delete this
+     }
+    // databus.removeBullets(this)
+      
+    // delete this
   }
 }

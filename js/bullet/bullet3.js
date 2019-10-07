@@ -1,14 +1,12 @@
 import Sprite   from '../base/sprite'
 import DataBus  from '../databus'
 import { getRoteImg } from '../utils/index'
-const BULLET_IMG_SRC = 'images/bullet.png'
-const BULLET_WIDTH   = 16
+const BULLET_IMG_SRC = 'images/bullet1.png'
+const BULLET_WIDTH   = 10
 const BULLET_HEIGHT  = 30
 const screenWidth = window.innerWidth 
 const screenHeight = window.innerHeight 
-const __ = {
-  speed: Symbol('speed')
-}
+
 
 let databus = new DataBus()
 export default class Bullet extends Sprite {
@@ -26,9 +24,11 @@ export default class Bullet extends Sprite {
   init(x, y, speed,mx,my) {
     this.x = x
     this.y = y
+    databus.createSpeed = 10
+    this.name = 'bullet3'
     this.moveX = mx
     this.moveY = my
-    this[__.speed] = speed
+    this.speed = speed
 
     this.visible = true
   }
@@ -43,8 +43,8 @@ export default class Bullet extends Sprite {
     },
       this
     )
-    this.y += this.moveY * this[__.speed]
-    this.x += this.moveX * this[__.speed]
+    this.y += this.moveY * this.speed
+    this.x += this.moveX * this.speed
     
     // 超出屏幕外回收自身
     // console.log(this.y, this.moveY,'====================')

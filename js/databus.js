@@ -1,5 +1,6 @@
 import Pool from './base/pool'
 import Pools from './base/pools'
+
 let instance
 const screenWidth = window.innerWidth 
 const screenHeight = window.innerHeight 
@@ -16,7 +17,10 @@ export default class DataBus {
 
     this.x = 0
     this.y = 0
+    this.createSpeed = 10
+    this.bulletClass = {
 
+    }
     this.playTempX = screenWidth/2
     this.playTempY = screenHeight/2
 
@@ -31,14 +35,14 @@ export default class DataBus {
       return instance
 
     instance = this
-
-    this.pool = new Pool()
     this.pools = new Pools()
+    
     this.reset()
   }
 
   reset(ctx) {
-  
+    this.pools && this.pools.pool.clear();
+   
     this.moveX = 0//手柄操作位移
     this.moveY = 0
 
@@ -51,7 +55,9 @@ export default class DataBus {
     this.playTempY = screenHeight / 2
     this.frame      = 0
     this.score      = 0
-    this.shootSpeed =3
+    this.shootSpeed =4
+    this.playerSpeed = 2
+    this.bulletClass = null
     this.bullets    = []
     this.enemys     = []
     this.gameTools = []

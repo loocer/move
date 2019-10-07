@@ -1,5 +1,5 @@
 import Sprite   from '../base/sprite'
-import Bullet from '../bullet/bullet2'
+import Bullet from '../bullet/bullet1'
 import DataBus  from '../databus'
 import Halo from './halo'
 
@@ -21,7 +21,8 @@ export default class Player extends Sprite {
     this.x = databus.playTempX
     this.y = databus.playTempY
 
-    this.lifeValue = 5
+    this.lifeValue = 10
+    this.allLifeValue = 20
     // this.x = 0
     // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了
@@ -128,8 +129,8 @@ export default class Player extends Sprite {
       // )
       // databus.bullets.push(bullet)
       // let bullet = databus.pool.getItemByClass('bullet', Bullet)
-      // let bullet = databus.pools.getItemByClass('bullet', Bullet)
-      let bullet = new Bullet()
+      let bullet = databus.pools.getItemByClass(databus.bulletClass.name, databus.bulletClass.class)
+      // let bullet = new Bullet()
       bullet.init(
         this.x,
         this.y,

@@ -6,3 +6,6 @@ export function getRoteImg(pobj, acObj) {
     acObj.rotate = ~~(Math.atan(atanrotate) / Math.PI * 180) + 270
   }
 }
+export function rnd(start, end) {
+  return Math.floor(Math.random() * (end - start) + start)
+}

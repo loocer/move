@@ -24,6 +24,7 @@ export default class CreateEnemyt {
     ]
   }
   createEnemy(){
+    
     // this.createEnemy1()
     // this.createEnemy1()
     // this.createEnemy1()
@@ -37,11 +38,16 @@ export default class CreateEnemyt {
     }
   }
   createEnemy1() {
-    for (let i = 0; i < ~~(Math.random() * 30);i++){
+    // if (databus.score>30){
+    //   return 
+    // }
+    let num = databus.frame/100
+    console.log(num)
+    for (let i = 0; i < ~~(Math.random() * num);i++){
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
       enemy.init(
-        1,
+        2,
         1,
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
         temp,
@@ -52,31 +58,37 @@ export default class CreateEnemyt {
     }
   }
   createEnemy2() {
-    for (let i = 0; i < ~~(Math.random() * 3); i++) {
+    if (databus.score > 400 || databus.score<30) {
+      return
+    }
+    for (let i = 0; i < ~~(Math.random() * 6); i++) {
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
       enemy.init(
-        .3,
-        4,
-        Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
+        .5,
+        1,
+         0,
         temp,
-        enImgs2,
-        del1s2
+        [enImgs1[0], enImgs2[0]],
+        del1s1
       )
       databus.enemys.push(enemy)
     }
   }
   createEnemy3() {
-    for (let i = 0; i < ~~(Math.random() * 3); i++) {
+    if (databus.score < 100) {
+      return
+    }
+    for (let i = 0; i < ~~(Math.random() * 30); i++) {
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
-      let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
+      let temp = rnd(databus.transX, window.innerWidth + ENEMY_WIDTH + databus.transX)
       enemy.init(
         .2,
-        4,
-        Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
+        1,
         temp,
-        enImgs3,
-        del1s2
+        0,
+        [enImgs1[0], enImgs2[0]],
+        del1s1
       )
       databus.enemys.push(enemy)
     }

@@ -21,10 +21,10 @@ atlas4.src = 'images/on-way.png'
 // atlas4.src = 'images/bg1.jpg'
 
 export default class HandShank {
-  constructor(rightHandShank) {
+  constructor(temp) {
     // 玩家默认处于屏幕底部居中位置
     // this.x = 100
-    this.rightHandShank = rightHandShank
+    this.rightHandShank = temp.righthandshank
     this.x = 100
     this.y = screenHeight - PLAYER_HEIGHT - 40
 
@@ -46,7 +46,7 @@ export default class HandShank {
     this.touchstartEvent = null
     this.touchmoveEvent = null
     // 初始化事件监听
-    this.initEvent()
+    this.initEvent(temp.player)
   }
 
   renderHandShank(ctx, player) {
@@ -57,13 +57,13 @@ export default class HandShank {
       this.y,
       this.width, this.height
     )
-    ctx.drawImage(
-      atlas2,
-      0, 0, 300, 300,
-      this.tx,
-      this.ty,
-      this.width, this.height
-    )
+    // ctx.drawImage(
+    //   atlas2,
+    //   0, 0, 300, 300,
+    //   this.tx,
+    //   this.ty,
+    //   this.width, this.heighewfrevrevbgvtrervfce
+    // )
     ctx.save()
     ctx.translate(this.x + this.width/2, this.y + this.height/2)
     // console.log(player.rotate)
@@ -95,8 +95,8 @@ export default class HandShank {
     let centerY = ~~(this.y - databus.transY + this.height / 2)
     let tempx = Math.abs((x - centerX) / 20) > 2 ? 2 : 1
     let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : 1
-    databus.moveX = x > centerX ? tempx : -tempx
-    databus.moveY = y > centerY ? tempy : -tempy
+    // databus.moveX = x > centerX ? tempx : -tempx
+    // databus.moveY = y > centerY ? tempy : -tempy
 
   }
   /**
@@ -122,7 +122,7 @@ export default class HandShank {
    * 玩家响应手指的触摸事件
    * 改变战机的位置
    */
-  initEvent() {
+  initEvent(player) {
     this.touchstartEvent = (e) => {
       // wx.showToast({
       //   title: '成功',
@@ -136,13 +136,36 @@ export default class HandShank {
         let y = p.clientY
         //
         if (this.checkIsFingerOnAir(x, y)) {
+          // this.touched = true
+          // this.isInsite = true
+          // this.touchedx = x
+          // this.touchedy = y
+          // this._formatMovePosition(x, y)
+        }
+        if (this.rightHandShank.checkIsFingerOnAir(x, y)) {
+          // this.rightHandShank.touched = true
+          // this.rightHandShank._formatMovePosition(x, y)
+          // this.rightHandShank.touchedx = x
+          // this.rightHandShank.touchedy = y
+          player.shoot()
+        }
+      }
+
+    }
+    canvas.addEventListener('touchstart', ((e) => {
+      console.log(e)
+      e.preventDefault()
+      for (let p of e.touches){
+        let x = p.clientX
+        let y = p.clientY
+        //
+        if (this.checkIsFingerOnAir(x, y)) {
           this.touched = true
-          this.isInsite = true
           this.touchedx = x
           this.touchedy = y
           this._formatMovePosition(x, y)
         }
-        if (this.rightHandShank.checkIsFingerOnAir(x, y)) {
+        if (this.rightHandShank.checkIsFingerOnAir(x,y)){
           this.rightHandShank.touched = true
           this.rightHandShank._formatMovePosition(x, y)
           this.rightHandShank.touchedx = x
@@ -150,29 +173,7 @@ export default class HandShank {
         }
       }
 
-    }
-    // canvas.addEventListener('touchstart', ((e) => {
-    //   console.log(e)
-    //   e.preventDefault()
-    //   for (let p of e.touches){
-    //     let x = p.clientX
-    //     let y = p.clientY
-    //     //
-    //     if (this.checkIsFingerOnAir(x, y)) {
-    //       this.touched = true
-    //       this.touchedx = x
-    //       this.touchedy = y
-    //       this._formatMovePosition(x, y)
-    //     }
-    //     if (this.rightHandShank.checkIsFingerOnAir(x,y)){
-    //       this.rightHandShank.touched = true
-    //       this.rightHandShank._formatMovePosition(x, y)
-    //       this.rightHandShank.touchedx = x
-    //       this.rightHandShank.touchedy = y
-    //     }
-    //   }
-
-    // }).bind(this))
+    }).bind(this))
 
     canvas.addEventListener('touchmove', ((e) => {
       e.preventDefault()

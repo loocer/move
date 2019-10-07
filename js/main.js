@@ -6,6 +6,7 @@ import HandShank from './runtime/handshank'
 import Righthandshank from './runtime/righthandshank.js'
 import Music      from './runtime/music'
 import { getRoteImg }  from './utils/index'
+import Bullet from './bullet/bullet1'
 import DataBus    from './databus'
 import Gamecreate from './gameTools/create'
 import {
@@ -47,23 +48,27 @@ export default class Main {
     // 维护当前requestAnimationFrame的id
     this.aniId    = 0
     
-    
+   
     this.restart()
   }
 
   restart() {
+    wx.triggerGC()
     databus.reset(ctx)
 
     canvas.removeEventListener(
       'touchstart',
       this.touchHandler
     )
-
+    databus.bulletClass ={
+      name:'bullet1',
+      class: Bullet
+    } 
     this.bg       = new BackGround(ctx)
     this.player   = new Player(ctx)
     this.gameinfo = new GameInfo()
     this.righthandshank = new Righthandshank()
-    this.handShank = new HandShank(this.righthandshank)
+    this.handShank = new HandShank(this)
     this.music    = new Music()
     this.bindLoop     = this.loop.bind(this)
     this.hasEventBind = false
@@ -114,7 +119,7 @@ export default class Main {
         let enemy = databus.enemys[i]
         if ( !enemy.isPlaying && enemy.isCollideWith(bullet) ) {
           bullet.visible = false
-          databus.pools.recover('bullet', bullet)
+          databus.pools.recover(bullet.name, bullet)
           if (--enemy.lifeValue==0){
             databus.score += enemy.score
             enemy.visible = false
@@ -135,7 +140,13 @@ export default class Main {
       })
     
       if ( this.player.isCollideWith(enemy) ) {
-        databus.gameOver = true
+        enemy.visible = false
+        enemy.playOvers()
+        databus.pools.recover('enemy', enemy)
+        --this.player.lifeValue
+        if (this.player.lifeValue==0){
+          databus.gameOver = true
+        }
         break
       }
     }
@@ -166,7 +177,7 @@ export default class Main {
   cameraMove(ctx){
     if (this.handShank.touched
       && (this.player.x + databus.moveX) > 0
-      && (this.player.x + databus.moveX) < wground - 40
+      && (this.player.x + databus.moveX) < wground 
     ) {
       this.player.x += (databus.moveX)
     }
@@ -202,9 +213,15 @@ export default class Main {
     pobj.y1 = (databus.y + databus.transY)
     pobj.y2 = this.handShank.y + 60
     getRoteImg(pobj, this.handShank)
+    let r = databus.playerSpeed / Math.sqrt((pobj.x1 - pobj.x2) * (pobj.x1 - pobj.x2) + (pobj.y1 - pobj.y2) * (pobj.y1 - pobj.y2))
+    databus.moveX = (pobj.x1 - pobj.x2) * r
+    databus.moveY = (pobj.y1 - pobj.y2) * r
   }
   // 游戏结束后的触摸事件处理逻辑
   touchEventHandler(e) {
+    if (!this.gameinfo.btnShare){
+      return
+    }
      e.preventDefault()
 
     let x = e.touches[0].clientX
@@ -226,7 +243,7 @@ export default class Main {
       && y <= share.endY){
       this.restart()
       wx.shareAppMessage({
-        title: '转发标题',
+        title: '老子不服就是要干爆你',
         imageUrl: canvas.toTempFilePathSync({
           destWidth: 500,
           destHeight: 400
@@ -247,7 +264,11 @@ export default class Main {
     
     // ctx.translate(0, -1)
     this.bg.render(ctx)
-    
+    databus.corpses.forEach((item) => {
+      if (item.visible) {
+        item.render(ctx)
+      }
+    })
     databus.bullets
           .concat(databus.enemys)
           .forEach((item) => {
@@ -260,23 +281,17 @@ export default class Main {
     })
     this.cameraMove(ctx)
     
-    
-    
     databus.animations.forEach((ani) => {
       if ( ani.isPlaying ) {
         ani.aniRender(ctx)
       }
     })
 
+    this.player.drawToCanvas(ctx)
     this.gameinfo.renderGameScore(ctx, databus.score)
+    this.gameinfo.renderPlayerBleed(ctx, this.player)
     this.handShank.renderHandShank(ctx, this.player)
     this.righthandshank.renderHandShank(ctx)
-    databus.corpses.forEach((item) => {
-      if (item.visible) {
-        item.render(ctx)
-      }
-    })
-    this.player.drawToCanvas(ctx)
     // ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
     // openDataContext.postMessage({
     //   data: databus,
@@ -308,7 +323,7 @@ export default class Main {
   update() {
     if ( databus.gameOver )
       return;
-
+    this.gamecreate.createEnemy1()
     this.bg.update()
     databus.corpses.forEach((item) => {
       item.update()
@@ -325,8 +340,8 @@ export default class Main {
 
     this.collisionDetection()
     
-    if (databus.frame % 10 === 0 && this.righthandshank.touched ) {
-
+    if (databus.frame % databus.createSpeed === 0 && this.righthandshank.touched ) {
+    // if (databus.frame % databus.createSpeed === 0) {
       this.player.shoot()
       // this.music.playShoot()
     }

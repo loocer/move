@@ -33,8 +33,10 @@ export default class Bullet extends Sprite {
   init(x, y, speed, mx, my) {
     this.x = x
     this.y = y
+    this.name = 'bullet2'
     this.moveX = mx
     this.moveY = my
+    databus.createSpeed = 5
     this.speed = speed
 
     this.visible = true
@@ -67,14 +69,16 @@ export default class Bullet extends Sprite {
     )
     this.y += this.moveY * this.speed
     this.x += this.moveX * this.speed
-
     // 超出屏幕外回收自身
     if (this.y < 0
       || this.y > groundHeight
       || this.x < 0
       || this.x > groundWidth
-    )
+    ){
+      this.visible = false
       databus.pools.recover('bullet', this)
+    }
+      
       // databus.removeBullets(this)
       // delete this
   }

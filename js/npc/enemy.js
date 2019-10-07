@@ -31,7 +31,7 @@ export default class Enemy extends Animation {
     // this.img.src = imgSrc
     this.del1s = del1s
     this.frame = 0
-    this.frameSpeed = 3
+    this.frameSpeed = 1/speed*5
     this.score = lifeValue
     this.lifeValue = lifeValue
     this.speed = speed
@@ -52,8 +52,9 @@ export default class Enemy extends Animation {
     // this.initFrames(frames)
   }
   playOvers() {
-    let c = new Corpses(atlas, this.x - 20, this.y - 20, this.del1s)
-    databus.corpses.push(c)
+    let corpses = databus.pools.getItemByClass('corpses', Corpses)
+    corpses.init(atlas, this.x - 20, this.y - 20, this.del1s)
+    databus.corpses.push(corpses)
   }
   getPosition(player) {
     let px = player.x + player.width / 2
@@ -139,8 +140,8 @@ export default class Enemy extends Animation {
   // 每一帧更新子弹位置
   update(player) {
     this.frame++
-    this.width = ENEMY_WIDTH + this.lifeValue * 2
-    this.height = ENEMY_HEIGHT + this.lifeValue * 2
+    this.width = ENEMY_WIDTH + this.lifeValue * 4
+    this.height = ENEMY_HEIGHT + this.lifeValue * 4
     this.getPosition(player)
     // this.y += this.speed
     // 对象回收
