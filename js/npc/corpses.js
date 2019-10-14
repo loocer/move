@@ -59,6 +59,8 @@ export default class Corpses {
     ctx.restore()
   }
   update() {
+    if (!this.visible)
+      return 
     this.frame++
     // console.log(this.del1s, ~~(this.frame / 10), '-------------', this.del1s[~~(this.frame / 10)])
     // this.atlas = this.del1s[~~(this.frame/8)]

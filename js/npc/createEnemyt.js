@@ -41,8 +41,7 @@ export default class CreateEnemyt {
     // if (databus.score>30){
     //   return 
     // }
-    let num = databus.frame/100
-    console.log(num)
+    let num = databus.frame/20
     for (let i = 0; i < ~~(Math.random() * num);i++){
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
@@ -54,7 +53,7 @@ export default class CreateEnemyt {
         [enImgs1[0], enImgs2[0]],
         del1s1
       )
-      databus.enemys.push(enemy)
+      databus.enemys.add(enemy)
     }
   }
   createEnemy2() {

@@ -54,7 +54,7 @@ export default class Enemy extends Animation {
   playOvers() {
     let corpses = databus.pools.getItemByClass('corpses', Corpses)
     corpses.init(atlas, this.x - 20, this.y - 20, this.del1s)
-    databus.corpses.push(corpses)
+    databus.corpses.add(corpses)
   }
   getPosition(player) {
     let px = player.x + player.width / 2
@@ -139,6 +139,8 @@ export default class Enemy extends Animation {
   }
   // 每一帧更新子弹位置
   update(player) {
+    if (!this.visible)
+      return 
     this.frame++
     this.width = ENEMY_WIDTH + this.lifeValue * 4
     this.height = ENEMY_HEIGHT + this.lifeValue * 4

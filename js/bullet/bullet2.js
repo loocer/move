@@ -59,6 +59,8 @@ export default class Bullet extends Sprite {
   // }
   // 每一帧更新子弹位置
   update() {
+    if (!this.visible)
+      return 
     getRoteImg({
       x1: this.x + this.moveX,
       x2: this.x,
@@ -76,7 +78,8 @@ export default class Bullet extends Sprite {
       || this.x > groundWidth
     ){
       this.visible = false
-      databus.pools.recover('bullet', this)
+      databus.pools.recover(this.name, this)
+      // databus.pools.recover('bullet', this)
     }
       
       // databus.removeBullets(this)

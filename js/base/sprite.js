@@ -16,7 +16,6 @@ export default class Sprite {
 
     this.visible = true
   }
-
   /**
    * 将精灵图绘制在canvas上
    */

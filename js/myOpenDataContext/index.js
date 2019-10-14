@@ -5,56 +5,106 @@ const screenWidth = wx.getSystemInfoSync().screenWidth;
 const screenHeight = wx.getSystemInfoSync().screenHeight;
 const ratio = wx.getSystemInfoSync().pixelRatio;
 
-// sharedCanvas.width = screenWidth * ratio;
-// sharedCanvas.height = screenHeight * ratio;
+sharedCanvas.width = screenWidth / ratio;
+sharedCanvas.height = screenHeight / ratio;
+
 let itemCanvas = wx.createCanvas();
 let ctx = itemCanvas.getContext('2d');
+//==================================
 
+
+
+
+//==================================
+let startY = 0, moveY = 0, list = [];
 let myScore = undefined;
-let myInfo = {};
-let myRank = undefined;
-
+let myfriends = []
+let allInfo = {}
+let atlas = wx.createImage();
+atlas.src = 'images/Common.png'
 // getUserInfo();
+function renderGameOver(ctx) {
+  ctx.fillStyle = 'rgba(0, 0, 0, .3)';
+  ctx.fillRect(0, 0, screenWidth, screenHeight);
 
+
+  ctx.fillStyle = "#ffffff"
+  ctx.font = "20px Arial"
+
+  ctx.fillText(
+    '游戏结束',
+    screenWidth / 2 - 40,
+    screenHeight / 2 - 200 + 50
+  )
+
+  ctx.fillText(
+    '得分: ' + 32,
+    screenWidth / 2 - 40,
+    screenHeight / 2 - 200 + 100
+  )
+
+  ctx.drawImage(
+    atlas,
+    120, 6, 39, 24,
+    screenWidth / 2 - 60,
+    screenHeight / 2 - 100 + 180,
+    120, 40
+  )
+
+  ctx.drawImage(
+    atlas,
+    120, 6, 39, 24,
+    screenWidth / 2 - 60,
+    screenHeight / 2 - 100 + 55,
+    120, 40
+  )
+
+  ctx.drawImage(
+    atlas,
+    120, 6, 39, 24,
+    screenWidth / 2 - 60,
+    screenHeight / 2 - 100 + 115,
+    120, 40
+  )
+
+  ctx.fillText(
+    '重新开始',
+    screenWidth / 2 - 40,
+    screenHeight / 2 - 100 + 205
+  )
+  ctx.fillText(
+    '查看排行',
+    screenWidth / 2 - 40,
+    screenHeight / 2 - 100 + 140
+  )
+  ctx.fillText(
+    '转发复活',
+    screenWidth / 2 - 40,
+    screenHeight / 2 - 100 + 80
+  )
+  /**
+   * 重新开始按钮区域
+   * 方便简易判断按钮点击
+   */
+  // this.btnArea = {
+  //   startX: screenWidth / 2 - 40,
+  //   startY: screenHeight / 2 - 100 + 180,
+  //   endX: screenWidth / 2 + 50,
+  //   endY: screenHeight / 2 - 100 + 255
+  // }
+  // this.btnShare = {
+  //   startX: screenWidth / 2 - 40,
+  //   startY: screenHeight / 2 - 95,
+  //   endX: screenWidth / 2 + 50,
+  //   endY: screenHeight / 2 - 20
+  // }
+}
 // 初始化标题返回按钮等元素
 function initEle(data) {
-  // context.scale(ratio, ratio);
-
-  context.clearRect(0, 0, 1200, 800);
-
-  // 画背景
-  context.fillStyle = 'red';
-  context.fillRect(0, 0, 100,100);
-  // 按照 750的尺寸绘制
-  // let scales = screenWidth / 750;
-
-  // // 画标题
-  // context.fillStyle = '#fff';
-  // context.font = '50px Arial';
-  // context.textAlign = 'center';
-  // context.fillText('好友排行榜', 750 / 2, 220);
-
-  // // 排名列表外框
-  // context.fillStyle = '#302F30';
-  // context.fillRect(80, 290, 750 - 80 * 2, 650);
-
-  // // 排行榜提示
-  // context.fillStyle = '#8D8D8D';
-  // context.font = '20px Arial';
-  // context.textAlign = 'left';
-  // context.fillText('每周一凌晨刷新', 100, 330);
-
-  // // 自己排名外框
-  // context.fillStyle = '#302F30';
-  // context.fillRect(80, 960, 750 - 80 * 2, 120);
-
-  // // 返回按钮
-  // let returnImage = wx.createImage();
-  // returnImage.src = 'images/return.png';
-  // returnImage.onload = () => {
-  //   context.drawImage(returnImage, 80, 1120, 100, 100);
-  // };
+  console.log(data)
+  renderGameOver(ctx)
 }
+
 let addNewScore= (data)=>{
   var kvDataList = new Array();
   kvDataList.push({
@@ -64,63 +114,81 @@ let addNewScore= (data)=>{
   wx.setUserCloudStorage({
     KVDataList: kvDataList
   })
-  console.log('-------1111111111111111');
-  console.log(data.score);
-  wx.getFriendCloudStorage({
-    keyList: ['score'],
-    success: function (res) {
-      console.log('---------===============');
-      console.log(res);
-      //TODO:进行数据绑定更新
-    }
-  });
-}
-function initRanklist(list) {
-  // 至少绘制6个
-  let length = Math.max(list.length, 6);
-  let itemHeight = 590 / 6;
-
-  // itemCanvas.width = screenWidth - 40 * 2;
-  // itemCanvas.height = itemHeight * length;
-  itemCanvas.width = (750 - 80 * 2);
-  itemCanvas.height = itemHeight * length;
-
-  ctx.clearRect(0, 0, itemCanvas.width, itemCanvas.height);
-
-  for (let i = 0; i < length; i++) {
-    if (i % 2 === 0) {
-      ctx.fillStyle = '#393739';
-    } else {
-      ctx.fillStyle = '#302F30';
-    }
-    console.log(itemCanvas.width);
-    ctx.fillRect(0, i * itemHeight, itemCanvas.width, itemHeight);
-  }
-
-  if (list && list.length > 0) {
-    list.map((item, index) => {
-      let avatar = wx.createImage();
-      avatar.src = item.avatarUrl;
-      avatar.onload = function () {
-        ctx.drawImage(avatar, 100, index * itemHeight + 14, 70, 70);
-        reDrawItem(0);
+  if (list.length ==0){
+    wx.getFriendCloudStorage({
+      keyList: ['score'],
+      success: function (res) {
+        console.log(res)
+        list = res
+        paixu(res.data)
+        // initEle(data)
+        initRanklist()
+        //TODO:进行数据绑定更新
       }
-      ctx.fillStyle = '#fff';
-      ctx.font = '28px Arial';
-      ctx.textAlign = 'left';
-      ctx.fillText(item.nickname, 190, index * itemHeight + 54);
-      ctx.font = 'bold 36px Arial';
-      ctx.textAlign = 'right';
-      ctx.fillText(item.score || 0, 550, index * itemHeight + 60);
-      ctx.font = 'italic 44px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText(index + 1, 46, index * itemHeight + 64)
     });
-  } else {
-    // 没有数据
+  }else{
+    initRanklist()
   }
+}
 
-  reDrawItem(0);
+function paixu(arry){
+  arry.sort(function (a, b) {
+    return -(a.KVDataList[0].value - b.KVDataList[0].value)
+  })
+  for (let obj of arry){
+    let atlas = wx.createImage();
+    atlas.src = obj.avatarUrl
+    obj.atlas = atlas
+  }
+  list = arry
+  console.log('排序后的',list)
+  allInfo.allHeight = list.length*40
+  allInfo.maxMoveTop = allInfo.allHeight - screenHeight
+}
+function initRanklist() {
+  context.fillStyle = 'rgba(0, 0, 0,1)';
+  context.fillRect(0, 0, 10000, 600);
+  context.fillStyle = '#fff';
+  console.log('------------------',moveY*4, allInfo.maxMoveTop)
+  let tempx = 100, tempy =0
+  let index =  -moveY/40
+  let temp = 1
+  for (let obj of list){
+    tempy = index*40
+  //  
+    let name =obj.nickname.substring(0, 5)
+    let core =obj.KVDataList[0].value
+    context.font = '20px Arial';
+    context.drawImage(
+      obj.atlas,
+      0, 0, 200, 200,
+      tempx,
+      tempy,
+      30,30
+    )
+    context.fillText(
+      name,
+      tempx + 100,
+      tempy + 20
+    )
+    context.fillText(
+      core,
+      tempx + 200,
+      tempy + 20
+    )
+    context.fillText(
+      temp,
+      tempx + 300,
+      tempy + 20
+    )
+   
+    // context.fillRect(tempx, tempy + 40, tempx + 400, tempy + 5);
+    index++
+    temp++
+  }
+  console.log('最后一个了啊，来，；，；，；，；，；，',tempy)
+  // context.fillStyle = 'rgba(0, 0, 0,1)';
+  // context.fillRect(tempx, 0, 400, 40);
 }
 
 // 绘制自己的排名
@@ -261,9 +329,12 @@ function getGroupRanking(ticket) {
 }
 // getGroupRanking();
 wx.onMessage(data => {
-  console.log('---------------------------------')
-  console.log(data)
-  addNewScore(data.data);
+  if (list.length == 0) {
+    addNewScore(data.data);
+  }
+  
+  // list = data.data
+  // getFriendsRanking()
   // if (data.type === 'friends') {
   //   // sharedCanvas.height = screenHeight;
   //   getFriendsRanking();
@@ -278,23 +349,45 @@ wx.onMessage(data => {
   // }
 });
 
-let startY = undefined, moveY = 0;
+
 // 触摸移动事件
 wx.onTouchMove(e => {
-  let touch = e.touches[0];
-  // 触摸移动第一次触发的位置
-  if (startY === undefined) {
-    startY = touch.clientY + moveY;
-  }
-  moveY = startY - touch.clientY;
-  reDrawItem(moveY);
+  
+  let touch = e.touches[0].clientY;
+  
+  startY = !startY ? touch: startY
+  moveY = startY - touch + moveY
+  startY = touch
+  // console.log('++++++++', moveY, touch, startY)
+  initRanklist()
+  // // 触摸移动第一次触发的位置
+  // if (startY === undefined) {
+  //   startY = touch.clientY + moveY;
+  // }
+  // moveY = startY - touch.clientY;
+  // reDrawItem(moveY);
 });
 wx.onTouchEnd(e => {
-  startY = undefined;
-  if (moveY < 0) { // 到顶
-    moveY = 0;
-  } else if (moveY > itemCanvas.height - 590) { // 到底
-    moveY = itemCanvas.height - 590;
-  }
-  reDrawItem(moveY);
+  // console.log(e)
+  // let touch = e.touches[0];
+  // startY =0
+  // startY = undefined;
+  // if (moveY < 0) { // 到顶
+  //   moveY = 0;
+  // } else if (moveY > itemCanvas.height - 590) { // 到底
+  //   moveY = itemCanvas.height - 590;
+  // }
+  // reDrawItem(moveY);
+});
+wx.onTouchStart(e => {
+  console.log('-=-=-=-=-=',e)
+  let touch = e.touches[0];
+  startY = touch.moveY
+  // startY = undefined;
+  // if (moveY < 0) { // 到顶
+  //   moveY = 0;
+  // } else if (moveY > itemCanvas.height - 590) { // 到底
+  //   moveY = itemCanvas.height - 590;
+  // }
+  // reDrawItem(moveY);
 });

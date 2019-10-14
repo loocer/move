@@ -62,7 +62,8 @@ init(x,y){
     return l > Math.abs(this.width - player.width);
   }
   update(player) {
-
+    if (!this.visible)
+      return 
     if (!this.checkIsFingerOnAir(player)) {
       databus.bulletClass = {
         name: this.bullet.bulletName,

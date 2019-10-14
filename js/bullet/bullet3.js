@@ -24,7 +24,7 @@ export default class Bullet extends Sprite {
   init(x, y, speed,mx,my) {
     this.x = x
     this.y = y
-    databus.createSpeed = 10
+    databus.createSpeed = 5
     this.name = 'bullet3'
     this.moveX = mx
     this.moveY = my
@@ -35,6 +35,8 @@ export default class Bullet extends Sprite {
 
   // 每一帧更新子弹位置
   update() {
+    if (!this.visible)
+      return 
     getRoteImg({
       x1: this.x + this.moveX,
       x2: this.x,
@@ -52,8 +54,11 @@ export default class Bullet extends Sprite {
       || this.y > screenHeight
       ||this.x < 0
       ||this.x > screenWidth
-     )
+     ){
+      this.visible = false
+      databus.pools.recover(this.name, this)
+     }
     // databus.removeBullets(this)
-      databus.pools.recover('bullet', this)
+      // databus.pools.recover('bullet', this)
   }
 }

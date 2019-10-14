@@ -55,13 +55,13 @@ export default class DataBus {
     this.playTempY = screenHeight / 2
     this.frame      = 0
     this.score      = 0
-    this.shootSpeed =4
+    this.shootSpeed =20
     this.playerSpeed = 2
     this.bulletClass = null
-    this.bullets    = []
-    this.enemys     = []
+    this.bullets = new Set()
+    this.enemys = new Set()
     this.gameTools = []
-    this.corpses = []
+    this.corpses = new Set()
     this.animations = []
     this.gameOver   = false
     ctx&&ctx.translate(this.transX, this.transY)

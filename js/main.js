@@ -1,14 +1,18 @@
-import Player     from './player/index'
+import Player from './player/index'
 import CreateEnemyt from './npc/createEnemyt'
 import BackGround from './runtime/background'
-import GameInfo   from './runtime/gameinfo'
+import GameInfo from './runtime/gameinfo'
 import HandShank from './runtime/handshank'
 import Righthandshank from './runtime/righthandshank.js'
-import Music      from './runtime/music'
-import { getRoteImg }  from './utils/index'
-import Bullet from './bullet/bullet1'
-import DataBus    from './databus'
+import Music from './runtime/music'
+import {
+  getRoteImg
+} from './utils/index'
+import Bullet from './bullet/bullet2'
+import DataBus from './databus'
 import Gamecreate from './gameTools/create'
+const worker = wx.createWorker('workers/request/index.js')
+
 import {
   groundWidth,
   groundHeight,
@@ -23,7 +27,9 @@ const hground = groundHeight
 // canvas.width = screenWidth
 // canvas.height = screenHeight
 
-let sysInfo = wx.getSystemInfoSync(), width = sysInfo.windowWidth, height = sysInfo.windowHeight;
+let sysInfo = wx.getSystemInfoSync(),
+  width = sysInfo.windowWidth,
+  height = sysInfo.windowHeight;
 
 canvas.style.width = width + "px";
 canvas.style.height = height + "px";
@@ -46,31 +52,41 @@ let showUserStorageFlag = true
 export default class Main {
   constructor() {
     // 维护当前requestAnimationFrame的id
-    this.aniId    = 0
-    
-   
-    this.restart()
-  }
+    this.aniId = 0
 
+
+    this.restart()
+    // this.getMsg()
+  }
+  getMsg() {
+    let that = this
+    worker.onMessage(function(res) {
+      let temp = res.msg
+      databus.corpses = temp.corpses
+      databus.enemys = temp.enemys
+      databus.bullets = temp.bullets
+      databus.gameTools = temp.gameTools
+    })
+  }
   restart() {
-    wx.triggerGC()
+    // wx.triggerGC()
     databus.reset(ctx)
 
     canvas.removeEventListener(
       'touchstart',
       this.touchHandler
     )
-    databus.bulletClass ={
-      name:'bullet1',
+    databus.bulletClass = {
+      name: 'bullet2',
       class: Bullet
-    } 
-    this.bg       = new BackGround(ctx)
-    this.player   = new Player(ctx)
+    }
+    this.bg = new BackGround(ctx)
+    this.player = new Player(ctx)
     this.gameinfo = new GameInfo()
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this)
-    this.music    = new Music()
-    this.bindLoop     = this.loop.bind(this)
+    this.music = new Music()
+    this.bindLoop = this.loop.bind(this)
     this.hasEventBind = false
     this.gamecreate = new Gamecreate()
     canvas.addEventListener('touchstart', this.handShank.touchstartEvent)
@@ -88,70 +104,91 @@ export default class Main {
    * 帧数取模定义成生成的频率
    */
   enemyGenerate() {
-    if (databus.frame % 1e2 ===0 ) {
-      
+    if (databus.frame % 2e1 === 0) {
+
       createEnemy.createEnemy()
       // enemy.init(6)
-     
+
     }
     if (databus.frame == 1e4) {
       databus.frame = 0
     }
-    if (databus.frame == 2*1e3) {
+    if (databus.frame == 2 * 1e3) {
       databus.createEnemysStatus = 3
     }
-    if (databus.frame == 1e3 ){
-      databus.createEnemysStatus =2
+    if (databus.frame == 1e3) {
+      databus.createEnemysStatus = 2
     }
     if (databus.frame == 0) {
       databus.createEnemysStatus = 1
     }
-    
+
   }
 
   // 全局碰撞检测
   collisionDetection() {
     let that = this
-   
+
     databus.bullets.forEach((bullet) => {
       let temp = []
-      for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
-        let enemy = databus.enemys[i]
-        if ( !enemy.isPlaying && enemy.isCollideWith(bullet) ) {
+      for (let enemy of databus.enemys) {
+        if (!enemy.isPlaying && enemy.isCollideWith(bullet)) {
           bullet.visible = false
           databus.pools.recover(bullet.name, bullet)
-          if (--enemy.lifeValue==0){
+          if (--enemy.lifeValue == 0) {
             databus.score += enemy.score
             enemy.visible = false
             enemy.playOvers()
-            databus.pools.recover('enemy',enemy)
+            databus.pools.recover('enemy', enemy)
           }
         }
       }
     })
-    for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
-      let enemy = databus.enemys[i]
+    for (let itemob of databus.enemys){
+      let enemy = itemob
       databus.gameTools.forEach((item) => {
-        if(item.checkIsFingerOnEnemy(enemy)){
+        if (item.checkIsFingerOnEnemy(enemy)) {
           enemy.visible = false
           enemy.playOvers()
           databus.pools.recover('enemy', enemy)
         }
       })
-    
-      if ( this.player.isCollideWith(enemy) ) {
+
+      if (this.player.isCollideWith(enemy)) {
         enemy.visible = false
         enemy.playOvers()
+        databus.score += enemy.score
         databus.pools.recover('enemy', enemy)
         --this.player.lifeValue
-        if (this.player.lifeValue==0){
+        if (this.player.lifeValue == 0) {
           databus.gameOver = true
         }
         break
       }
     }
+    // for (let i = 0, il = databus.enemys.length; i < il; i++) {
+    //   let enemy = databus.enemys[i]
+    //   databus.gameTools.forEach((item) => {
+    //     if (item.checkIsFingerOnEnemy(enemy)) {
+    //       enemy.visible = false
+    //       enemy.playOvers()
+    //       databus.pools.recover('enemy', enemy)
+    //     }
+    //   })
+
+    //   if (this.player.isCollideWith(enemy)) {
+    //     enemy.visible = false
+    //     enemy.playOvers()
+    //     databus.pools.recover('enemy', enemy)
+    //       --this.player.lifeValue
+    //     if (this.player.lifeValue == 0) {
+    //       databus.gameOver = true
+    //     }
+    //     break
+    //   }
+    // }
   }
-  rowMove(ctx){
+  rowMove(ctx) {
     let tempX = this.player.x > databus.playTempX ? Math.abs(this.player.x - databus.playTempX) : -Math.abs(this.player.x - databus.playTempX)
     databus.playTempX = this.player.x
     this.handShank.x += tempX
@@ -162,7 +199,7 @@ export default class Main {
     //   this.handShank.tx += tempX
     // }
   }
-  colMove(ctx){
+  colMove(ctx) {
     let tempY = this.player.y > databus.playTempY ? Math.abs(this.player.y - databus.playTempY) : -Math.abs(this.player.y - databus.playTempY)
     databus.playTempY = this.player.y
     this.handShank.y += tempY
@@ -174,41 +211,41 @@ export default class Main {
     // }
   }
   //视觉移动 不至于第一人称跑出屏幕
-  cameraMove(ctx){
-    if (this.handShank.touched
-      && (this.player.x + databus.moveX) > 0
-      && (this.player.x + databus.moveX) < wground 
+  cameraMove(ctx) {
+    if (this.handShank.touched &&
+      (this.player.x + databus.moveX) > 0 &&
+      (this.player.x + databus.moveX) < wground
     ) {
       this.player.x += (databus.moveX)
     }
-    if (this.handShank.touched
-      && (this.player.y + databus.moveY) > 0
-      && (this.player.y + databus.moveY) < hground - 40
-    ){
+    if (this.handShank.touched &&
+      (this.player.y + databus.moveY) > 0 &&
+      (this.player.y + databus.moveY) < hground - 40
+    ) {
       this.player.y += (databus.moveY)
     }
-    if (this.handShank.touched
-      && (this.player.x + databus.moveX) > screenWidth / 2
-      && (this.player.x + databus.moveX) < wground - screenWidth / 2
+    if (this.handShank.touched &&
+      (this.player.x + databus.moveX) > screenWidth / 2 &&
+      (this.player.x + databus.moveX) < wground - screenWidth / 2
     ) {
       this.rowMove(ctx)
-      
+
     }
-    if (this.handShank.touched
-      && (this.player.y + databus.moveY) > screenHeight/2 
-      && (this.player.y + databus.moveY) < hground - screenHeight / 2
-    ){
+    if (this.handShank.touched &&
+      (this.player.y + databus.moveY) > screenHeight / 2 &&
+      (this.player.y + databus.moveY) < hground - screenHeight / 2
+    ) {
       this.colMove(ctx)
-      
-    } 
+
+    }
     // if (this.handShank.isInsite) {//点击在手柄内
-    if (this.handShank.touched&&databus.x){
+    if (this.handShank.touched && databus.x) {
       this.handShank.tx = databus.x + databus.transX - 60
       this.handShank.ty = databus.y + databus.transY - 60
     }
-  
+
     let pobj = {}
-    pobj.x1 = databus.x + databus.transX//点击
+    pobj.x1 = databus.x + databus.transX //点击
     pobj.x2 = this.handShank.x + 60
     pobj.y1 = (databus.y + databus.transY)
     pobj.y2 = this.handShank.y + 60
@@ -219,28 +256,28 @@ export default class Main {
   }
   // 游戏结束后的触摸事件处理逻辑
   touchEventHandler(e) {
-    if (!this.gameinfo.btnShare){
+    if (!this.gameinfo.btnShare) {
       return
     }
-     e.preventDefault()
+    e.preventDefault()
 
     let x = e.touches[0].clientX
     let y = e.touches[0].clientY
 
     let area = this.gameinfo.btnArea
-    
-    if (   x >= area.startX
-        && x <= area.endX
-        && y >= area.startY
-        && y <= area.endY  ){
+
+    if (x >= area.startX &&
+      x <= area.endX &&
+      y >= area.startY &&
+      y <= area.endY) {
       this.restart()
     }
-      
+
     let share = this.gameinfo.btnShare
-    if (x >= share.startX
-      && x <= share.endX
-      && y >= share.startY
-      && y <= share.endY){
+    if (x >= share.startX &&
+      x <= share.endX &&
+      y >= share.startY &&
+      y <= share.endY) {
       this.restart()
       wx.shareAppMessage({
         title: '老子不服就是要干爆你',
@@ -250,9 +287,9 @@ export default class Main {
         })
         // imageUrl: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=606551735,1600986175&fm=26&gp=0.j'
       })
-      
-      }
-      
+
+    }
+
   }
 
   /**
@@ -260,29 +297,34 @@ export default class Main {
    * 每一帧重新绘制所有的需要展示的元素
    */
   render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    
+    // ctx.clearRect(0, 0, canvas.width, canvas.height)
     // ctx.translate(0, -1)
-    this.bg.render(ctx)
-    databus.corpses.forEach((item) => {
+    // this.bg.render(ctx)
+       this.addNewScore()
+    
+  
+    return
+    Array.from(databus.corpses).forEach((item) => {
       if (item.visible) {
         item.render(ctx)
       }
     })
-    databus.bullets
-          .concat(databus.enemys)
-          .forEach((item) => {
-              item.drawToCanvas(ctx)
-            })
-    databus.gameTools.forEach((item)=>{
+    Array.from(databus.bullets)
+      .concat(Array.from(databus.enemys))
+      .forEach((item) => {
+        if (item.visible) {
+        item.drawToCanvas(ctx)
+        }
+      })
+    databus.gameTools.forEach((item) => {
       if (item.visible) {
         item.drawToCanvas(ctx)
       }
     })
     this.cameraMove(ctx)
-    
+
     databus.animations.forEach((ani) => {
-      if ( ani.isPlaying ) {
+      if (ani.isPlaying) {
         ani.aniRender(ctx)
       }
     })
@@ -299,21 +341,23 @@ export default class Main {
     // })
     // 游戏结束停止帧循环
     // this.gameinfo.renderGameOver(ctx, databus.score)
-    if ( databus.gameOver ) {
+    if (databus.gameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)
-      showUserStorageFlag&&this.addNewScore()
-      if ( !this.hasEventBind ) {
+      showUserStorageFlag && this.addNewScore()
+      if (!this.hasEventBind) {
         showUserStorageFlag = true
         this.hasEventBind = true
         this.touchHandler = this.touchEventHandler.bind(this)
-        canvas.removeEventListener('touchstart',this.handShank.touchstartEvent)
+        canvas.removeEventListener('touchstart', this.handShank.touchstartEvent)
         canvas.addEventListener('touchstart', this.touchHandler)
       }
     }
   }
-  addNewScore(){
+  addNewScore() {
     showUserStorageFlag = false
-    ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
+    ctx.drawImage(sharedCanvas, 0, 0, screenWidth, screenHeight)
+    // return
+    
     openDataContext.postMessage({
       data: databus,
       command: 'addNewScore'
@@ -321,67 +365,79 @@ export default class Main {
   }
   // 游戏逻辑更新主函数
   update() {
-    if ( databus.gameOver )
+    if (databus.gameOver)
       return;
     this.gamecreate.createEnemy1()
     this.bg.update()
     databus.corpses.forEach((item) => {
       item.update()
     })
-    databus.bullets
-           .concat(databus.enemys)
-           .forEach((item) => {
-             item.update(this.player)
-            })
+    Array.from(databus.bullets)
+      .concat(Array.from(databus.enemys))
+      .forEach((item) => {
+        item.update(this.player)
+      })
     databus.gameTools.forEach((item) => {
       item.update(this.player)
     })
     this.enemyGenerate()
 
     this.collisionDetection()
-    
-    if (databus.frame % databus.createSpeed === 0 && this.righthandshank.touched ) {
-    // if (databus.frame % databus.createSpeed === 0) {
+
+    // if (databus.frame % databus.createSpeed === 0 && this.righthandshank.touched) {
+      if (databus.frame % databus.createSpeed === 0) {
       this.player.shoot()
       // this.music.playShoot()
     }
     this.player.rotate = this.righthandshank.rotate
     //--------------回收----------
-    let temp = []
-    databus.corpses.forEach((item) => {
-      if (item.visible) {
-        temp.push(item)
+    // console.log(222222222222222222, JSON.stringify(deepCopy(databus)))
+    // worker.postMessage({
+    //   msg: databus
+    // })
+    if (true) {
+      for (let item of databus.corpses) {
+        if (!item.visible) {
+          databus.corpses.delete(item);
+        }
       }
-    })
-    databus.corpses = temp
-    temp = []
-    databus.enemys.forEach((item) => {
-      if (item.visible) {
-        temp.push(item)
+      for (let item of databus.enemys) {
+        if (!item.visible) {
+          databus.bullets.delete(item);
+        }
       }
-    })
-    databus.enemys = temp
-    temp = []
-    databus.bullets.forEach((item) => {
-      if (item.visible) {
-        temp.push(item)
+      // databus.enemys.forEach((item) => {
+      //   if (item.visible) {
+      //     temp.push(item)
+      //   }
+      // })
+      // databus.enemys = temp
+      for (let item of databus.bullets){
+        if (!item.visible) {
+          databus.bullets.delete(item);
+          // temp.push(item)
+        }
       }
-    })
-    databus.bullets = temp
-
-    temp = []
-    databus.gameTools.forEach((item) => {
-      if (item.visible) {
-        temp.push(item)
-      }
-    })
-    databus.gameTools = temp
+      let temp = []
+      // Array.from(databus.bullets).forEach((item) => {
+      //   if (item.visible) {
+      //     temp.push(item)
+      //   }
+      // })
+      // databus.bullets = temp
+      databus.gameTools.forEach((item) => {
+        if (item.visible) {
+          temp.push(item)
+        }
+      })
+      databus.gameTools = temp
+    }
   }
 
   // 实现游戏帧循环
   loop() {
     databus.frame++
-    wx.triggerGC()
+      wx.triggerGC()
     this.update()
     this.render()
 

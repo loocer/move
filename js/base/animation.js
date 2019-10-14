@@ -12,7 +12,6 @@ const __ = {
  */
 export default class Animation extends Sprite {
   constructor(imgSrc='', width, height) {
-    console.log(imgSrc, width, height)
     super(imgSrc, width, height)
 
     // 当前动画是否播放中
@@ -40,7 +39,7 @@ export default class Animation extends Sprite {
      * 推入到全局动画池里面
      * 便于全局绘图的时候遍历和绘制当前动画帧
      */
-    databus.animations.push(this)
+    // databus.animations.push(this)
   }
 
   /**
