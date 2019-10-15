@@ -92,9 +92,15 @@ export default class GameInfo {
      */
     this.btnArea = {
       startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 - 100 + 180,
+      startY: screenHeight / 2 + 80,
       endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2 - 100 + 255
+      endY: screenHeight / 2 + 155
+    }
+    this.rankIng = {
+      startX: screenWidth / 2 - 40,
+      startY: screenHeight / 2 - 10,
+      endX: screenWidth / 2 + 50,
+      endY: screenHeight / 2  + 125
     }
     this.btnShare = {
       startX: screenWidth / 2 - 40,

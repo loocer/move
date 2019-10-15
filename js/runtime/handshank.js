@@ -1,6 +1,6 @@
 import DataBus from '../databus'
 // import rightHandShank from './righthandshank'
-
+import ToolPanel from './toolPanel.js'
 
 const screenWidth = window.innerWidth
 const screenHeight = window.innerHeight
@@ -11,6 +11,7 @@ let atlas2 = new Image()
 let atlas3 = new Image()
 let atlas4 = new Image()
 let databus = new DataBus()
+let toolPanel = new ToolPanel()
 let y = 30
 const PLAYER_WIDTH = 120
 const PLAYER_HEIGHT = 120
@@ -142,6 +143,9 @@ export default class HandShank {
           // this.touchedy = y
           // this._formatMovePosition(x, y)
         }
+        if (toolPanel.checkIsFingerOnAir(x,y)){
+          databus.showUserStorageFlag = !databus.showUserStorageFlag
+        }
         if (this.rightHandShank.checkIsFingerOnAir(x, y)) {
           // this.rightHandShank.touched = true
           // this.rightHandShank._formatMovePosition(x, y)
@@ -177,6 +181,9 @@ export default class HandShank {
 
     canvas.addEventListener('touchmove', ((e) => {
       e.preventDefault()
+      if (databus.showUserStorageFlag){
+        return
+      }
       for (let p of e.touches) {
         let x = p.clientX
         let y = p.clientY

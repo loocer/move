@@ -3,16 +3,20 @@ let context = sharedCanvas.getContext('2d');
 
 const screenWidth = wx.getSystemInfoSync().screenWidth;
 const screenHeight = wx.getSystemInfoSync().screenHeight;
+
+let sysInfo = wx.getSystemInfoSync(),
+  width = sysInfo.windowWidth,
+  height = sysInfo.windowHeight;
 const ratio = wx.getSystemInfoSync().pixelRatio;
 
-sharedCanvas.width = screenWidth / ratio;
-sharedCanvas.height = screenHeight / ratio;
+// sharedCanvas.width = sharedCanvas.width * ratio;
+// sharedCanvas.height = sharedCanvas.width * ratio;
 
 let itemCanvas = wx.createCanvas();
 let ctx = itemCanvas.getContext('2d');
 //==================================
 
-
+context.scale(ratio, ratio)
 
 
 //==================================
@@ -147,15 +151,13 @@ function paixu(arry){
 }
 function initRanklist() {
   context.fillStyle = 'rgba(0, 0, 0,1)';
-  context.fillRect(0, 0, 10000, 600);
+  context.fillRect(0, 0, 500, 600);
   context.fillStyle = '#fff';
-  console.log('------------------',moveY*4, allInfo.maxMoveTop)
   let tempx = 100, tempy =0
   let index =  -moveY/40
   let temp = 1
   for (let obj of list){
     tempy = index*40
-  //  
     let name =obj.nickname.substring(0, 5)
     let core =obj.KVDataList[0].value
     context.font = '20px Arial';
@@ -164,7 +166,7 @@ function initRanklist() {
       0, 0, 200, 200,
       tempx,
       tempy,
-      30,30
+      40,30
     )
     context.fillText(
       name,
@@ -181,12 +183,9 @@ function initRanklist() {
       tempx + 300,
       tempy + 20
     )
-   
-    // context.fillRect(tempx, tempy + 40, tempx + 400, tempy + 5);
     index++
     temp++
   }
-  console.log('最后一个了啊，来，；，；，；，；，；，',tempy)
   // context.fillStyle = 'rgba(0, 0, 0,1)';
   // context.fillRect(tempx, 0, 400, 40);
 }

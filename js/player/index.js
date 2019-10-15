@@ -21,8 +21,8 @@ export default class Player extends Sprite {
     this.x = databus.playTempX
     this.y = databus.playTempY
 
-    this.lifeValue = 1e6
-    this.allLifeValue = 1e6
+    this.lifeValue = 1
+    this.allLifeValue = 1e2
     // this.x = 0
     // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了

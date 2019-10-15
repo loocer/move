@@ -5,6 +5,7 @@ import GameInfo from './runtime/gameinfo'
 import HandShank from './runtime/handshank'
 import Righthandshank from './runtime/righthandshank.js'
 import Music from './runtime/music'
+import ToolPanel from './runtime/toolPanel.js'
 import {
   getRoteImg
 } from './utils/index'
@@ -41,11 +42,13 @@ ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
 let openDataContext = wx.getOpenDataContext()
 let sharedCanvas = openDataContext.canvas
-
+sharedCanvas.style.width = width + "px";
+sharedCanvas.style.height = height + "px";
+sharedCanvas.height = height * window.devicePixelRatio;
+sharedCanvas.width = width * window.devicePixelRatio;
 
 let databus = new DataBus(ctx)
 let createEnemy = new CreateEnemyt(ctx)
-let showUserStorageFlag = true
 /**
  * 游戏主函数
  */
@@ -85,6 +88,7 @@ export default class Main {
     this.gameinfo = new GameInfo()
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this)
+    this.toolPanel = new ToolPanel()
     this.music = new Music()
     this.bindLoop = this.loop.bind(this)
     this.hasEventBind = false
@@ -144,7 +148,7 @@ export default class Main {
         }
       }
     })
-    for (let itemob of databus.enemys){
+    for (let itemob of databus.enemys) {
       let enemy = itemob
       databus.gameTools.forEach((item) => {
         if (item.checkIsFingerOnEnemy(enemy)) {
@@ -159,7 +163,7 @@ export default class Main {
         enemy.playOvers()
         databus.score += enemy.score
         databus.pools.recover('enemy', enemy)
-        --this.player.lifeValue
+          --this.player.lifeValue
         if (this.player.lifeValue == 0) {
           databus.gameOver = true
         }
@@ -254,6 +258,14 @@ export default class Main {
     databus.moveX = (pobj.x1 - pobj.x2) * r
     databus.moveY = (pobj.y1 - pobj.y2) * r
   }
+  touchRankingEventHandler(e) {
+    e.preventDefault()
+    let x = e.touches[0].clientX
+    let y = e.touches[0].clientY
+    if (this.toolPanel.checkIsFingerOnAir(x,y)){
+      databus.showUserStorageFlag = !databus.showUserStorageFlag
+    }
+  }
   // 游戏结束后的触摸事件处理逻辑
   touchEventHandler(e) {
     if (!this.gameinfo.btnShare) {
@@ -271,7 +283,16 @@ export default class Main {
       y >= area.startY &&
       y <= area.endY) {
       this.restart()
+      return
     }
+    // let rankIng = this.gameinfo.rankIng
+    // if (x >= rankIng.startX &&
+    //   x <= rankIng.endX &&
+    //   y >= rankIng.startY &&
+    //   y <= rankIng.endY) {
+    //   databus.showUserStorageFlag = false
+    //   return
+    // }
 
     let share = this.gameinfo.btnShare
     if (x >= share.startX &&
@@ -297,13 +318,10 @@ export default class Main {
    * 每一帧重新绘制所有的需要展示的元素
    */
   render() {
-    // ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
     // ctx.translate(0, -1)
-    // this.bg.render(ctx)
-       this.addNewScore()
+    this.bg.render(ctx)
     
-  
-    return
     Array.from(databus.corpses).forEach((item) => {
       if (item.visible) {
         item.render(ctx)
@@ -313,7 +331,7 @@ export default class Main {
       .concat(Array.from(databus.enemys))
       .forEach((item) => {
         if (item.visible) {
-        item.drawToCanvas(ctx)
+          item.drawToCanvas(ctx)
         }
       })
     databus.gameTools.forEach((item) => {
@@ -343,28 +361,33 @@ export default class Main {
     // this.gameinfo.renderGameOver(ctx, databus.score)
     if (databus.gameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)
-      showUserStorageFlag && this.addNewScore()
       if (!this.hasEventBind) {
-        showUserStorageFlag = true
+        
         this.hasEventBind = true
         this.touchHandler = this.touchEventHandler.bind(this)
         canvas.removeEventListener('touchstart', this.handShank.touchstartEvent)
         canvas.addEventListener('touchstart', this.touchHandler)
       }
     }
+    this.toolPanel.drawToCanvas(ctx)
+      this.addNewScore()
   }
   addNewScore() {
-    showUserStorageFlag = false
-    ctx.drawImage(sharedCanvas, 0, 0, screenWidth, screenHeight)
-    // return
+    this.toolPanel.updata()
     
+    console.log('=---------------', screenHeight)
+    ctx.drawImage(sharedCanvas, databus.panelPosition.rankingX + databus.transX, databus.transY, 500, 375)
     openDataContext.postMessage({
       data: databus,
       command: 'addNewScore'
     })
+    
   }
   // 游戏逻辑更新主函数
   update() {
+    if (databus.showUserStorageFlag ){
+      return
+    }
     if (databus.gameOver)
       return;
     this.gamecreate.createEnemy1()
@@ -385,7 +408,7 @@ export default class Main {
     this.collisionDetection()
 
     // if (databus.frame % databus.createSpeed === 0 && this.righthandshank.touched) {
-      if (databus.frame % databus.createSpeed === 0) {
+    if (databus.frame % databus.createSpeed === 0) {
       this.player.shoot()
       // this.music.playShoot()
     }
@@ -412,7 +435,7 @@ export default class Main {
       //   }
       // })
       // databus.enemys = temp
-      for (let item of databus.bullets){
+      for (let item of databus.bullets) {
         if (!item.visible) {
           databus.bullets.delete(item);
           // temp.push(item)

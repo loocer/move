@@ -48,7 +48,7 @@ export default class DataBus {
 
     this.x = 0//鼠标位置
     this.y = 0
-
+    this.showUserStorageFlag = false
     this.shootX = 0
     this.shootY = 0
     this.playTempX = screenWidth / 2
@@ -61,6 +61,9 @@ export default class DataBus {
     this.bullets = new Set()
     this.enemys = new Set()
     this.gameTools = []
+    this.panelPosition = {
+      rankingX:-500
+    }
     this.corpses = new Set()
     this.animations = []
     this.gameOver   = false
