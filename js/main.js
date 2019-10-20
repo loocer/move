@@ -9,7 +9,7 @@ import ToolPanel from './runtime/toolPanel.js'
 import {
   getRoteImg
 } from './utils/index'
-import Bullet from './bullet/bullet2'
+import Bullet from './bullet/bullet1'
 import DataBus from './databus'
 import Gamecreate from './gameTools/create'
 const worker = wx.createWorker('workers/request/index.js')
@@ -360,9 +360,9 @@ export default class Main {
     // 游戏结束停止帧循环
     // this.gameinfo.renderGameOver(ctx, databus.score)
     if (databus.gameOver) {
+      this.addScore()
       this.gameinfo.renderGameOver(ctx, databus.score)
       if (!this.hasEventBind) {
-        
         this.hasEventBind = true
         this.touchHandler = this.touchEventHandler.bind(this)
         canvas.removeEventListener('touchstart', this.handShank.touchstartEvent)
@@ -370,16 +370,21 @@ export default class Main {
       }
     }
     this.toolPanel.drawToCanvas(ctx)
-      this.addNewScore()
+    this.showRanking()
   }
-  addNewScore() {
+  addScore(){
+    // ctx.drawImage(sharedCanvas, databus.panelPosition.rankingX + databus.transX, databus.transY, 500, 375)
+    openDataContext.postMessage({
+      data: databus,
+      command: 'addScore'
+    })
+  }
+  showRanking() {
     this.toolPanel.updata()
-    
-    console.log('=---------------', screenHeight)
     ctx.drawImage(sharedCanvas, databus.panelPosition.rankingX + databus.transX, databus.transY, 500, 375)
     openDataContext.postMessage({
       data: databus,
-      command: 'addNewScore'
+      command: 'showRanking'
     })
     
   }

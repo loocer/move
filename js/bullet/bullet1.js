@@ -31,7 +31,7 @@ export default class Bullet extends Sprite {
     this.zy = y 
     this.x = x
     this.y = y
-    databus.createSpeed = 1
+    databus.createSpeed = 10
     this.moveX = mx
     this.moveY = my
     this.speed = speed

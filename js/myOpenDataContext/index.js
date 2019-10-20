@@ -108,31 +108,37 @@ function initEle(data) {
   console.log(data)
   renderGameOver(ctx)
 }
-
-let addNewScore= (data)=>{
-  var kvDataList = new Array();
-  kvDataList.push({
-    key: "score",
-    value: data.score+''
-  });
-  wx.setUserCloudStorage({
-    KVDataList: kvDataList
-  })
-  if (list.length ==0){
+let showRanking=()=>{
+  if (list.length == 0) {
     wx.getFriendCloudStorage({
       keyList: ['score'],
       success: function (res) {
-        console.log(res)
         list = res
         paixu(res.data)
         // initEle(data)
         initRanklist()
-        //TODO:进行数据绑定更新
       }
     });
-  }else{
+  } else {
     initRanklist()
   }
+}
+let addNewScore= (data)=>{
+  getMyScore().then((score)=>{
+    console.log('----------------', data.score, score)
+    if (data.score > score){
+      var kvDataList = new Array();
+      kvDataList.push({
+        key: "score",
+        value: data.score + ''
+      });
+      console.log('----------------', kvDataList)
+      wx.setUserCloudStorage({
+        KVDataList: kvDataList
+      })
+    }
+  })
+  
 }
 
 function paixu(arry){
@@ -145,7 +151,6 @@ function paixu(arry){
     obj.atlas = atlas
   }
   list = arry
-  console.log('排序后的',list)
   allInfo.allHeight = list.length*40
   allInfo.maxMoveTop = allInfo.allHeight - screenHeight
 }
@@ -262,26 +267,30 @@ function getUserInfo() {
 
 // 获取自己的分数
 function getMyScore() {
-  wx.getUserCloudStorage({
-    keyList: ['score', 'maxScore'],
-    success: res => {
-      let data = res;
-      if (data.KVDataList.length==0){
-        return
+  return new Promise((resive)=>{
+    wx.getUserCloudStorage({
+      keyList: ['score', 'maxScore'],
+      success: res => {
+        let data = res;
+        if (data.KVDataList.length == 0) {
+          resive()
+        }
+        resive(data.KVDataList[0].value)
+        console.log(',,,,,,,,,,,,,,,,,,,', data);
+        // let lastScore = data.KVDataList[0].value || 0;
+        // if (!data.KVDataList[1]) {
+        //   saveMaxScore(lastScore);
+        //   myScore = lastScore;
+        // } else if (lastScore > data.KVDataList[1].value) {
+        //   saveMaxScore(lastScore);
+        //   myScore = lastScore;
+        // } else {
+        //   myScore = data.KVDataList[1].value;
+        // }
       }
-      console.log(data);
-      let lastScore = data.KVDataList[0].value || 0;
-      if (!data.KVDataList[1]) {
-        saveMaxScore(lastScore);
-        myScore = lastScore;
-      } else if (lastScore > data.KVDataList[1].value) {
-        saveMaxScore(lastScore);
-        myScore = lastScore;
-      } else {
-        myScore = data.KVDataList[1].value;
-      }
-    }
-  });
+    });
+  })
+  
 }
 
 function saveMaxScore(maxScore) {
@@ -328,8 +337,11 @@ function getGroupRanking(ticket) {
 }
 // getGroupRanking();
 wx.onMessage(data => {
-  if (list.length == 0) {
-    addNewScore(data.data);
+  if (data.command=='addScore'){
+    addNewScore(data.data)
+  }
+  if (data.command == 'showRanking') {
+    showRanking()
   }
   
   // list = data.data

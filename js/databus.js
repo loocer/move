@@ -55,7 +55,7 @@ export default class DataBus {
     this.playTempY = screenHeight / 2
     this.frame      = 0
     this.score      = 0
-    this.shootSpeed =20
+    this.shootSpeed =10
     this.playerSpeed = 2
     this.bulletClass = null
     this.bullets = new Set()

@@ -130,12 +130,10 @@ export default class HandShank {
       //   icon: 'success',
       //   duration: 2000
       // })
-      console.log(e)
       e.preventDefault()
       for (let p of e.touches) {
         let x = p.clientX
         let y = p.clientY
-        //
         if (this.checkIsFingerOnAir(x, y)) {
           // this.touched = true
           // this.isInsite = true
@@ -146,6 +144,7 @@ export default class HandShank {
         if (toolPanel.checkIsFingerOnAir(x,y)){
           databus.showUserStorageFlag = !databus.showUserStorageFlag
         }
+        
         if (this.rightHandShank.checkIsFingerOnAir(x, y)) {
           // this.rightHandShank.touched = true
           // this.rightHandShank._formatMovePosition(x, y)
@@ -157,7 +156,9 @@ export default class HandShank {
 
     }
     canvas.addEventListener('touchstart', ((e) => {
-      console.log(e)
+      if (databus.showUserStorageFlag){
+        return
+      }
       e.preventDefault()
       for (let p of e.touches){
         let x = p.clientX
