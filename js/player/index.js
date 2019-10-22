@@ -21,8 +21,8 @@ export default class Player extends Sprite {
     this.x = databus.playTempX
     this.y = databus.playTempY
 
-    this.lifeValue = 1
-    this.allLifeValue = 1e2
+    this.lifeValue = 6e2
+    this.allLifeValue = 1e5
     // this.x = 0
     // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了
@@ -116,8 +116,14 @@ export default class Player extends Sprite {
    * 射击时机由外部决定
    */
   shoot() {
+    // if (databus.frame % 30 > 20) {
+    //   return
+    // }
     let mx = databus.shootX
     let my = databus.shootY
+
+    // this.x = this.x - 1
+    // this.y = this.x - 1
     if (mx == 0 && my==0){}else{
       // let bullet = databus.pools.getItemByClass('bullet', Bullet)
       // bullet.init(

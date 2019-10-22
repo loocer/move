@@ -15,7 +15,8 @@ export default class Music {
     this.bgmAudio.src  = 'audio/bgm.mp3'
 
     this.shootAudio     = new Audio()
-    this.shootAudio.src = 'audio/bullet.mp3'
+    this.shootAudio.src = 'audio/jujiqiang.mp3'
+    // this.shootAudio.loop = true
 
     this.boomAudio     = new Audio()
     this.boomAudio.src = 'audio/boom.mp3'

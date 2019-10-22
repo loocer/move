@@ -96,7 +96,7 @@ export default class Main {
     canvas.addEventListener('touchstart', this.handShank.touchstartEvent)
     // 清除上一局的动画
     window.cancelAnimationFrame(this.aniId);
-
+    
     this.aniId = window.requestAnimationFrame(
       this.bindLoop,
       canvas
@@ -415,7 +415,6 @@ export default class Main {
     // if (databus.frame % databus.createSpeed === 0 && this.righthandshank.touched) {
     if (databus.frame % databus.createSpeed === 0) {
       this.player.shoot()
-      // this.music.playShoot()
     }
     this.player.rotate = this.righthandshank.rotate
     //--------------回收----------
