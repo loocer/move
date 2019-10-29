@@ -16,7 +16,6 @@ import {
 
 
 let databus = new DataBus()
-let mu = new Music()
 export default class Bullet extends Sprite {
   constructor() {
     super(BULLET_IMG_SRC, BULLET_WIDTH, BULLET_HEIGHT)
@@ -30,13 +29,12 @@ export default class Bullet extends Sprite {
     databus.moveY = y > centerY ? tempy : -tempy
   }
   init(x, y, speed, mx, my) {
-    mu.playShoot()
     this.name = 'bullet1'
     this.zx = x
     this.zy = y
     this.x = x
     this.y = y
-    databus.createSpeed = 50
+    databus.createSpeed = 10
     this.moveX = mx
     this.moveY = my
     this.speed = speed
@@ -96,7 +94,7 @@ export default class Bullet extends Sprite {
       x: this.x,
       y: this.y
     })
-    // this.points = this.points.length > 3 ? this.points.slice(this.points.length - 3, this.points.length - 1) : this.points
+    this.points = this.points.length > 3 ? this.points.slice(this.points.length - 3, this.points.length - 1) : this.points
     // 超出屏幕外回收自身
     // console.log(this.points, '====================')
     if (this.y < 0 ||

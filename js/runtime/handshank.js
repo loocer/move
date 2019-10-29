@@ -166,6 +166,7 @@ export default class HandShank {
         //
         if (this.checkIsFingerOnAir(x, y)) {
           this.touched = true
+          databus.touched = true
           this.touchedx = x
           this.touchedy = y
           this._formatMovePosition(x, y)
@@ -224,6 +225,7 @@ export default class HandShank {
           this.ty = screenHeight - PLAYER_HEIGHT - 40 + databus.transY
           this.isInsite = false
           this.touched = false
+          databus.touched = false
         }else{
           this.rightHandShank.touched = false
         }

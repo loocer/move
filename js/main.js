@@ -4,12 +4,11 @@ import BackGround from './runtime/background'
 import GameInfo from './runtime/gameinfo'
 import HandShank from './runtime/handshank'
 import Righthandshank from './runtime/righthandshank.js'
-import Music from './runtime/music'
 import ToolPanel from './runtime/toolPanel.js'
 import {
   getRoteImg
 } from './utils/index'
-import Bullet from './bullet/bullet1'
+import Bullet from './bullet/bullet2'
 import DataBus from './databus'
 import Gamecreate from './gameTools/create'
 const worker = wx.createWorker('workers/request/index.js')
@@ -89,7 +88,6 @@ export default class Main {
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this)
     this.toolPanel = new ToolPanel()
-    this.music = new Music()
     this.bindLoop = this.loop.bind(this)
     this.hasEventBind = false
     this.gamecreate = new Gamecreate()
@@ -416,7 +414,8 @@ export default class Main {
     if (databus.frame % databus.createSpeed === 0) {
       this.player.shoot()
     }
-    this.player.rotate = this.righthandshank.rotate
+    this.player.rotateBody = this.righthandshank.rotate
+    this.player.rotateLag = this.handShank.rotate
     //--------------回收----------
     // console.log(222222222222222222, JSON.stringify(deepCopy(databus)))
     // worker.postMessage({

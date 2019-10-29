@@ -105,7 +105,6 @@ function renderGameOver(ctx) {
 }
 // 初始化标题返回按钮等元素
 function initEle(data) {
-  console.log(data)
   renderGameOver(ctx)
 }
 let showRanking=()=>{
@@ -125,14 +124,12 @@ let showRanking=()=>{
 }
 let addNewScore= (data)=>{
   getMyScore().then((score)=>{
-    console.log('----------------', data.score, score)
     if (data.score > score){
       var kvDataList = new Array();
       kvDataList.push({
         key: "score",
         value: data.score + ''
       });
-      console.log('----------------', kvDataList)
       wx.setUserCloudStorage({
         KVDataList: kvDataList
       })

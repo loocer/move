@@ -2,7 +2,9 @@ import Sprite   from '../base/sprite'
 import Bullet from '../bullet/bullet1'
 import DataBus  from '../databus'
 import Halo from './halo'
-
+import {
+  playerImag
+} from '../utils/common'
 const screenWidth    = window.innerWidth
 const screenHeight   = window.innerHeight
 
@@ -18,22 +20,68 @@ export default class Player extends Sprite {
     super(PLAYER_IMG_SRC, PLAYER_WIDTH, PLAYER_HEIGHT)
 
     // 玩家默认处于屏幕底部居中位置
+    this.init()
+    // 初始化事件监听
+    // this.initEvent()
+  }
+  init(){
     this.x = databus.playTempX
     this.y = databus.playTempY
-
+    this.bodyImg = playerImag(1)
+    this.lagImg1 = playerImag(2)
+    this.lagImg2 = playerImag(3)
     this.lifeValue = 6e2
     this.allLifeValue = 1e5
     // this.x = 0
     // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了
     this.touched = false
-    
+
     this.bullets = []
-
-    // 初始化事件监听
-    // this.initEvent()
   }
+  drawToCanvas(ctx) {
+    if (!this.visible)
+      return
+   
+    // let bu  = null
+    // if (databus.touched){
+    //   bu = databus.frame % 10 > 5 ? this.lagImg1 : this.lagImg2
+    // }else{
+    //   bu = this.lagImg1
+    // }
+    let bu = this.lagImg1
+    ctx.save()
+    ctx.translate(this.x, this.y)
+    ctx.rotate(this.rotateLag * Math.PI / 180)
+    ctx.drawImage(
+      bu,
+      -this.width / 2,
+      -this.height / 2,
+      this.width,
+      this.height
+    )
+    ctx.restore()
 
+    // ctx.save()
+    // ctx.translate(this.x, this.y)
+    // ctx.rotate(this.rotateBody * Math.PI / 180 + 45.15)
+    // ctx.drawImage(
+    //   this.bodyImg,
+    //   -this.width / 2,
+    //   -this.height / 2,
+    //   this.width,
+    //   this.height
+    // )
+    // ctx.restore()
+
+    
+    // ctx.beginPath();
+    // ctx.lineWidth = 5;
+    // ctx.arc(0, 0, 15+2 * this.lifeValue , 0, 2 * Math.PI);
+    // ctx.stroke();
+    
+
+  }
   /**
    * 当手指触摸屏幕的时候
    * 判断手指是否在飞机上

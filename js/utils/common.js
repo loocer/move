@@ -33,23 +33,28 @@ export const enImgs2 = [
   ENEMY_IMG_SRC11,
 ]
 const bulletImgs = [
-  ["images/bullet.png", Bullet2,'bullet2'],
-  ["images/bullet1.png", Bullet3,'bullet1']
+  ["images/bullet.png", Bullet2, 'bullet2'],
+  ["images/bullet1.png", Bullet3, 'bullet1']
 ]
 export const backButton = (() => {
   let img = new Image()
   img.src = "images/return.png"
   return img
 })()
+export const playerImag = (i) => {
+  let img = new Image()
+  img.src = 'images/player/p' + i + '.png'
+  return img
+}
 export const bullets = (() => {
   let list = []
-  for (let bimg of bulletImgs){
+  for (let bimg of bulletImgs) {
     let img = new Image()
     img.src = bimg[0]
     list.push({
       img,
       bulletName: bimg[2],
-      bulletClass:bimg[1]
+      bulletClass: bimg[1]
     })
   }
   return list
