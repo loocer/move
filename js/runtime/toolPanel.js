@@ -39,7 +39,7 @@ export default class HandShank {
       )
   }
   updata(){
-    if (databus.showUserStorageFlag && databus.panelPosition.rankingX < 1) {
+    if (databus.showUserStorageFlag && databus.panelPosition.rankingX < -20) {
       databus.panelPosition.rankingX += 20
     }
     if (!databus.showUserStorageFlag && databus.panelPosition.rankingX > -500) {

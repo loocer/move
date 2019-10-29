@@ -135,21 +135,12 @@ export default class HandShank {
         let x = p.clientX
         let y = p.clientY
         if (this.checkIsFingerOnAir(x, y)) {
-          // this.touched = true
-          // this.isInsite = true
-          // this.touchedx = x
-          // this.touchedy = y
-          // this._formatMovePosition(x, y)
         }
         if (toolPanel.checkIsFingerOnAir(x,y)){
           databus.showUserStorageFlag = !databus.showUserStorageFlag
         }
         
         if (this.rightHandShank.checkIsFingerOnAir(x, y)) {
-          // this.rightHandShank.touched = true
-          // this.rightHandShank._formatMovePosition(x, y)
-          // this.rightHandShank.touchedx = x
-          // this.rightHandShank.touchedy = y
           player.shoot()
         }
       }
@@ -196,14 +187,9 @@ export default class HandShank {
           // this.ty = y
           this._formatMovePosition(x,y)
           let l = Math.pow(160 - x, 2) + Math.pow(screenHeight - PLAYER_HEIGHT +20 - y, 2)
-          // console.log(140 - x, screenHeight - 120 - y,l)
           if (l<3600) {
-            // this.handShank.tx = databus.x + databus.transX - 30
-            // this.handShank.ty = databus.y + databus.transY - 30
             this.isInsite = true
-            // this.handShank.tx = databus.x + databus.transX - 30
           }else{
-            // console.log(this.tx,'出去了。。。。。')
             this.isInsite = false
           }
         }else{

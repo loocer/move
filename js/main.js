@@ -414,6 +414,7 @@ export default class Main {
     if (databus.frame % databus.createSpeed === 0) {
       this.player.shoot()
     }
+    // this.player.rotate = this.righthandshank.rotate
     this.player.rotateBody = this.righthandshank.rotate
     this.player.rotateLag = this.handShank.rotate
     //--------------回收----------

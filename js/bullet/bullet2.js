@@ -38,7 +38,14 @@ export default class Bullet extends Sprite {
     this.moveY = my
     databus.createSpeed = 3
     this.speed = speed
-
+    getRoteImg({
+      x1: this.x + this.moveX,
+      x2: this.x,
+      y1: this.y + this.moveY,
+      y2: this.y,
+    },
+      this
+    )
     this.visible = true
   }
   // drawToCanvas(ctx) {

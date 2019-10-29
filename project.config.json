@@ -8,7 +8,7 @@
 		"newFeature": true
 	},
 	"compileType": "game",
-	"libVersion": "2.8.1",
+	"libVersion": "2.9.1",
 	"appid": "wx245c5d66b426b182",
 	"projectname": "x-bug",
 	"simulatorType": "wechat",

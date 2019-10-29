@@ -62,7 +62,7 @@ export default class DataBus {
     this.enemys = new Set()
     this.gameTools = []
     this.panelPosition = {
-      rankingX:-500
+      rankingX:-400
     }
     this.corpses = new Set()
     this.animations = []

@@ -30,8 +30,8 @@ export default class Player extends Sprite {
     this.bodyImg = playerImag(1)
     this.lagImg1 = playerImag(2)
     this.lagImg2 = playerImag(3)
-    this.lifeValue = 6e2
-    this.allLifeValue = 1e5
+    this.lifeValue = 1e2
+    this.allLifeValue = 1e2
     // this.x = 0
     // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了
@@ -43,13 +43,13 @@ export default class Player extends Sprite {
     if (!this.visible)
       return
    
-    // let bu  = null
-    // if (databus.touched){
-    //   bu = databus.frame % 10 > 5 ? this.lagImg1 : this.lagImg2
-    // }else{
-    //   bu = this.lagImg1
-    // }
-    let bu = this.lagImg1
+    let bu  = null
+    if (databus.touched){
+      bu = databus.frame % 10 > 5 ? this.lagImg1 : this.lagImg2
+    }else{
+      bu = this.lagImg1
+    }
+    // let bu = this.lagImg1
     ctx.save()
     ctx.translate(this.x, this.y)
     ctx.rotate(this.rotateLag * Math.PI / 180)
@@ -62,17 +62,17 @@ export default class Player extends Sprite {
     )
     ctx.restore()
 
-    // ctx.save()
-    // ctx.translate(this.x, this.y)
-    // ctx.rotate(this.rotateBody * Math.PI / 180 + 45.15)
-    // ctx.drawImage(
-    //   this.bodyImg,
-    //   -this.width / 2,
-    //   -this.height / 2,
-    //   this.width,
-    //   this.height
-    // )
-    // ctx.restore()
+    ctx.save()
+    ctx.translate(this.x, this.y)
+    ctx.rotate(this.rotateBody * Math.PI / 180 + 45.15)
+    ctx.drawImage(
+      this.bodyImg,
+      -this.width / 2,
+      -this.height / 2,
+      this.width,
+      this.height
+    )
+    ctx.restore()
 
     
     // ctx.beginPath();
@@ -185,9 +185,12 @@ export default class Player extends Sprite {
       // let bullet = databus.pool.getItemByClass('bullet', Bullet)
       let bullet = databus.pools.getItemByClass(databus.bulletClass.name, databus.bulletClass.class)
       // let bullet = new Bullet()
+      console.log(this.rotateBody)
+      let px = this.x + 30 * Math.cos(this.rotateBody * Math.PI / 180 -45.2)
+      let py = this.y + 30 * Math.sin(this.rotateBody * Math.PI / 180 - 45.2)
       bullet.init(
-        this.x,
-        this.y,
+        px,
+        py,
         databus.shootSpeed,
         mx,
         my
