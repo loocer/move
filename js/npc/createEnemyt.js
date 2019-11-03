@@ -41,17 +41,23 @@ export default class CreateEnemyt {
     // if (databus.score>30){
     //   return 
     // }
-    let num = databus.frame/60
+    let num = databus.frame%100/10
     for (let i = 0; i < ~~(Math.random() * num);i++){
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
+      let tempc = rnd(1, 3)
+      let findTime = 40
+      // let stopSpeed = tempc==1?0:30
+      let stopSpeed =30
       enemy.init(
-        2,
+        tempc,
         1,
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
         temp,
         [enImgs1[0], enImgs2[0]],
-        del1s1
+        del1s1,
+        stopSpeed,
+        findTime
       )
       databus.enemys.add(enemy)
     }

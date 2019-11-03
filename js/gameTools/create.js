@@ -28,17 +28,17 @@ export default class Create {
     //   let boom = new Boom(rnd(0, groundWidth), rnd(0, screenHeight))
     //   databus.gameTools.push(boom)
     // }
-    if (databus.frame % 2e3 == 0) {
+    if (databus.frame % 5e3 == 0) {
       let boom = databus.pools.getItemByClass('boom', Boom)
       boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
       databus.gameTools.push(boom)
     }
-    if (databus.frame % 3e2 == 0) {
+    if (databus.frame % 3e3 == 0) {
       let boom = databus.pools.getItemByClass('accelerate', Accelerate)
       boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
       databus.gameTools.push(boom)
     }
-    if (databus.frame % 8e2 == 0) {
+    if (databus.frame % 3e5 == 0) {
       let boom = databus.pools.getItemByClass('changeBullet', ChangeBullet)
       boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
       databus.gameTools.push(boom)

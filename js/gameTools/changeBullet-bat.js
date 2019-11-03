@@ -21,20 +21,20 @@ export default class Boom {
   constructor(x, y) {
     // 玩家默认处于屏幕底部居中位置
     // this.x = 100
-
+    
   }
-  init(x, y) {
-    this.x = x
-    this.y = y
-    this.name = 'changeBullet'
-    this.bullet = bullets[rnd(0, bullets.length)]
-    this.visible = true
-    this.isBoom = false
-    this.boomTime = 1
-    this.maxBoomTime = 1e3
-    this.width = PLAYER_WIDTH
-    this.height = PLAYER_HEIGHT
-  }
+init(x,y){
+  this.x = x
+  this.y = y
+  this.name = 'changeBullet'
+  this.bullet = bullets[rnd(0, bullets.length)]
+  this.visible = true
+  this.isBoom = false
+  this.boomTime = 1
+  this.maxBoomTime = 1e3
+  this.width = PLAYER_WIDTH
+  this.height = PLAYER_HEIGHT
+}
   drawToCanvas(ctx) {
     if (!this.isBoom) {//will booming
       ctx.save()
@@ -63,12 +63,12 @@ export default class Boom {
   }
   update(player) {
     if (!this.visible)
-      return
+      return 
     if (!this.checkIsFingerOnAir(player)) {
       databus.bulletClass = {
         name: this.bullet.bulletName,
         class: this.bullet.bulletClass
-      }
+      } 
       this.boomTime = 0
       this.isBoom = true
     }
@@ -79,7 +79,7 @@ export default class Boom {
       databus.bulletClass = {
         name: 'bullet1',
         class: Bullet1
-      }
+      } 
       this.visible = false
       databus.pools.recover(this.name, this)
     }

@@ -93,7 +93,7 @@ export default class Boom {
 
   checkIsFingerOnAir(player) {
     let l = Math.sqrt(Math.pow((this.x - player.x), 2) + Math.pow((this.y - player.y), 2))
-    return l > Math.abs(this.width - player.width);
+    return l > player.width;
   }
   update(player) {
     if (!this.visible)

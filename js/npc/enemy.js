@@ -23,15 +23,18 @@ export default class Enemy extends Animation {
     }
     return temps
   }
-  init(speed, lifeValue, x, y, imgSrcs, del1s) {
+  init(speed, lifeValue, x, y, imgSrcs, del1s, stopTime, findTime) {
     this.x = x
     this.y = y
     // this.srcImg = srcImg
     this.imgs = this.setImage(imgSrcs)
     // this.img.src = imgSrc
     this.del1s = del1s
+    this.time = 0
     this.frame = 0
-    this.frameSpeed = 1/speed*5
+    this.stopTime = stopTime//停留休息时间
+    this.findTime = findTime//停留休息时间
+    this.frameSpeed = 0
     this.score = lifeValue
     this.lifeValue = lifeValue
     this.speed = speed
@@ -56,7 +59,8 @@ export default class Enemy extends Animation {
     corpses.init(atlas, this.x - 20, this.y - 20, this.del1s)
     databus.corpses.add(corpses)
   }
-  getPosition(player) {
+  getPosition() {
+    let player = this.player
     let px = player.x + player.width / 2
     let py = player.y + player.height / 2
     let lpx = Math.abs(this.x - player.x)
@@ -84,67 +88,47 @@ export default class Enemy extends Animation {
   drawToCanvas(ctx) {
     if (!this.visible)
       return
-    // ctx.translate(-(this.x - databus.transX + this.width / 2), -(this.y - databus.transY + this.height / 2))
-    // ctx.translate(this.x - databus.transX + this.width/2, this.y - databus.transY+ this.height/2)
-    // ctx.translate(-this.x , -this.y)
-
-    // ctx.drawImage(
-    //   this.img,
-    //   this.x,
-    //   this.y,
-    //   this.width,
-    //   this.height
-    // )
-    if (this.frame % this.frameSpeed < this.frameSpeed/2) {
+    let index = ~~this.frameSpeed
       ctx.save()
       ctx.translate(this.x, this.y)
       ctx.rotate(this.rotate * Math.PI / 180)
       ctx.drawImage(
-        this.imgs[0],
+        this.imgs[index],
         -this.width / 2,
         -this.height / 2,
         this.width,
         this.height
       )
       ctx.restore()
-    }
-    if (this.frame % this.frameSpeed >= this.frameSpeed / 2) {
-      ctx.save()
-      ctx.translate(this.x, this.y)
-      ctx.rotate(this.rotate * Math.PI / 180)
-      ctx.drawImage(
-        this.imgs[1],
-        -this.width / 2,
-        -this.height / 2,
-        this.width,
-        this.height
-      )
-    }
-    // ctx.save()
-    // ctx.translate(this.x, this.y)
-    // ctx.rotate(this.rotate * Math.PI / 180)
-    // ctx.drawImage(
-    //   this.img,
-    //   -this.width / 2,
-    //   -this.height / 2,
-    //   this.width,
-    //   this.height
-    // )
-    // ctx.beginPath();
-    // ctx.lineWidth = 5;
-    // ctx.arc(0, 0, 15+2 * this.lifeValue , 0, 2 * Math.PI);
-    // ctx.stroke();
-    ctx.restore()
-
   }
   // 每一帧更新子弹位置
   update(player) {
+    
     if (!this.visible)
       return 
+    
+    this.time++
+    if (this.time % 100 < this.stopTime){
+      return 
+    }
+    if (this.frame % 20 == 0) {
+      this.frameSpeed++
+      if (this.frameSpeed > this.imgs.length - 1) {
+        this.frameSpeed = 0
+      }
+    }
     this.frame++
     this.width = ENEMY_WIDTH + this.lifeValue * 4
     this.height = ENEMY_HEIGHT + this.lifeValue * 4
-    this.getPosition(player)
+    if (this.time % 100 < this.findTime) {
+      this.player = {
+        x:player.x,
+        y:player.y,
+        width:player.width,
+        height:player.height
+      }
+    }
+    this.getPosition()
     // this.y += this.speed
     // 对象回收
     // if ( this.y > window.innerHeight + this.height )

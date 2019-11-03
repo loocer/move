@@ -297,7 +297,6 @@ export default class Main {
       x <= share.endX &&
       y >= share.startY &&
       y <= share.endY) {
-      this.restart()
       wx.shareAppMessage({
         title: '老子不服就是要干爆你',
         imageUrl: canvas.toTempFilePathSync({

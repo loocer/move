@@ -10,8 +10,8 @@ const screenHeight   = window.innerHeight
 
 // 玩家相关常量设置
 const PLAYER_IMG_SRC = 'images/player.png'
-const PLAYER_WIDTH   = 50
-const PLAYER_HEIGHT  = 50
+const PLAYER_WIDTH   = 30
+const PLAYER_HEIGHT  = 30
 
 let databus = new DataBus()
 
@@ -185,9 +185,8 @@ export default class Player extends Sprite {
       // let bullet = databus.pool.getItemByClass('bullet', Bullet)
       let bullet = databus.pools.getItemByClass(databus.bulletClass.name, databus.bulletClass.class)
       // let bullet = new Bullet()
-      console.log(this.rotateBody)
-      let px = this.x + 30 * Math.cos(this.rotateBody * Math.PI / 180 -45.2)
-      let py = this.y + 30 * Math.sin(this.rotateBody * Math.PI / 180 - 45.2)
+      let px = this.x + 27 * Math.cos(this.rotateBody * Math.PI / 180 -45.3)
+      let py = this.y + 27 * Math.sin(this.rotateBody * Math.PI / 180 - 45.3)
       bullet.init(
         px,
         py,

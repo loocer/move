@@ -2,7 +2,9 @@ import './js/libs/weapp-adapter'
 import './js/libs/symbol'
 
 import Main from './js/main'
-
+wx.showShareMenu({
+  withShareTicket: true
+})
 wx.getSystemInfo({
   success(res) {
     if (res.system.substring(0,3)=='ios'){

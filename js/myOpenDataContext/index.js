@@ -160,7 +160,7 @@ function initRanklist() {
   let temp = 1
   for (let obj of list){
     tempy = index*40
-    let name =obj.nickname.substring(0, 5)
+    let name =obj.nickname.substring(0, 4)
     let core =obj.KVDataList[0].value
     context.font = '20px Arial';
     context.drawImage(
