@@ -24,8 +24,6 @@ import {
 let ctx = canvas.getContext('2d')
 const wground = groundWidth
 const hground = groundHeight
-// canvas.width = screenWidth
-// canvas.height = screenHeight
 
 let sysInfo = wx.getSystemInfoSync(),
   width = sysInfo.windowWidth,
@@ -51,14 +49,13 @@ let createEnemy = new CreateEnemyt(ctx)
 /**
  * 游戏主函数
  */
+
 export default class Main {
   constructor() {
     // 维护当前requestAnimationFrame的id
     this.aniId = 0
-
-
+    this.init()
     this.restart()
-    // this.getMsg()
   }
   getMsg() {
     let that = this
@@ -70,6 +67,36 @@ export default class Main {
       databus.gameTools = temp.gameTools
     })
   }
+  init() {
+    window.cancelAnimationFrame(this.aniId);
+    this.aniId = window.requestAnimationFrame(
+      this.bindLoop,
+      canvas
+    )
+    this.gameinfo = new GameInfo(this)
+    canvas.addEventListener('touchstart', this.initTouchHandler)
+  }
+  initTouchHandler(e) {
+    e.preventDefault()
+
+    let x = e.touches[0].clientX
+    let y = e.touches[0].clientY
+
+    let area = this.gameinfo.btnArea
+
+    if (x >= area.startX &&
+      x <= area.endX &&
+      y >= area.startY &&
+      y <= area.endY) {
+      canvas.removeEventListener(
+        'touchstart',
+        this.initTouchHandler
+      )
+      this.restart()
+      return
+    }
+  }
+
   restart() {
     // wx.triggerGC()
     databus.reset(ctx)
@@ -84,7 +111,6 @@ export default class Main {
     }
     this.bg = new BackGround(ctx)
     this.player = new Player(ctx)
-    this.gameinfo = new GameInfo()
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this)
     this.toolPanel = new ToolPanel()
@@ -94,7 +120,7 @@ export default class Main {
     canvas.addEventListener('touchstart', this.handShank.touchstartEvent)
     // 清除上一局的动画
     window.cancelAnimationFrame(this.aniId);
-    
+
     this.aniId = window.requestAnimationFrame(
       this.bindLoop,
       canvas
@@ -260,7 +286,7 @@ export default class Main {
     e.preventDefault()
     let x = e.touches[0].clientX
     let y = e.touches[0].clientY
-    if (this.toolPanel.checkIsFingerOnAir(x,y)){
+    if (this.toolPanel.checkIsFingerOnAir(x, y)) {
       databus.showUserStorageFlag = !databus.showUserStorageFlag
     }
   }
@@ -309,16 +335,15 @@ export default class Main {
     }
 
   }
-
-  /**
-   * canvas重绘函数
-   * 每一帧重新绘制所有的需要展示的元素
-   */
-  render() {
+  initRender() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    this.gameinfo.initRender(ctx)
+  }
+  doingRender() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     // ctx.translate(0, -1)
     this.bg.render(ctx)
-    
+
     Array.from(databus.corpses).forEach((item) => {
       if (item.visible) {
         item.render(ctx)
@@ -369,7 +394,7 @@ export default class Main {
     this.toolPanel.drawToCanvas(ctx)
     this.showRanking()
   }
-  addScore(){
+  addScore() {
     // ctx.drawImage(sharedCanvas, databus.panelPosition.rankingX + databus.transX, databus.transY, 500, 375)
     openDataContext.postMessage({
       data: databus,
@@ -383,11 +408,27 @@ export default class Main {
       data: databus,
       command: 'showRanking'
     })
-    
+
+  }
+  /**
+   * canvas重绘函数
+   * 每一帧重新绘制所有的需要展示的元素
+   */
+  render() {
+    if (databus.state==1){
+      this.initRender()
+    }
+  }
+  initUpdata(){
+
   }
   // 游戏逻辑更新主函数
   update() {
-    if (databus.showUserStorageFlag ){
+    if (databus.state == 1) {
+      this.initUpdata()
+      return
+    }
+    if (databus.showUserStorageFlag) {
       return
     }
     if (databus.gameOver)

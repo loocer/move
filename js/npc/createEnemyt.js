@@ -6,8 +6,10 @@ import {
   enImgs1,
   enImgs2,
   enImgs3,
-  del1s1,
+  bleed1,
   del1s2,
+  bihu,
+  spider
 } from '../utils/common.js'
 const ENEMY_WIDTH = 50
 const ENEMY_HEIGHT = 50
@@ -19,7 +21,7 @@ export default class CreateEnemyt {
   constructor() {
     this.createEnemys = [
       this.createEnemy1,
-      // this.createEnemy2,
+      this.createEnemy2,
       // this.createEnemy3
     ]
   }
@@ -54,8 +56,8 @@ export default class CreateEnemyt {
         1,
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
         temp,
-        [enImgs1[0], enImgs2[0]],
-        del1s1,
+        bihu,
+        bleed1,
         stopSpeed,
         findTime
       )
@@ -63,21 +65,25 @@ export default class CreateEnemyt {
     }
   }
   createEnemy2() {
-    if (databus.score > 400 || databus.score<30) {
-      return
-    }
-    for (let i = 0; i < ~~(Math.random() * 6); i++) {
+    let num = databus.frame % 100 / 10
+    for (let i = 0; i < ~~(Math.random() * num); i++) {
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
+      let tempc = rnd(1, 3)
+      let findTime = 40
+      // let stopSpeed = tempc==1?0:30
+      let stopSpeed = 30
       enemy.init(
-        .5,
+        tempc,
         1,
-         0,
+        Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
         temp,
-        [enImgs1[0], enImgs2[0]],
-        del1s1
+        spider,
+        bleed1,
+        stopSpeed,
+        findTime
       )
-      databus.enemys.push(enemy)
+      databus.enemys.add(enemy)
     }
   }
   createEnemy3() {
@@ -93,7 +99,7 @@ export default class CreateEnemyt {
         temp,
         0,
         [enImgs1[0], enImgs2[0]],
-        del1s1
+        bleed1
       )
       databus.enemys.push(enemy)
     }

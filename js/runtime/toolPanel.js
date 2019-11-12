@@ -30,13 +30,13 @@ export default class HandShank {
       && y <= thisy + this.height + deviation)
   }
   drawToCanvas(ctx) {
-      ctx.drawImage(
-        this.atlas,
-        this.x + databus.transX,
-        this.y + databus.transY,
-        this.width,
-        this.height
-      )
+      // ctx.drawImage(
+      //   this.atlas,
+      //   this.x + databus.transX,
+      //   this.y + databus.transY,
+      //   this.width,
+      //   this.height
+      // )
   }
   updata(){
     if (databus.showUserStorageFlag && databus.panelPosition.rankingX < -20) {

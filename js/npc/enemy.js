@@ -3,8 +3,8 @@ import DataBus from '../databus'
 import Corpses from './corpses.js'
 import { getRoteImg } from '../utils/index'
 
-const ENEMY_WIDTH = 30
-const ENEMY_HEIGHT = 30
+const ENEMY_WIDTH = 50
+const ENEMY_HEIGHT = 50
 
 let databus = new DataBus()
 let atlas = new Image()
@@ -91,7 +91,7 @@ export default class Enemy extends Animation {
     let index = ~~this.frameSpeed
       ctx.save()
       ctx.translate(this.x, this.y)
-      ctx.rotate(this.rotate * Math.PI / 180)
+      ctx.rotate((this.rotate + 180) * Math.PI / 180 )
       ctx.drawImage(
         this.imgs[index],
         -this.width / 2,
@@ -111,7 +111,7 @@ export default class Enemy extends Animation {
     if (this.time % 100 < this.stopTime){
       return 
     }
-    if (this.frame % 20 == 0) {
+    if (this.frame % 2 == 0) {
       this.frameSpeed++
       if (this.frameSpeed > this.imgs.length - 1) {
         this.frameSpeed = 0

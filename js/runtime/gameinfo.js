@@ -1,31 +1,93 @@
 import DataBus from '../databus'
-let atlas = new Image()
-let y = 30
-atlas.src = 'images/Common.png'
 let databus = new DataBus()
 import {
   groundWidth,
   groundHeight,
   screenHeight,
-  screenWidth
+  screenWidth,
+  bloodBg,
+  scoreBg,
+  initPics
 } from '../utils/common.js'
+let leftP = (screenWidth - 386) / 2
 export default class GameInfo {
+  constructor() {
+    this.bg = initPics[0]
+    this.button = initPics[1]
+  }
   renderGameScore(ctx, score) {
+
     ctx.fillStyle = "#ffffff"
     ctx.font = "20px Arial"
     ctx.fillText(
       score,
-      10 + databus.transX,
-      y + databus.transY
+      leftP + databus.transX - 150,
+      25 + databus.transY
     )
+  }
+  touchstartEvent = (e) => {
+    // wx.showToast({
+    //   title: '成功',
+    //   icon: 'success',
+    //   duration: 2000
+    // })
+    e.preventDefault()
+    for (let p of e.touches) {
+      let x = p.clientX
+      let y = p.clientY
+      if (this.checkIsFingerOnAir(x, y)) {}
+      if (toolPanel.checkIsFingerOnAir(x, y)) {
+        databus.showUserStorageFlag = !databus.showUserStorageFlag
+      }
+
+      if (this.rightHandShank.checkIsFingerOnAir(x, y)) {
+        player.shoot()
+      }
+    }
+
+  }
+  initRender(ctx){
+    ctx.drawImage(this.bg, 0, 0, 1600, 750, databus.transX, databus.transY,screenWidth , screenHeight )
+    ctx.drawImage(this.button, 0, 0, 429, 324, screenWidth/2-150 + databus.transX, (screenHeight - 300 * (324 / 429)) / 2 + databus.transY, 300, 300 * (324 / 429))
   }
   renderPlayerBleed(ctx, player) {
     player.lifeValue = player.lifeValue > player.allLifeValue ? player.allLifeValue : player.lifeValue
     let length = databus.transX + (screenWidth - 300) / 2
-    ctx.fillStyle = 'rgba(0,0,0, .3)';
-    ctx.fillRect(length, databus.transY, 300, 30);
-    ctx.fillStyle = 'rgba(0,206,209, 1)';
-    ctx.fillRect(length, databus.transY, 300*(player.lifeValue / player.allLifeValue), 30);
+    /*---------------------背景框-------------------------*/
+    ctx.drawImage(scoreBg, leftP + databus.transX - 162, databus.transY)
+    ctx.drawImage(bloodBg, leftP + databus.transX - 18, databus.transY)
+    /*---------------------外框-------------------------》*/
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#00ff00";
+    ctx.beginPath();
+    ctx.arc(leftP + databus.transX, databus.transY + 20, 8, Math.PI / 2, Math.PI / 2 * 3, false);
+
+    ctx.moveTo(leftP + databus.transX, databus.transY + 12);
+    ctx.lineTo(screenWidth - leftP + databus.transX, databus.transY + 12);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(leftP + databus.transX, databus.transY + 28);
+    ctx.lineTo(screenWidth - leftP + databus.transX, databus.transY + 28);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(screenWidth - leftP + databus.transX, databus.transY + 20, 8, Math.PI / 2 * 3, Math.PI / 2, false);
+    ctx.stroke();
+
+    /*---------------------外框-------------------------《*/
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#00ff00";
+    ctx.beginPath();
+    ctx.arc(leftP + databus.transX, databus.transY + 20, 6, Math.PI / 2, Math.PI / 2 * 3, false);
+    ctx.fill();
+    ctx.beginPath();
+    // ctx.moveTo(leftP + databus.transX, databus.transY+30);
+    // ctx.lineTo(screenWidth - leftP, databus.transY+30);
+
+    ctx.fillRect(leftP + databus.transX, databus.transY + 14, 300 * (player.lifeValue / player.allLifeValue), 12);
+    ctx.strokeStyle = "#00ff00";
+    // ctx.lineJoin = "round";
+    ctx.stroke();
   }
   renderGameOver(ctx, score) {
     ctx.fillStyle = 'rgba(0, 0, 0, .7)';
@@ -100,7 +162,7 @@ export default class GameInfo {
       startX: screenWidth / 2 - 40,
       startY: screenHeight / 2 - 10,
       endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2  + 125
+      endY: screenHeight / 2 + 125
     }
     this.btnShare = {
       startX: screenWidth / 2 - 40,

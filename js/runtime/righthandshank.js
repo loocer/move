@@ -71,26 +71,7 @@ export default class RightHandShank {
   _formatMovePosition(x, y) {
     let centerX = ~~(this.x - databus.transX + this.width / 2)
     let centerY = ~~(this.y - databus.transY + this.height / 2)
-    // let tempx = Math.abs((x - centerX) / 20) > 2 ? 2 : Math.abs((x - centerX) / 20)
-    // let tempy = Math.abs((y - centerY) / 20) > 2 ? 2 : Math.abs((y - centerY) / 20)
-    // if (tempx < 1 && tempy<1){
-    //   tempx = 2
-    //   tempy = 2
-    // }
-    // databus.shootX = x > centerX ? tempx : -tempx
-    // databus.shootY = y > centerY ? tempy : -tempy
-
-    // // databus.shootX = databus.moveX
-    // // databus.shootY = databus.moveY
     
-    // getRoteImg({
-    //   x1: databus.shootX,
-    //   x2: 0,
-    //   y1: databus.shootY,
-    //   y2: 0,
-    // },
-    //   this
-    // )
     let pobj = {}
     pobj.x2 = 0
     pobj.x1 = x - centerX

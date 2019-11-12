@@ -35,10 +35,34 @@ export const enImgs2 = [
 const bulletImgs = [
   ["images/bullet.png", Bullet2, 'bullet2']
 ]
+export const bloodBg = (() => {
+  let img = new Image()
+  img.src = 'images/bg/Rectangle.png'
+  return img
+})()
+export const scoreBg = (() => {
+  let img = new Image()
+  img.src = 'images/bg/score-bg.png'
+  return img
+})()
 export const backButton = (() => {
   let img = new Image()
   img.src = "images/return.png"
   return img
+})()
+export const bihu = (() => {
+  let imags = []
+  for (let i = 1; i < 5; i++) {
+    imags.push('images/bihu/' + i + '.png')
+  }
+  return imags
+})()
+export const spider = (() => {
+  let imags = []
+  for (let i = 1; i < 5; i++) {
+    imags.push('images/spider/' + i + '.png')
+  }
+  return imags
 })()
 export const playerImag = (i) => {
   let img = new Image()
@@ -62,17 +86,27 @@ export const boom1 = (() => {
   let list = []
   for (let i = 0; i < 19; i++) {
     let atlas = new Image()
-    atlas.src = `images/explosion${19 - i}.png`
+    atlas.src = `images/return.png`
     list.push(atlas)
   }
   return list
 })()
-export const del1s1 = (() => {
+export const bleed1 = (() => {
   let del1s = []
   for (let i = 0; i < 9; i++) {
     let atlas = new Image()
     atlas.src = `images/bleed.png`
     del1s.push(atlas)
   }
+  return del1s
+})()
+export const initPics = (() => {
+  let del1s = []
+  let atlas = new Image()
+  atlas.src = `images/bg/init-bg.png`
+  del1s.push(atlas)
+  let atlas2 = new Image()
+  atlas2.src = `images/button/init.png`
+  del1s.push(atlas2)
   return del1s
 })()

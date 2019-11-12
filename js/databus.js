@@ -55,12 +55,13 @@ export default class DataBus {
     this.playTempY = screenHeight / 2
     this.frame      = 0
     this.score      = 0
-    this.shootSpeed =5
+    this.shootSpeed = 5
     this.playerSpeed = 2
     this.bulletClass = null
     this.bullets = new Set()
     this.enemys = new Set()
     this.gameTools = []
+    this.state = 1//1,刚进入游戏；2,结束游戏 3,再次开启游戏
     this.panelPosition = {
       rankingX:-400
     }
