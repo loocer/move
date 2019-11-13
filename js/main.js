@@ -55,7 +55,7 @@ export default class Main {
     // 维护当前requestAnimationFrame的id
     this.aniId = 0
     this.init()
-    this.restart()
+    // this.restart()
   }
   getMsg() {
     let that = this
@@ -68,39 +68,44 @@ export default class Main {
     })
   }
   init() {
+    this.bindLoop = this.loop.bind(this)
     window.cancelAnimationFrame(this.aniId);
     this.aniId = window.requestAnimationFrame(
       this.bindLoop,
       canvas
     )
     this.gameinfo = new GameInfo(this)
-    canvas.addEventListener('touchstart', this.initTouchHandler)
+    this.touchHandler =this.initTouchHandler.bind(this)
+    canvas.addEventListener('touchstart', this.touchHandler)
   }
   initTouchHandler(e) {
-    e.preventDefault()
+    
 
     let x = e.touches[0].clientX
     let y = e.touches[0].clientY
-
-    let area = this.gameinfo.btnArea
-
-    if (x >= area.startX &&
-      x <= area.endX &&
-      y >= area.startY &&
-      y <= area.endY) {
-      canvas.removeEventListener(
-        'touchstart',
-        this.initTouchHandler
-      )
+    if (this.gameinfo.checkIsFingerOnAir(x, y)) {
       this.restart()
-      return
     }
+    // let area = this.gameinfo.btnArea
+
+    // if (x >= area.startX &&
+    //   x <= area.endX &&
+    //   y >= area.startY &&
+    //   y <= area.endY) {
+    //   canvas.removeEventListener(
+    //     'touchstart',
+    //     this.initTouchHandler
+    //   )
+    //   this.restart()
+    //   return
+    // }
   }
 
   restart() {
     // wx.triggerGC()
+    
     databus.reset(ctx)
-
+    databus.state = 2
     canvas.removeEventListener(
       'touchstart',
       this.touchHandler
@@ -417,6 +422,9 @@ export default class Main {
   render() {
     if (databus.state==1){
       this.initRender()
+    }
+    if (databus.state == 2){
+      this.doingRender()
     }
   }
   initUpdata(){

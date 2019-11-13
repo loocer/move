@@ -30,7 +30,7 @@ export default class Player extends Sprite {
     this.bodyImg = playerImag(1)
     this.lagImg1 = playerImag(2)
     this.lagImg2 = playerImag(3)
-    this.lifeValue = 1e1
+    this.lifeValue = 3
     this.allLifeValue = 1e2
     // this.x = 0
     // this.y = 0
