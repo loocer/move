@@ -152,39 +152,50 @@ function paixu(arry){
   allInfo.maxMoveTop = allInfo.allHeight - screenHeight
 }
 function initRanklist() {
+  let panelWidth = 500
+  // let iniY = (screenHeight - panelWidth * (720 / 910)) / 2 + databus.transY
+  // let iniX = screenWidth / 2 - panelWidth / 2 + databus.transX
+  // this.toolPanel.updata()
+  // ctx.drawImage(sharedCanvas, iniX + 150 * (panelWidth / 910), iniY + 210 * (panelWidth / 910), (panelWidth / 910) * 680, (panelWidth / 910) * 360)
+
+
+
+
+
   context.fillStyle = 'rgba(0, 0, 0,1)';
-  context.fillRect(0, 0, 500, 600);
+  context.fillRect(0, 0, screenWidth, screenHeight);
   context.fillStyle = '#fff';
-  let tempx = 100, tempy =0
-  let index =  -moveY/40
+  let tempx = 20, tempy =0
+  let index =  -moveY/100
   let temp = 1
   for (let obj of list){
-    tempy = index*40
+    tempy = index*100
     let name =obj.nickname.substring(0, 4)
     let core =obj.KVDataList[0].value
-    context.font = '20px Arial';
+    context.font = '40px Arial';
+    context.fillText(
+      temp,
+      tempx +20,
+      tempy + 50
+    )
     context.drawImage(
       obj.atlas,
       0, 0, 200, 200,
-      tempx,
+      tempx + 110,
       tempy,
-      40,30
+      100,80
     )
     context.fillText(
       name,
-      tempx + 100,
-      tempy + 20
+      tempx + 250,
+      tempy + 50
     )
     context.fillText(
       core,
-      tempx + 200,
-      tempy + 20
+      tempx + 500,
+      tempy + 50
     )
-    context.fillText(
-      temp,
-      tempx + 300,
-      tempy + 20
-    )
+    
     index++
     temp++
   }
@@ -380,11 +391,12 @@ wx.onTouchEnd(e => {
   // let touch = e.touches[0];
   // startY =0
   // startY = undefined;
-  // if (moveY < 0) { // 到顶
-  //   moveY = 0;
-  // } else if (moveY > itemCanvas.height - 590) { // 到底
-  //   moveY = itemCanvas.height - 590;
-  // }
+  console.log(list.length, moveY)
+  if (moveY < 0) { // 到顶
+    moveY = 0;
+  } else if (moveY > (list.length-2)*100) { // 到底
+    moveY = (list.length - 2) * 100;
+  }
   // reDrawItem(moveY);
 });
 wx.onTouchStart(e => {

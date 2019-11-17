@@ -111,5 +111,8 @@ export const initPics = (() => {
   let atlas3 = new Image()
   atlas3.src = `images/button/restar.png`
   del1s.push(atlas3)
+  let atlas4 = new Image()
+  atlas4.src = `images/bg/runking-bg.png`
+  del1s.push(atlas4)
   return del1s
 })()

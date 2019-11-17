@@ -15,6 +15,7 @@ export default class GameInfo {
     this.bg = initPics[0]
     this.button = initPics[1]
     this.button2 = initPics[2]
+    this.button3 = initPics[3]
   }
   renderGameScore(ctx, score) {
     ctx.fillStyle = "#ffffff"
@@ -25,7 +26,8 @@ export default class GameInfo {
       25 + databus.transY
     )
   }
-  
+
+
   checkIsFingerOnAir=(x, y)=> {
     return !!(x >= this.start.startX
       && y >= this.start.startY
@@ -39,6 +41,22 @@ export default class GameInfo {
       && x <= this.runking1.endX
       && y <= this.runking1.endY
     )
+  }
+  runKingRender(ctx){
+    let panelWidth =400
+    let iniY = (screenHeight - panelWidth * (720 / 910)) / 2 + databus.transY
+    let iniX = screenWidth / 2 - panelWidth/2 + databus.transX
+
+    ctx.drawImage(this.bg, 0, 0, 910, 720, databus.transX, databus.transY, screenWidth, screenHeight)
+    ctx.drawImage(this.button3, 0, 0, 910, 720, iniX, iniY, panelWidth, panelWidth * (720 / 910))
+
+    this.runkingStart = {
+      startX: iniX + 310 * panelWidth / 910 + databus.transX,
+      startY: iniY + 600 * panelWidth / 910 + databus.transY,
+      endX: iniX + 650 * panelWidth / 910 + databus.transX,
+      endY: iniY + 710 * panelWidth / 910 + databus.transY,
+    }
+    
   }
   initRender(ctx){
     let panelWidth = 400

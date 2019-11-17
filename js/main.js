@@ -79,6 +79,22 @@ export default class Main {
     this.touchHandler = this.initTouchHandler.bind(this)
     canvas.addEventListener('touchstart', this.touchHandler)
   }
+  initTouchRunkingStart(e) {
+    let x = e.touches[0].clientX
+    let y = e.touches[0].clientY
+    let runkingStart = this.gameinfo.runkingStart
+    if (x >= runkingStart.startX &&
+      x <= runkingStart.endX &&
+      y >= runkingStart.startY &&
+      y <= runkingStart.endY) {
+      canvas.removeEventListener(
+        'touchstart',
+        this.touchHandler
+      )
+      this.restart()
+      return
+    }
+  }
   initTouchHandler(e) {
 
 
@@ -88,7 +104,14 @@ export default class Main {
       this.restart()
     }
     if (this.gameinfo.checkIsFingerRunking1(x, y)) {
-      this.showRanking()
+      canvas.removeEventListener(
+        'touchstart',
+        this.touchHandler
+      )
+      this.touchHandler = this.initTouchRunkingStart.bind(this)
+      canvas.addEventListener('touchstart', this.touchHandler)
+      databus.state = 3
+      
     }
     // let area = this.gameinfo.btnArea
 
@@ -122,7 +145,7 @@ export default class Main {
     this.player = new Player(ctx)
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this)
-    
+
     this.bindLoop = this.loop.bind(this)
     this.hasEventBind = false
     this.gamecreate = new Gamecreate()
@@ -196,14 +219,14 @@ export default class Main {
         enemy.playOvers()
         databus.score += enemy.score
         databus.pools.recover('enemy', enemy)
-        --databus.lifeValue
+          --databus.lifeValue
         if (databus.lifeValue == 0) {
           databus.gameOver = true
         }
         break
       }
     }
-  
+
   }
   rowMove(ctx) {
     let tempX = this.player.x > databus.playTempX ? Math.abs(this.player.x - databus.playTempX) : -Math.abs(this.player.x - databus.playTempX)
@@ -287,8 +310,13 @@ export default class Main {
       x <= runking.endX &&
       y >= runking.startY &&
       y <= runking.endY) {
-      console.log('runking-----------------')
-      return
+      canvas.removeEventListener(
+        'touchstart',
+        this.touchHandler
+      )
+      this.touchHandler = this.initTouchRunkingStart.bind(this)
+      canvas.addEventListener('touchstart', this.touchHandler)
+      databus.state = 3
     }
 
     if (x >= restart.startX &&
@@ -313,7 +341,7 @@ export default class Main {
       let temp = this
       wx.showModal({
         title: '转发失败',
-        confirmText:'继续转发',
+        confirmText: '继续转发',
         success(res) {
           if (res.confirm) {
             wx.shareAppMessage({
@@ -322,7 +350,7 @@ export default class Main {
             })
             wx.showModal({
               title: '提示',
-              showCancel:false,
+              showCancel: false,
               content: '已复活点击继续',
               success(res) {
                 databus.gameOver = false
@@ -367,6 +395,10 @@ export default class Main {
   initRender() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     this.gameinfo.initRender(ctx)
+  }
+  runKingRender(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    this.gameinfo.runKingRender(ctx)
   }
   doingRender() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -422,7 +454,7 @@ export default class Main {
       }
     }
     this.toolPanel.drawToCanvas(ctx)
-    
+
   }
   addScore() {
     // ctx.drawImage(sharedCanvas, databus.panelPosition.rankingX + databus.transX, databus.transY, 500, 375)
@@ -432,8 +464,11 @@ export default class Main {
     })
   }
   showRanking() {
+    let panelWidth = 400
+    let iniY = (screenHeight - panelWidth * (720 / 910)) / 2 + databus.transY
+    let iniX = screenWidth / 2 - panelWidth / 2 + databus.transX
     this.toolPanel.updata()
-    ctx.drawImage(sharedCanvas, databus.panelPosition.rankingX + databus.transX, databus.transY, 500, 375)
+    ctx.drawImage(sharedCanvas, iniX + 130 * (panelWidth / 910), iniY + 200 * (panelWidth / 910), (panelWidth / 910) * 680, (panelWidth / 910) * 360)
     openDataContext.postMessage({
       data: databus,
       command: 'showRanking'
@@ -448,6 +483,10 @@ export default class Main {
     if (databus.state == 1) {
       this.initRender()
     }
+    if (databus.state == 3) {
+      this.runKingRender()
+      this.showRanking()
+    }
     if (databus.state == 2) {
       this.doingRender()
     }
@@ -459,6 +498,9 @@ export default class Main {
   update() {
     if (databus.state == 1) {
       this.initUpdata()
+      return
+    }
+    if (databus.state == 3) {
       return
     }
     if (databus.showUserStorageFlag) {
