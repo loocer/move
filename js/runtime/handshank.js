@@ -20,7 +20,7 @@ atlas2.src = 'images/on-fire.png'
 atlas3.src = 'images/32.png'
 atlas4.src = 'images/on-way.png'
 // atlas4.src = 'images/bg1.jpg'
-
+let instance
 export default class HandShank {
   constructor(temp) {
     // 玩家默认处于屏幕底部居中位置
@@ -48,6 +48,10 @@ export default class HandShank {
     this.touchmoveEvent = null
     // 初始化事件监听
     this.initEvent(temp.player)
+    if (instance)
+      return instance
+
+    instance = this
   }
 
   renderHandShank(ctx, player) {
@@ -125,6 +129,9 @@ export default class HandShank {
    */
   initEvent(player) {
     this.touchstartEvent = (e) => {
+      if (databus.stopFlag){
+        return
+      }
       // wx.showToast({
       //   title: '成功',
       //   icon: 'success',
@@ -141,12 +148,16 @@ export default class HandShank {
         }
         
         if (this.rightHandShank.checkIsFingerOnAir(x, y)) {
-          player.shoot()
+          // player.shoot()
         }
       }
 
     }
     canvas.addEventListener('touchstart', ((e) => {
+      console.log
+      if (databus.stopFlag) {
+        return
+      }
       if (databus.showUserStorageFlag){
         return
       }
@@ -174,6 +185,9 @@ export default class HandShank {
 
     canvas.addEventListener('touchmove', ((e) => {
       e.preventDefault()
+      if (databus.stopFlag) {
+        return
+      }
       if (databus.showUserStorageFlag){
         return
       }
@@ -201,6 +215,9 @@ export default class HandShank {
 
     canvas.addEventListener('touchend', ((e) => {
       console.log(e)
+      if (databus.stopFlag) {
+        return
+      }
       for (let obj of e.changedTouches){
         let x = obj.clientX
         let y = obj.clientY

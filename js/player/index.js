@@ -27,10 +27,11 @@ export default class Player extends Sprite {
   init(){
     this.x = databus.playTempX
     this.y = databus.playTempY
+    this.fireAcTime = 0
     this.bodyImg = playerImag(1)
     this.lagImg1 = playerImag(2)
     this.lagImg2 = playerImag(3)
-    this.lifeValue = 3
+    this.lifeValue = databus.lifeValue
     this.allLifeValue = 1e2
     // this.x = 0
     // this.y = 0
@@ -42,7 +43,9 @@ export default class Player extends Sprite {
   drawToCanvas(ctx) {
     if (!this.visible)
       return
-   
+    if(this.fireAcTime!=0){
+      this.fireAcTime--
+    }
     let bu  = null
     if (databus.touched){
       bu = databus.frame % 10 > 5 ? this.lagImg1 : this.lagImg2
@@ -67,7 +70,7 @@ export default class Player extends Sprite {
     ctx.rotate(this.rotateBody * Math.PI / 180 + 45.15)
     ctx.drawImage(
       this.bodyImg,
-      -this.width / 2,
+      -this.width / 2 + this.fireAcTime,
       -this.height / 2,
       this.width,
       this.height
@@ -164,6 +167,8 @@ export default class Player extends Sprite {
    * 射击时机由外部决定
    */
   shoot() {
+    console.log(787878)
+    this.fireAcTime = 5
     // if (databus.frame % 30 > 20) {
     //   return
     // }

@@ -14,6 +14,7 @@ const PLAYER_HEIGHT = 120
 atlas.src = 'images/handshank.png'
 atlas2.src = 'images/on-fire.png'
 // atlas3.src = 'images/on-way.png'
+let instance
 export default class RightHandShank {
   constructor() {
     // 玩家默认处于屏幕底部居中位置
@@ -35,6 +36,10 @@ export default class RightHandShank {
     this.touched = false
 
     this.bullets = []
+    if (instance)
+      return instance
+
+    instance = this
     // 初始化事件监听
     // this.initEvent()
   }

@@ -1,8 +1,8 @@
 // export const 
 export const screenWidth = window.innerWidth
 export const screenHeight = window.innerHeight
-export const groundWidth = 1000
-export const groundHeight = 600
+export const groundWidth = screenWidth
+export const groundHeight = screenHeight
 import Bullet1 from '../bullet/bullet1'
 import Bullet2 from '../bullet/bullet2'
 import Bullet3 from '../bullet/bullet3'

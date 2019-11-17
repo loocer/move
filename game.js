@@ -5,6 +5,11 @@ import Main from './js/main'
 wx.showShareMenu({
   withShareTicket: true
 })
+wx.onShareAppMessage(function () {
+  return {
+    title: '转发标题'
+  }
+})
 wx.getSystemInfo({
   success(res) {
     if (res.system.substring(0,3)=='ios'){

@@ -69,22 +69,26 @@ export default class Main {
   }
   init() {
     this.bindLoop = this.loop.bind(this)
+    this.toolPanel = new ToolPanel()
     window.cancelAnimationFrame(this.aniId);
     this.aniId = window.requestAnimationFrame(
       this.bindLoop,
       canvas
     )
     this.gameinfo = new GameInfo(this)
-    this.touchHandler =this.initTouchHandler.bind(this)
+    this.touchHandler = this.initTouchHandler.bind(this)
     canvas.addEventListener('touchstart', this.touchHandler)
   }
   initTouchHandler(e) {
-    
+
 
     let x = e.touches[0].clientX
     let y = e.touches[0].clientY
     if (this.gameinfo.checkIsFingerOnAir(x, y)) {
       this.restart()
+    }
+    if (this.gameinfo.checkIsFingerRunking1(x, y)) {
+      this.showRanking()
     }
     // let area = this.gameinfo.btnArea
 
@@ -103,7 +107,7 @@ export default class Main {
 
   restart() {
     // wx.triggerGC()
-    
+
     databus.reset(ctx)
     databus.state = 2
     canvas.removeEventListener(
@@ -118,7 +122,7 @@ export default class Main {
     this.player = new Player(ctx)
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this)
-    this.toolPanel = new ToolPanel()
+    
     this.bindLoop = this.loop.bind(this)
     this.hasEventBind = false
     this.gamecreate = new Gamecreate()
@@ -192,34 +196,14 @@ export default class Main {
         enemy.playOvers()
         databus.score += enemy.score
         databus.pools.recover('enemy', enemy)
-          --this.player.lifeValue
-        if (this.player.lifeValue == 0) {
+        --databus.lifeValue
+        if (databus.lifeValue == 0) {
           databus.gameOver = true
         }
         break
       }
     }
-    // for (let i = 0, il = databus.enemys.length; i < il; i++) {
-    //   let enemy = databus.enemys[i]
-    //   databus.gameTools.forEach((item) => {
-    //     if (item.checkIsFingerOnEnemy(enemy)) {
-    //       enemy.visible = false
-    //       enemy.playOvers()
-    //       databus.pools.recover('enemy', enemy)
-    //     }
-    //   })
-
-    //   if (this.player.isCollideWith(enemy)) {
-    //     enemy.visible = false
-    //     enemy.playOvers()
-    //     databus.pools.recover('enemy', enemy)
-    //       --this.player.lifeValue
-    //     if (this.player.lifeValue == 0) {
-    //       databus.gameOver = true
-    //     }
-    //     break
-    //   }
-    // }
+  
   }
   rowMove(ctx) {
     let tempX = this.player.x > databus.playTempX ? Math.abs(this.player.x - databus.playTempX) : -Math.abs(this.player.x - databus.playTempX)
@@ -228,9 +212,6 @@ export default class Main {
     this.righthandshank.x += tempX
     databus.transX = this.handShank.x - 100
     ctx.translate(-tempX, 0)
-    // if (this.handShank.touched && !this.handShank.isInsite) {//
-    //   this.handShank.tx += tempX
-    // }
   }
   colMove(ctx) {
     let tempY = this.player.y > databus.playTempY ? Math.abs(this.player.y - databus.playTempY) : -Math.abs(this.player.y - databus.playTempY)
@@ -239,9 +220,6 @@ export default class Main {
     this.righthandshank.y += tempY
     databus.transY = this.handShank.y - (screenHeight - 160)
     ctx.translate(0, -tempY)
-    // if (this.handShank.touched && !this.handShank.isInsite) {
-    //   this.handShank.ty += tempY
-    // }
   }
   //视觉移动 不至于第一人称跑出屏幕
   cameraMove(ctx) {
@@ -297,21 +275,67 @@ export default class Main {
   }
   // 游戏结束后的触摸事件处理逻辑
   touchEventHandler(e) {
-    if (!this.gameinfo.btnShare) {
+    e.preventDefault()
+    let x = e.touches[0].clientX + databus.transX
+    let y = e.touches[0].clientY + databus.transY
+    let {
+      share,
+      restart,
+      runking
+    } = this.gameinfo
+    if (x >= runking.startX &&
+      x <= runking.endX &&
+      y >= runking.startY &&
+      y <= runking.endY) {
+      console.log('runking-----------------')
       return
     }
-    e.preventDefault()
 
-    let x = e.touches[0].clientX
-    let y = e.touches[0].clientY
-
-    let area = this.gameinfo.btnArea
-
-    if (x >= area.startX &&
-      x <= area.endX &&
-      y >= area.startY &&
-      y <= area.endY) {
+    if (x >= restart.startX &&
+      x <= restart.endX &&
+      y >= restart.startY &&
+      y <= restart.endY) {
       this.restart()
+      return
+    }
+    if (x >= share.startX &&
+      x <= share.endX &&
+      y >= share.startY &&
+      y <= share.endY) {
+      wx.shareAppMessage({
+        title: '老子不服就是要干爆你',
+        // imageUrl: canvas.toTempFilePathSync({
+        //   destWidth: 500,
+        //   destHeight: 400
+        // })
+        imageUrl: 'https://mmocgame.qpic.cn/wechatgame/20TthBlrSbn0tka4tiageU2xDneWRVOYvldMxJNgeFRteUvo6QjeibIbibP7XClRuZX/0',
+      })
+      let temp = this
+      wx.showModal({
+        title: '转发失败',
+        confirmText:'继续转发',
+        success(res) {
+          if (res.confirm) {
+            wx.shareAppMessage({
+              title: '老子不服就是要干爆你',
+              imageUrl: 'https://mmocgame.qpic.cn/wechatgame/20TthBlrSbn0tka4tiageU2xDneWRVOYvldMxJNgeFRteUvo6QjeibIbibP7XClRuZX/0',
+            })
+            wx.showModal({
+              title: '提示',
+              showCancel:false,
+              content: '已复活点击继续',
+              success(res) {
+                databus.gameOver = false
+                databus.stopFlag = false
+                databus.lifeValue = 20
+                // temp.restart()
+              }
+            })
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
       return
     }
     // let rankIng = this.gameinfo.rankIng
@@ -323,21 +347,21 @@ export default class Main {
     //   return
     // }
 
-    let share = this.gameinfo.btnShare
-    if (x >= share.startX &&
-      x <= share.endX &&
-      y >= share.startY &&
-      y <= share.endY) {
-      wx.shareAppMessage({
-        title: '老子不服就是要干爆你',
-        imageUrl: canvas.toTempFilePathSync({
-          destWidth: 500,
-          destHeight: 400
-        })
-        // imageUrl: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=606551735,1600986175&fm=26&gp=0.j'
-      })
+    // let share = this.gameinfo.btnShare
+    // if (x >= share.startX &&
+    //   x <= share.endX &&
+    //   y >= share.startY &&
+    //   y <= share.endY) {
+    //   wx.shareAppMessage({
+    //     title: '老子不服就是要干爆你',
+    //     imageUrl: canvas.toTempFilePathSync({
+    //       destWidth: 500,
+    //       destHeight: 400
+    //     })
+    //     // imageUrl: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=606551735,1600986175&fm=26&gp=0.j'
+    //   })
 
-    }
+    // }
 
   }
   initRender() {
@@ -389,15 +413,16 @@ export default class Main {
     if (databus.gameOver) {
       this.addScore()
       this.gameinfo.renderGameOver(ctx, databus.score)
+      databus.stopFlag = true
       if (!this.hasEventBind) {
         this.hasEventBind = true
         this.touchHandler = this.touchEventHandler.bind(this)
-        canvas.removeEventListener('touchstart', this.handShank.touchstartEvent)
+        // canvas.removeEventListener('touchstart', this.handShank.touchstartEvent)
         canvas.addEventListener('touchstart', this.touchHandler)
       }
     }
     this.toolPanel.drawToCanvas(ctx)
-    this.showRanking()
+    
   }
   addScore() {
     // ctx.drawImage(sharedCanvas, databus.panelPosition.rankingX + databus.transX, databus.transY, 500, 375)
@@ -420,14 +445,14 @@ export default class Main {
    * 每一帧重新绘制所有的需要展示的元素
    */
   render() {
-    if (databus.state==1){
+    if (databus.state == 1) {
       this.initRender()
     }
-    if (databus.state == 2){
+    if (databus.state == 2) {
       this.doingRender()
     }
   }
-  initUpdata(){
+  initUpdata() {
 
   }
   // 游戏逻辑更新主函数
@@ -459,7 +484,7 @@ export default class Main {
     this.collisionDetection()
 
     // if (databus.frame % databus.createSpeed === 0 && this.righthandshank.touched) {
-    if (databus.frame % databus.createSpeed === 0) {
+    if (databus.frame % databus.createSpeed === 0 && this.righthandshank.touched) {
       this.player.shoot()
     }
     // this.player.rotate = this.righthandshank.rotate
@@ -506,6 +531,7 @@ export default class Main {
         }
       })
       databus.gameTools = temp
+      this.player.lifeValue = databus.lifeValue
     }
   }
 

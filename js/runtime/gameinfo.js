@@ -17,7 +17,6 @@ export default class GameInfo {
     this.button2 = initPics[2]
   }
   renderGameScore(ctx, score) {
-
     ctx.fillStyle = "#ffffff"
     ctx.font = "20px Arial"
     ctx.fillText(
@@ -28,28 +27,18 @@ export default class GameInfo {
   }
   
   checkIsFingerOnAir=(x, y)=> {
-    console.log(x >= this.start.startX, y >= this.start.startY, x <= this.start.endX, y <= this.start.endY, '++++++++++++++++++++')
     return !!(x >= this.start.startX
       && y >= this.start.startY
       && x <= this.start.endX
       && y <= this.start.endY
     )
   }
-  touchstartEvent = (e) => {
-    wx.showToast({
-      title: '成功',
-      icon: 'success',
-      duration: 2000
-    })
-    e.preventDefault()
-    for (let p of e.touches) {
-      let x = p.clientX
-      let y = p.clientY
-      if (this.checkIsFingerOnAir(x, y)) {
-        console.log(999999999999999)
-      }
-    }
-
+  checkIsFingerRunking1 = (x, y)=>{
+    return !!(x >= this.runking1.startX
+      && y >= this.runking1.startY
+      && x <= this.runking1.endX
+      && y <= this.runking1.endY
+    )
   }
   initRender(ctx){
     let panelWidth = 400
@@ -65,11 +54,15 @@ export default class GameInfo {
       endX: iniX + panelWidth,
       endY: panelWidth * (628 / 848) * (37 / 65) + iniY + (panelWidth / 848 * 120)
     }
-    this.runking={
-
+    this.runking1={
+      startX: screenWidth / 2 - 150 + databus.transX,
+      startY: panelWidth * (628 / 848) * (514 / 650) + iniY,
+      endX: iniX + panelWidth,
+      endY: panelWidth * (628 / 848) * (630 / 650) + iniY
     }
   }
   renderPlayerBleed(ctx, player) {
+    
     player.lifeValue = player.lifeValue > player.allLifeValue ? player.allLifeValue : player.lifeValue
     let length = databus.transX + (screenWidth - 300) / 2
     /*---------------------背景框-------------------------*/
@@ -110,16 +103,28 @@ export default class GameInfo {
   }
   renderGameOver(ctx, score) {
     let panelWidth = 200
-    let iniY = (screenHeight - panelWidth * (648 / 273)) / 2 + databus.transY
-    let iniX = screenWidth / 2 - 200 + databus.transX
+    let iniY = (screenHeight - panelWidth * (220 / 285)) / 2 + databus.transY
+    let iniX = screenWidth / 2 - panelWidth / 2 + databus.transX
     ctx.fillStyle = 'rgba(0, 0, 0, .7)';
     ctx.fillRect(0, 0, groundWidth, groundHeight);
-    ctx.drawImage(this.button2, 0, 0, 273, 220, screenWidth / 2 - panelWidth / 2 + databus.transX, (screenHeight - panelWidth * (220 / 273)) / 2 + databus.transY, panelWidth, panelWidth * (220 / 273))
-    this.btnShare = {
-      startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 - 95,
-      endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2 - 20
+    ctx.drawImage(this.button2, 0, 0, 285, 220, iniX, iniY, panelWidth, panelWidth * (220 / 285))
+    this.restart = {
+      startX: iniX,
+      startY: iniY + 85 * (panelWidth / 285),
+      endX: iniX + panelWidth,
+      endY: iniY + 140 * (panelWidth / 270)
+    }
+    this.share = {
+      startX: iniX,
+      startY: iniY,
+      endX: iniX + panelWidth,
+      endY: iniY + 60 * (panelWidth / 270)
+    }
+    this.runking = {
+      startX: iniX,
+      startY: iniY + 170 * (panelWidth / 285),
+      endX: iniX + panelWidth,
+      endY: iniY + 235 * (panelWidth / 270)
     }
   }
 }
