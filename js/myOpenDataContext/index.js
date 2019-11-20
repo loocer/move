@@ -282,9 +282,9 @@ function getMyScore() {
         let data = res;
         if (data.KVDataList.length == 0) {
           resive()
+        }else{
+          resive(data.KVDataList[0].value)
         }
-        resive(data.KVDataList[0].value)
-        console.log(',,,,,,,,,,,,,,,,,,,', data);
         // let lastScore = data.KVDataList[0].value || 0;
         // if (!data.KVDataList[1]) {
         //   saveMaxScore(lastScore);

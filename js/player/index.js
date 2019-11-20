@@ -7,6 +7,7 @@ import {
 } from '../utils/common'
 const screenWidth    = window.innerWidth
 const screenHeight   = window.innerHeight
+import Handshank from '../runtime/handshank.js'
 
 // 玩家相关常量设置
 const PLAYER_IMG_SRC = 'images/player.png'
@@ -16,15 +17,16 @@ const PLAYER_HEIGHT  = 30
 let databus = new DataBus()
 
 export default class Player extends Sprite {
-  constructor() {
+  constructor(main) {
     super(PLAYER_IMG_SRC, PLAYER_WIDTH, PLAYER_HEIGHT)
-
+    this.handShank = main.handShank
     // 玩家默认处于屏幕底部居中位置
     this.init()
     // 初始化事件监听
     // this.initEvent()
   }
   init(){
+    
     this.x = databus.playTempX
     this.y = databus.playTempY
     this.fireAcTime = 0
@@ -32,7 +34,7 @@ export default class Player extends Sprite {
     this.lagImg1 = playerImag(2)
     this.lagImg2 = playerImag(3)
     this.lifeValue = databus.lifeValue
-    this.allLifeValue = 1e2
+    this.allLifeValue = 2e2
     // this.x = 0
     // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了
@@ -168,7 +170,8 @@ export default class Player extends Sprite {
    */
   shoot() {
     console.log(787878)
-    this.fireAcTime = 5
+ 
+    this.fireAcTime = this.handShank.touched?2: 5
     // if (databus.frame % 30 > 20) {
     //   return
     // }

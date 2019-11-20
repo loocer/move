@@ -7,6 +7,7 @@ import {
   enImgs2,
   enImgs3,
   bleed1,
+  bleed2,
   del1s2,
   bihu,
   spider
@@ -57,7 +58,7 @@ export default class CreateEnemyt {
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
         temp,
         bihu,
-        bleed1,
+        bleed2,
         stopSpeed,
         findTime
       )

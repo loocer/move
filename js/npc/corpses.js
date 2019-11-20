@@ -1,6 +1,6 @@
 import Animation from '../base/animation'
 import DataBus from '../databus'
-import { getRoteImg } from '../utils/index'
+import { getRoteImg, rnd } from '../utils/index'
 
 
 
@@ -16,6 +16,7 @@ export default class Corpses {
     this.atlas = del1s[0]
     this.showLong = 1000
     this.visible = true
+    this.rote = rnd(0, 360)
     this.x = X
     this.y = Y
   }
@@ -34,26 +35,12 @@ export default class Corpses {
     // ctx.arc(this.x - 20,  this.y - 20,20, 0, 2 * Math.PI);
     ctx.save()
     ctx.translate(this.x, this.y)
-    // ctx.rotate(this.rotate * Math.PI / 180)
-    // ctx.drawImage(
-    //   atlas,
-    //   0,
-    //   0,
-    //   50,
-    //   50
-    // )
-    // ctx.restore()
-    // ctx.beginPath();
-    // ctx.lineWidth = 5;
-    // ctx.arc(0, 0, 15+2 * this.lifeValue , 0, 2 * Math.PI);
-    // ctx.stroke();
-   
-    // ctx.stroke();
+    ctx.rotate(this.rote * Math.PI / 180)
       ctx.drawImage(
         this.atlas ,
         0, 0, 100,100,
-        0,
-        0,
+        -20,
+        -20,
         40,40
       )
     ctx.restore()

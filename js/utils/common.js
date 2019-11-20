@@ -100,6 +100,15 @@ export const bleed1 = (() => {
   }
   return del1s
 })()
+export const bleed2 = (() => {
+  let del1s = []
+  for (let i = 0; i < 9; i++) {
+    let atlas = new Image()
+    atlas.src = `images/ble1ed.png`
+    del1s.push(atlas)
+  }
+  return del1s
+})()
 export const initPics = (() => {
   let del1s = []
   let atlas = new Image()

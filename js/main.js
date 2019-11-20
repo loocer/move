@@ -142,10 +142,10 @@ export default class Main {
       class: Bullet
     }
     this.bg = new BackGround(ctx)
-    this.player = new Player(ctx)
+   
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this)
-
+    this.player = new Player(this)
     this.bindLoop = this.loop.bind(this)
     this.hasEventBind = false
     this.gamecreate = new Gamecreate()
@@ -508,6 +508,7 @@ export default class Main {
     }
     if (databus.gameOver)
       return;
+    
     this.gamecreate.createEnemy1()
     this.bg.update()
     databus.corpses.forEach((item) => {

@@ -30,7 +30,7 @@ export default class DataBus {
     this.moveX = 0//手柄操作位移
     this.moveY = 0
     this.gameIndex = 0
-    this.lifeValue = 20
+    this.lifeValue = 200
     this.createEnemysStatus = 1//关卡
     if ( instance )
       return instance
@@ -68,7 +68,7 @@ export default class DataBus {
     this.panelPosition = {
       rankingX:-400
     }
-    this.lifeValue = 20
+    this.lifeValue = 200
     this.corpses = new Set()
     this.animations = []
     this.gameOver   = false
