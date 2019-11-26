@@ -124,6 +124,7 @@ let showRanking=()=>{
 }
 let addNewScore= (data)=>{
   getMyScore().then((score)=>{
+    console.log(score, data.score)
     if (data.score > score){
       var kvDataList = new Array();
       kvDataList.push({
@@ -281,7 +282,7 @@ function getMyScore() {
       success: res => {
         let data = res;
         if (data.KVDataList.length == 0) {
-          resive()
+          resive(0)
         }else{
           resive(data.KVDataList[0].value)
         }

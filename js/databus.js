@@ -17,7 +17,7 @@ export default class DataBus {
 
     this.x = 0
     this.y = 0
-    this.createSpeed = 10
+    this.createSpeed = 2
     this.bulletClass = {
 
     }
@@ -58,8 +58,8 @@ export default class DataBus {
     this.playTempY = screenHeight / 2
     this.frame      = 0
     this.score      = 0
-    this.shootSpeed = 5
-    this.playerSpeed = 2
+    this.shootSpeed = 10
+    this.playerSpeed = 1
     this.bulletClass = null
     this.bullets = new Set()
     this.enemys = new Set()
@@ -68,7 +68,8 @@ export default class DataBus {
     this.panelPosition = {
       rankingX:-400
     }
-    this.lifeValue = 200
+    this.createSpeed = 20
+    this.lifeValue = 20
     this.corpses = new Set()
     this.animations = []
     this.gameOver   = false

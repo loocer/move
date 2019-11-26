@@ -46,6 +46,7 @@ sharedCanvas.width = width * window.devicePixelRatio;
 
 let databus = new DataBus(ctx)
 let createEnemy = new CreateEnemyt(ctx)
+let shareFlag = false
 /**
  * 游戏主函数
  */
@@ -164,24 +165,29 @@ export default class Main {
    * 帧数取模定义成生成的频率
    */
   enemyGenerate() {
-    if (databus.frame % 2e1 === 0) {
+    if (databus.frame % 5e1 === 0) {
+      if(databus.enemys.size<20){
+        createEnemy.createEnemy()
+      }
+    }
+    // if (databus.frame % 2e3 === 0) {
 
-      createEnemy.createEnemy()
-      // enemy.init(6)
+    //   createEnemy.createEnemy()
+    //   // enemy.init(6)
 
-    }
-    if (databus.frame == 1e4) {
-      databus.frame = 0
-    }
-    if (databus.frame == 2 * 1e3) {
-      databus.createEnemysStatus = 3
-    }
-    if (databus.frame == 1e3) {
-      databus.createEnemysStatus = 2
-    }
-    if (databus.frame == 0) {
-      databus.createEnemysStatus = 1
-    }
+    // }
+    // if (databus.frame == 1e4) {
+    //   databus.frame = 0
+    // }
+    // if (databus.frame == 2 * 1e3) {
+    //   databus.createEnemysStatus = 3
+    // }
+    // if (databus.frame == 1e3) {
+    //   databus.createEnemysStatus = 2
+    // }
+    // if (databus.frame == 0) {
+    //   databus.createEnemysStatus = 1
+    // }
 
   }
 
@@ -214,7 +220,7 @@ export default class Main {
         }
       })
 
-      if (this.player.isCollideWith(enemy)) {
+      if (this.player.isplesCollideWith(enemy)) {
         enemy.visible = false
         enemy.playOvers()
         databus.score += enemy.score
@@ -331,40 +337,62 @@ export default class Main {
       y >= share.startY &&
       y <= share.endY) {
       wx.shareAppMessage({
-        title: '老子不服就是要干爆你',
+        title: '孤独的828战士，会不会成为第829战死的将士呢？',
         // imageUrl: canvas.toTempFilePathSync({
         //   destWidth: 500,
         //   destHeight: 400
         // })
-        imageUrl: 'https://mmocgame.qpic.cn/wechatgame/20TthBlrSbn0tka4tiageU2xDneWRVOYvldMxJNgeFRteUvo6QjeibIbibP7XClRuZX/0',
+        imageUrl:'/images/bg.png',
+        // imageUrlId:'EaPjTeGFSY-aOIUlhIIWOw'
       })
-      let temp = this
-      wx.showModal({
-        title: '转发失败',
-        confirmText: '继续转发',
-        success(res) {
-          if (res.confirm) {
-            wx.shareAppMessage({
-              title: '老子不服就是要干爆你',
-              imageUrl: 'https://mmocgame.qpic.cn/wechatgame/20TthBlrSbn0tka4tiageU2xDneWRVOYvldMxJNgeFRteUvo6QjeibIbibP7XClRuZX/0',
-            })
-            wx.showModal({
-              title: '提示',
-              showCancel: false,
-              content: '已复活点击继续',
-              success(res) {
-                databus.gameOver = false
-                databus.stopFlag = false
-                databus.lifeValue = 20
-                // temp.restart()
+      if (shareFlag){
+        setTimeout(() => {
+          wx.showModal({
+            title: '提示',
+            showCancel: false,
+            content: '已复活点击继续',
+            success(res) {
+              shareFlag = true
+              databus.gameOver = false
+              databus.stopFlag = false
+              databus.lifeValue = 20
+              // temp.restart()
+            }
+          })
+        },2000)
+      }else{
+        setTimeout(()=>{
+          let temp = this
+          wx.showModal({
+            title: '转发失败',
+            confirmText: '继续转发',
+            success(res) {
+              if (res.confirm) {
+                wx.shareAppMessage({
+                  title: '孤独的828战士，会不会成为第829战死的将士呢？',
+                  imageUrl: 'https://mmocgame.qpic.cn/wechatgame/20TthBlrSbn0tka4tiageU2xDneWRVOYvldMxJNgeFRteUvo6QjeibIbibP7XClRuZX/0',
+                  imageUrlId: 'EaPjTeGFSY-aOIUlhIIWOw'
+                })
+                wx.showModal({
+                  title: '提示',
+                  showCancel: false,
+                  content: '已复活点击继续',
+                  success(res) {
+                    shareFlag = true
+                    databus.gameOver = false
+                    databus.stopFlag = false
+                    databus.lifeValue = 20
+                    // temp.restart()
+                  }
+                })
+              } else if (res.cancel) {
+                console.log('用户点击取消')
               }
-            })
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        }
-      })
-      return
+            }
+          })
+        },2000)
+        
+      }
     }
     // let rankIng = this.gameinfo.rankIng
     // if (x >= rankIng.startX &&
@@ -422,7 +450,7 @@ export default class Main {
         item.drawToCanvas(ctx)
       }
     })
-    this.cameraMove(ctx)
+    
 
     databus.animations.forEach((ani) => {
       if (ani.isPlaying) {
@@ -445,6 +473,7 @@ export default class Main {
     if (databus.gameOver) {
       this.addScore()
       this.gameinfo.renderGameOver(ctx, databus.score)
+      databus.state == 4
       databus.stopFlag = true
       if (!this.hasEventBind) {
         this.hasEventBind = true
@@ -508,7 +537,7 @@ export default class Main {
     }
     if (databus.gameOver)
       return;
-    
+    this.cameraMove(ctx)
     this.gamecreate.createEnemy1()
     this.bg.update()
     databus.corpses.forEach((item) => {
@@ -527,7 +556,7 @@ export default class Main {
     this.collisionDetection()
 
     // if (databus.frame % databus.createSpeed === 0 && this.righthandshank.touched) {
-    if (databus.frame % databus.createSpeed === 0 && this.righthandshank.touched) {
+    if (databus.frame % databus.createSpeed == 0 && this.righthandshank.touched) {
       this.player.shoot()
     }
     // this.player.rotate = this.righthandshank.rotate
@@ -546,7 +575,7 @@ export default class Main {
       }
       for (let item of databus.enemys) {
         if (!item.visible) {
-          databus.bullets.delete(item);
+          databus.enemys.delete(item);
         }
       }
       // databus.enemys.forEach((item) => {

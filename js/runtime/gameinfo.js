@@ -59,7 +59,7 @@ export default class GameInfo {
     
   }
   initRender(ctx){
-    let panelWidth = 400
+    let panelWidth = 300
     let iniY = (screenHeight - panelWidth * (648 / 858)) / 2 + databus.transY
     let iniX = screenWidth / 2 - 200 + databus.transX
     

@@ -125,3 +125,8 @@ export const initPics = (() => {
   del1s.push(atlas4)
   return del1s
 })()
+export const biHuBody=(()=>{
+  let atlas = new Image()
+  atlas.src = `images/body/bihu.png`
+  return atlas
+})()

@@ -5,7 +5,7 @@ import {
   getRoteImg
 } from '../utils/index'
 
-const ENEMY_WIDTH = 50
+const ENEMY_WIDTH = 30
 const ENEMY_HEIGHT = 50
 
 let databus = new DataBus()
@@ -25,7 +25,7 @@ export default class Enemy extends Animation {
     }
     return temps
   }
-  init(speed, lifeValue, x, y, imgSrcs, del1s, stopTime, findTime) {
+  init(speed, lifeValue, x, y, imgSrcs, del1s, stopTime, findTime,finIndex) {
     this.x = x
     this.y = y
     // this.srcImg = srcImg
@@ -33,6 +33,7 @@ export default class Enemy extends Animation {
     // this.img.src = imgSrc
     this.del1s = del1s
     this.time = 0
+    this.finIndex = finIndex
     this.frame = 0
     this.stopTime = stopTime //停留休息时间
     this.findTime = findTime //停留休息时间
@@ -86,6 +87,8 @@ export default class Enemy extends Animation {
       },
       this
     )
+
+    // console.log(this.rotate)
   }
   drawToCanvas(ctx) {
     if (!this.visible)
@@ -99,18 +102,87 @@ export default class Enemy extends Animation {
       this.width,
       this.height
     )
+    // ctx.rect(-this.width / 2, -this.height / 2, this.width,this.height);
+
+    // let x1 = -this.width / 2 + 50 * Math.cos(0)
+    // let y1 = -this.height / 2 + 50 * Math.sin(0)
+    // ctx.arc(0, 0, this.width/3, 0, 2 * Math.PI);
+    // let x11 = -this.width / 2 + 50 * Math.cos(90)
+    // let y11= -this.height / 2 + 50 * Math.sin(90)
+    // ctx.arc(x11, y11, 10, 0, 2 * Math.PI);  
+    // let x12 = -this.width / 2 + 50 * Math.cos(180)
+    // let y12 = -this.height / 2 + 50 * Math.sin(180)
+    // ctx.arc(x12, y12, 10, 0, 2 * Math.PI);
+    // ctx.stroke();
     ctx.restore()
   }
   getFrameTimeFlag() {
+    if (!this.player){
+      return true
+    }
     return (Math.abs(this.x - this.player.x) +
       Math.abs(this.y - this.player.y)) > 10
 
+  }
+  findTool1(player){
+    if (~~(this.time % 300/100)==0) {
+      this.player = {
+        x: player.x,
+        y: player.y,
+        width: player.width,
+        height: player.height
+      }
+    }
+    if (~~(this.time % 300 / 100) == 1) {
+      this.player = {
+        x: player.x,
+        y: player.y + 100,
+        width: player.width,
+        height: player.height
+      }
+    }
+    if (~~(this.time % 300 / 100) == 2) {
+      this.player = {
+        x: player.x + 150,
+        y: player.y,
+        width: player.width,
+        height: player.height
+      }
+    }
+  }
+  findTool2(player) {
+    if (~~(this.time % 300 / 100) == 0) {
+      this.player = {
+        x: player.x,
+        y: player.y,
+        width: player.width,
+        height: player.height
+      }
+    }
+    if (~~(this.time % 300 / 100) == 1) {
+      this.player = {
+        x: player.x,
+        y: player.y + 100,
+        width: player.width,
+        height: player.height
+      }
+    }
+  }
+  findTool3(player) {
+    if (~~(this.time % 300 / 100)<2) {
+      this.player = {
+        x: player.x,
+        y: player.y,
+        width: player.width,
+        height: player.height
+      }
+    }
   }
   // 每一帧更新子弹位置
   update(player) {
     if (!this.visible)
       return
-    if (this.time % 100 < this.findTime) {
+    if (this.time==0){
       this.player = {
         x: player.x,
         y: player.y,
@@ -119,13 +191,23 @@ export default class Enemy extends Animation {
       }
     }
     this.time++
-      if (this.time % 100 < this.stopTime) {
+      if (this.time % 300 < this.stopTime) {
         return
       }
+    if (this.finIndex==0){
+      this.findTool1(player)
+      }
+    if (this.finIndex == 1) {
+      this.findTool2(player)
+    }
+    if (this.finIndex == 2) {
+      this.findTool3(player)
+    }
+    // this.findTool(player)
     if (!this.getFrameTimeFlag()) {
       return
     }
-
+   
 
     this.frame++
       this.width = ENEMY_WIDTH + this.lifeValue * 4

@@ -60,7 +60,7 @@ export default class Boom {
     if (!this.visible)
       return 
     if (!this.checkIsFingerOnAir(player) && !this.isBoom) {
-      databus.playerSpeed+=.5
+      databus.createSpeed+=1
       player.lifeValue++
       this.boomTime = 0
       this.isBoom = true

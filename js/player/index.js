@@ -11,8 +11,8 @@ import Handshank from '../runtime/handshank.js'
 
 // 玩家相关常量设置
 const PLAYER_IMG_SRC = 'images/player.png'
-const PLAYER_WIDTH   = 30
-const PLAYER_HEIGHT  = 30
+const PLAYER_WIDTH   = 20
+const PLAYER_HEIGHT  = 20
 
 let databus = new DataBus()
 
@@ -77,6 +77,8 @@ export default class Player extends Sprite {
       this.width,
       this.height
     )
+    // ctx.arc(0, 0, this.width/1.5, 0, 2 * Math.PI);
+    // ctx.stroke();
     ctx.restore()
 
     
@@ -102,7 +104,21 @@ export default class Player extends Sprite {
               && x <= this.x + this.width + deviation
               && y <= this.y + this.height + deviation  )
   }
+  isplesCollideWith(sp) {
+    let spX = sp.x
+    let spY = sp.y
 
+    if (!this.visible || !sp.visible)
+      return false
+    return (
+      Math.sqrt((spX - this.x) * (spX - this.x) +
+        (spY - this.y) * (spY - this.y)) < (sp.width/3 + this.width/3)
+    )
+    // return !!(   spX >= this.x
+    //           && spX <= this.x + this.width
+    //           && spY >= this.y
+    //           && spY <= this.y + this.height  )
+  }
   /**
    * 根据手指的位置设置飞机的位置
    * 保证手指处于飞机中间

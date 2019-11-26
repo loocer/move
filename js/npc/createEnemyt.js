@@ -2,6 +2,7 @@ import Animation from '../base/animation'
 import DataBus from '../databus'
 import Enemy from './enemy'
 import { getRoteImg } from '../utils/index'
+import { type, type2 } from './enemyObjs.js'
 import {
   enImgs1,
   enImgs2,
@@ -21,9 +22,11 @@ function rnd(start, end) {
 export default class CreateEnemyt {
   constructor() {
     this.createEnemys = [
+      // this.createEnemy1,
       this.createEnemy1,
-      this.createEnemy2,
-      // this.createEnemy3
+      // this.createEnemy3,
+      // this.createEnemy4,
+      // this.createEnemy5
     ]
   }
   createEnemy(){
@@ -40,25 +43,83 @@ export default class CreateEnemyt {
       // }
     }
   }
+  createEnemy2() {
+    let list = type2()
+    for (let li of list) {
+      databus.enemys.add(li)
+    }
+  }
   createEnemy1() {
+    let list = type()
+    for (let li of list){
+      databus.enemys.add(li)
+    }
+      
+      // databus.enemys.add(type2())
+    
+    
     // if (databus.score>30){
     //   return 
     // }
-    let num = databus.frame%100/10
-    for (let i = 0; i < ~~(Math.random() * num);i++){
+    // let num = databus.frame%100/2
+    // for (let i = 0; i < ~~(Math.random() * num);i++){
+    //   let enemy = databus.pools.getItemByClass('enemy', Enemy)
+    //   let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
+    //   let tempc = rnd(1, 2)
+    //   let findTime = rnd(200, 100)
+    //   // let stopSpeed = tempc==1?0:30
+    //   let stopSpeed =rnd(20,100)
+    //   enemy.init(
+    //     tempc,
+    //     1,
+    //     Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
+    //     temp,
+    //     bihu,
+    //     bleed2,
+    //     stopSpeed,
+    //     findTime
+    //   )
+    //   databus.enemys.add(enemy)
+    // }
+  }
+  createEnemy5() {
+    let num = databus.frame % 100 / 5
+    for (let i = 0; i < ~~(Math.random() * num); i++) {
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
-      let tempc = rnd(1, 3)
-      let findTime = 40
+      let tempc = rnd(1, 2)
+      let findTime = 0
       // let stopSpeed = tempc==1?0:30
-      let stopSpeed =30
+      let stopSpeed = 0
       enemy.init(
         tempc,
         1,
         Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
         temp,
         bihu,
-        bleed2,
+        bleed1,
+        stopSpeed,
+        findTime
+      )
+      databus.enemys.add(enemy)
+    }
+  }
+  createEnemy4() {
+    let num = databus.frame % 100 / 4
+    for (let i = 0; i < ~~(Math.random() * num); i++) {
+      let enemy = databus.pools.getItemByClass('enemy', Enemy)
+      let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
+      let tempc = rnd(1, 2)
+      let findTime = rnd(0, 1) ? 10 : 70
+      // let stopSpeed = tempc==1?0:30
+      let stopSpeed = 0
+      enemy.init(
+        tempc,
+        1,
+        Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
+        temp,
+        spider,
+        bleed1,
         stopSpeed,
         findTime
       )
@@ -66,14 +127,14 @@ export default class CreateEnemyt {
     }
   }
   createEnemy2() {
-    let num = databus.frame % 100 / 10
+    let num = databus.frame % 100 / 1
     for (let i = 0; i < ~~(Math.random() * num); i++) {
       let enemy = databus.pools.getItemByClass('enemy', Enemy)
       let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
-      let tempc = rnd(1, 3)
-      let findTime = 40
+      let tempc = rnd(1, 2)
+      let findTime = rnd(0, 1) ? 10 : 70
       // let stopSpeed = tempc==1?0:30
-      let stopSpeed = 30
+      let stopSpeed = rnd(2, 50)
       enemy.init(
         tempc,
         1,
@@ -88,22 +149,24 @@ export default class CreateEnemyt {
     }
   }
   createEnemy3() {
-    if (databus.score < 100) {
-      return
-    }
-    for (let i = 0; i < ~~(Math.random() * 30); i++) {
-      let enemy = databus.pools.getItemByClass('enemy', Enemy)
-      let temp = rnd(databus.transX, window.innerWidth + ENEMY_WIDTH + databus.transX)
-      enemy.init(
-        .2,
-        1,
-        temp,
-        0,
-        [enImgs1[0], enImgs2[0]],
-        bleed1
-      )
-      databus.enemys.push(enemy)
-    }
+ 
+    let enemy = databus.pools.getItemByClass('enemy', Enemy)
+    let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
+    let tempc = rnd(1, 3)
+    let findTime = rnd(0, 1)?200:50
+    // let stopSpeed = tempc==1?0:30
+    let stopSpeed = rnd(10, 30)
+    enemy.init(
+      tempc,
+      1,
+      Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
+      temp,
+      spider,
+      bleed1,
+      stopSpeed,
+      findTime
+    )
+      databus.enemys.add(enemy)
   }
   // createEnemy3() {
   //   for (let i = 0; i < ~~(Math.random() * 30); i++) {

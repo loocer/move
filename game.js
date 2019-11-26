@@ -7,7 +7,9 @@ wx.showShareMenu({
 })
 wx.onShareAppMessage(function () {
   return {
-    title: '转发标题'
+    title: '孤独的828战士，会不会成为第829个牺牲掉的战士呢？',
+    // imageUrlId: 'EaPjTeGFSY-aOIUlhIIWOw',
+    imageUrl: '/images/bg.png',
   }
 })
 wx.getSystemInfo({
