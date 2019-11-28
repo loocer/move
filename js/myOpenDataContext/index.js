@@ -20,89 +20,14 @@ context.scale(ratio, ratio)
 
 
 //==================================
-let startY = 0, moveY = 0, list = [];
+let startY = 0, moveY = 0, list = [],isGetFlag=false;
 let myScore = undefined;
 let myfriends = []
 let allInfo = {}
 let atlas = wx.createImage();
 atlas.src = 'images/Common.png'
 // getUserInfo();
-function renderGameOver(ctx) {
-  ctx.fillStyle = 'rgba(0, 0, 0, .3)';
-  ctx.fillRect(0, 0, screenWidth, screenHeight);
 
-
-  ctx.fillStyle = "#ffffff"
-  ctx.font = "20px Arial"
-
-  ctx.fillText(
-    '游戏结束',
-    screenWidth / 2 - 40,
-    screenHeight / 2 - 200 + 50
-  )
-
-  ctx.fillText(
-    '得分: ' + 32,
-    screenWidth / 2 - 40,
-    screenHeight / 2 - 200 + 100
-  )
-
-  ctx.drawImage(
-    atlas,
-    120, 6, 39, 24,
-    screenWidth / 2 - 60,
-    screenHeight / 2 - 100 + 180,
-    120, 40
-  )
-
-  ctx.drawImage(
-    atlas,
-    120, 6, 39, 24,
-    screenWidth / 2 - 60,
-    screenHeight / 2 - 100 + 55,
-    120, 40
-  )
-
-  ctx.drawImage(
-    atlas,
-    120, 6, 39, 24,
-    screenWidth / 2 - 60,
-    screenHeight / 2 - 100 + 115,
-    120, 40
-  )
-
-  ctx.fillText(
-    '重新开始',
-    screenWidth / 2 - 40,
-    screenHeight / 2 - 100 + 205
-  )
-  ctx.fillText(
-    '查看排行',
-    screenWidth / 2 - 40,
-    screenHeight / 2 - 100 + 140
-  )
-  ctx.fillText(
-    '转发复活',
-    screenWidth / 2 - 40,
-    screenHeight / 2 - 100 + 80
-  )
-  /**
-   * 重新开始按钮区域
-   * 方便简易判断按钮点击
-   */
-  // this.btnArea = {
-  //   startX: screenWidth / 2 - 40,
-  //   startY: screenHeight / 2 - 100 + 180,
-  //   endX: screenWidth / 2 + 50,
-  //   endY: screenHeight / 2 - 100 + 255
-  // }
-  // this.btnShare = {
-  //   startX: screenWidth / 2 - 40,
-  //   startY: screenHeight / 2 - 95,
-  //   endX: screenWidth / 2 + 50,
-  //   endY: screenHeight / 2 - 20
-  // }
-}
 // 初始化标题返回按钮等元素
 function initEle(data) {
   renderGameOver(ctx)
@@ -112,6 +37,7 @@ let showRanking=()=>{
     wx.getFriendCloudStorage({
       keyList: ['score'],
       success: function (res) {
+        isGetFlag=true
         list = res
         paixu(res.data)
         // initEle(data)
@@ -350,7 +276,16 @@ wx.onMessage(data => {
     addNewScore(data.data)
   }
   if (data.command == 'showRanking') {
-    showRanking()
+    isGetFlag=false
+    let getFlag = setInterval(()=>{
+      if (isGetFlag){
+        clearInterval(getFlag)
+      }
+      showRanking()
+    },500)
+    // while (!isGetFlag) {
+    //    showRanking()
+    // }
   }
   
   // list = data.data

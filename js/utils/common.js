@@ -12,6 +12,9 @@ const ENEMY_IMG_SRC1 = 'images/iPhone XS2.png'
 const ENEMY_IMG_SRC2 = 'images/iPhone XS3.png'
 const ENEMY_IMG_SRC3 = 'images/iPhone XS4.png'
 const ENEMY_IMG_SRC4 = 'images/e1.png'
+import DataBus from '../databus'
+
+let databus = new DataBus()
 export const enImgs1 = [
   ENEMY_IMG_SRC4,
   ENEMY_IMG_SRC4,
@@ -109,13 +112,15 @@ export const bleed2 = (() => {
   }
   return del1s
 })()
-export const initPics = (() => {
+export const initPics = () => {
   let del1s = []
   let atlas = new Image()
   atlas.src = `images/bg/init-bg.png`
   del1s.push(atlas)
   let atlas2 = new Image()
   atlas2.src = `images/button/tittle.png`
+  // console.log(databus.testImag,'-------------')
+  atlas2.src = databus.testImag
   del1s.push(atlas2)
   let atlas3 = new Image()
   atlas3.src = `images/button/restar.png`
@@ -124,7 +129,7 @@ export const initPics = (() => {
   atlas4.src = `images/bg/runking-bg.png`
   del1s.push(atlas4)
   return del1s
-})()
+}
 export const biHuBody=(()=>{
   let atlas = new Image()
   atlas.src = `images/body/bihu.png`

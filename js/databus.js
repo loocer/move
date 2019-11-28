@@ -9,6 +9,7 @@ const screenHeight = window.innerHeight
  */
 export default class DataBus {
   constructor() {
+    this.testImag = ""
     this.transX = 0
     this.transY = 0
 
@@ -38,7 +39,7 @@ export default class DataBus {
     instance = this
     this.pools = new Pools()
     
-    this.reset()
+    this.reset(null)
   }
 
   reset(ctx) {
@@ -76,6 +77,9 @@ export default class DataBus {
     ctx&&ctx.translate(this.transX, this.transY)
     this.transX = 0//canvas平移距离
     this.transY = 0
+
+
+    
   }
 
   /**

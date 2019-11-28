@@ -12,10 +12,11 @@ import {
 let leftP = (screenWidth - 386) / 2
 export default class GameInfo {
   constructor() {
-    this.bg = initPics[0]
-    this.button = initPics[1]
-    this.button2 = initPics[2]
-    this.button3 = initPics[3]
+    this.tempIamg = initPics()
+    this.bg = this.tempIamg[0]
+    this.button = this.tempIamg[1]
+    this.button2 = this.tempIamg[2]
+    this.button3 = this.tempIamg[3]
   }
   renderGameScore(ctx, score) {
     ctx.fillStyle = "#ffffff"

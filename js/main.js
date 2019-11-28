@@ -79,6 +79,10 @@ export default class Main {
     this.gameinfo = new GameInfo(this)
     this.touchHandler = this.initTouchHandler.bind(this)
     canvas.addEventListener('touchstart', this.touchHandler)
+    openDataContext.postMessage({
+      data: databus,
+      command: 'showRanking'
+    })
   }
   initTouchRunkingStart(e) {
     let x = e.touches[0].clientX
@@ -112,7 +116,7 @@ export default class Main {
       this.touchHandler = this.initTouchRunkingStart.bind(this)
       canvas.addEventListener('touchstart', this.touchHandler)
       databus.state = 3
-      
+
     }
     // let area = this.gameinfo.btnArea
 
@@ -143,7 +147,7 @@ export default class Main {
       class: Bullet
     }
     this.bg = new BackGround(ctx)
-   
+
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this)
     this.player = new Player(this)
@@ -158,6 +162,10 @@ export default class Main {
       this.bindLoop,
       canvas
     )
+    openDataContext.postMessage({
+      data: databus,
+      command: 'showRanking'
+    })
   }
 
   /**
@@ -166,7 +174,7 @@ export default class Main {
    */
   enemyGenerate() {
     if (databus.frame % 5e1 === 0) {
-      if(databus.enemys.size<20){
+      if (databus.enemys.size < 20) {
         createEnemy.createEnemy()
       }
     }
@@ -342,10 +350,10 @@ export default class Main {
         //   destWidth: 500,
         //   destHeight: 400
         // })
-        imageUrl:'/images/bg.png',
+        imageUrl: 'images/bleed.png',
         // imageUrlId:'EaPjTeGFSY-aOIUlhIIWOw'
       })
-      if (shareFlag){
+      if (shareFlag) {
         setTimeout(() => {
           wx.showModal({
             title: '提示',
@@ -359,9 +367,9 @@ export default class Main {
               // temp.restart()
             }
           })
-        },2000)
-      }else{
-        setTimeout(()=>{
+        }, 2000)
+      } else {
+        setTimeout(() => {
           let temp = this
           wx.showModal({
             title: '转发失败',
@@ -370,28 +378,29 @@ export default class Main {
               if (res.confirm) {
                 wx.shareAppMessage({
                   title: '孤独的828战士，会不会成为第829战死的将士呢？',
-                  imageUrl: 'https://mmocgame.qpic.cn/wechatgame/20TthBlrSbn0tka4tiageU2xDneWRVOYvldMxJNgeFRteUvo6QjeibIbibP7XClRuZX/0',
-                  imageUrlId: 'EaPjTeGFSY-aOIUlhIIWOw'
+                  imageUrl: 'images/bleed.png',
                 })
-                wx.showModal({
-                  title: '提示',
-                  showCancel: false,
-                  content: '已复活点击继续',
-                  success(res) {
-                    shareFlag = true
-                    databus.gameOver = false
-                    databus.stopFlag = false
-                    databus.lifeValue = 20
-                    // temp.restart()
-                  }
-                })
+                setTimeout(() => {
+                  wx.showModal({
+                    title: '提示',
+                    showCancel: false,
+                    content: '已复活点击继续',
+                    success(res) {
+                      shareFlag = true
+                      databus.gameOver = false
+                      databus.stopFlag = false
+                      databus.lifeValue = 20
+                      // temp.restart()
+                    }
+                  })
+                }, 2000)
               } else if (res.cancel) {
                 console.log('用户点击取消')
               }
             }
           })
-        },2000)
-        
+        }, 2000)
+
       }
     }
     // let rankIng = this.gameinfo.rankIng
@@ -424,7 +433,7 @@ export default class Main {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     this.gameinfo.initRender(ctx)
   }
-  runKingRender(){
+  runKingRender() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     this.gameinfo.runKingRender(ctx)
   }
@@ -450,7 +459,7 @@ export default class Main {
         item.drawToCanvas(ctx)
       }
     })
-    
+
 
     databus.animations.forEach((ani) => {
       if (ani.isPlaying) {
@@ -498,10 +507,6 @@ export default class Main {
     let iniX = screenWidth / 2 - panelWidth / 2 + databus.transX
     this.toolPanel.updata()
     ctx.drawImage(sharedCanvas, iniX + 130 * (panelWidth / 910), iniY + 200 * (panelWidth / 910), (panelWidth / 910) * 680, (panelWidth / 910) * 360)
-    openDataContext.postMessage({
-      data: databus,
-      command: 'showRanking'
-    })
 
   }
   /**
