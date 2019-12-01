@@ -34,7 +34,7 @@ export default class Player extends Sprite {
     this.lagImg1 = playerImag(2)
     this.lagImg2 = playerImag(3)
     this.lifeValue = databus.lifeValue
-    this.allLifeValue = 2e2
+    this.allLifeValue = 2e3
     // this.x = 0
     // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了

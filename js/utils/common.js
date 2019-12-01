@@ -60,6 +60,13 @@ export const bihu = (() => {
   }
   return imags
 })()
+export const duobi = (() => {
+  let imags = []
+  for (let i = 1; i < 5; i++) {
+    imags.push('images/duobi/' + i + '.png')
+  }
+  return imags
+})()
 export const spider = (() => {
   let imags = []
   for (let i = 1; i < 5; i++) {
@@ -85,15 +92,15 @@ export const bullets = (() => {
   }
   return list
 })()
-export const boom1 = (() => {
+export const boomsImage = () => {
   let list = []
-  for (let i = 0; i < 19; i++) {
+  for (let bo of booms){
     let atlas = new Image()
-    atlas.src = `images/return.png`
+    atlas.src = bo.url
     list.push(atlas)
   }
   return list
-})()
+}
 export const bleed1 = (() => {
   let del1s = []
   for (let i = 0; i < 9; i++) {
@@ -119,8 +126,7 @@ export const initPics = () => {
   del1s.push(atlas)
   let atlas2 = new Image()
   atlas2.src = `images/button/tittle.png`
-  // console.log(databus.testImag,'-------------')
-  atlas2.src = databus.testImag
+  atlas2.src = getImgByName('title').url
   del1s.push(atlas2)
   let atlas3 = new Image()
   atlas3.src = `images/button/restar.png`
@@ -130,8 +136,61 @@ export const initPics = () => {
   del1s.push(atlas4)
   return del1s
 }
-export const biHuBody=(()=>{
+export const biHuBody = (() => {
   let atlas = new Image()
   atlas.src = `images/body/bihu.png`
   return atlas
 })()
+export const boomIcon = ()=>{
+  let atlas = new Image()
+  atlas.src = getImgByName('boom-icon').url
+  return atlas
+}
+export const speedIcon = () => {
+  let atlas = new Image()
+  atlas.src = getImgByName('addspeed-icon').url
+  return atlas
+}
+const icon = [
+  {
+    name: 'boom-icon',
+    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/icon/boom.png',
+  },
+  {
+    name: 'addspeed-icon',
+    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/icon/add-speed.png',
+  }
+]
+const booms = [{
+    name: 'boom1',
+    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/1.png',
+  },
+  {
+    name: 'boom2',
+    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/2.png',
+  },
+  {
+    name: 'boom3',
+    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/3.png',
+  },
+  {
+    name: 'boom4',
+    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/4.png',
+  },
+  {
+    name: 'boom5',
+    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/5.png',
+  }
+]
+export const netResourse = [{
+    name: 'title',
+    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/button/tittle.png',
+}, ...booms, ...icon
+]
+const getImgByName = (name) => {
+  for (let obj of databus.allImages) {
+    if (obj.name == name) {
+      return obj
+    }
+  }
+}

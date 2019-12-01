@@ -9,6 +9,7 @@ import {
   bleed2,
   del1s2,
   bihu,
+  duobi,
   spider
 } from '../utils/common.js'
 function rnd(start, end) {
@@ -26,7 +27,7 @@ const creademo = (tempc, findTime, stopSpeed, findIndex)=>{
     1,
     Math.round(Math.random()) ? leftP : rightP,
     temp,
-    bihu,
+    duobi,
     bleed1,
     stopSpeed,
     findTime,
@@ -53,20 +54,29 @@ const creademoTop = (tempc, findTime, stopSpeed, findIndex) => {
 }
 export const type = () => {
   return [
-    creademo(1,200,10,0),
-    creademo(1, 100, 30,1),
-    creademoTop(1, 100, 5,0),
-    creademoTop(1, 100, 20,2),
-    creademoTop(1, 100, 60,1),
+    creademo(1,200,10,2),
+    creademoTop(1, 100, 60,2),
+    creademo(1, 200, 100, 2),
   ]
 }
+
 export const type2 = () => {
   return [
-    creademo(1, 200, 10,0),
-    creademo(1, 100, 30,2),
-    creademo(1, 100, 70,1),,
-    creademoTop(1, 100, 5,1),
-    creademoTop(1, 100, 40,2),
-    creademoTop(1, 100, 5,0),
+    // creademo(1, 200, 10,1),
+    // creademo(1, 100, 30,1),
+    // creademo(1, 100, 70,1),,
+    // creademoTop(1, 100, 5,1),
+    // creademoTop(1, 100, 40,1),
+    // creademoTop(1, 100, 5,1),
+  ]
+}
+export const type3=()=> {
+  return [
+    creademo(1, 200, 10, 2),
+    // creademo(1, 100, 30,1),
+    // creademo(1, 100, 70,1),,
+    creademoTop(1, 100, 70, 2),
+    // creademoTop(1, 100, 40,1),
+    // creademoTop(1, 100, 5,1),
   ]
 }

@@ -1,8 +1,16 @@
 import Animation from '../base/animation'
 import DataBus from '../databus'
 import Enemy from './enemy'
-import { getRoteImg } from '../utils/index'
-import { type, type2 } from './enemyObjs.js'
+import Check1 from './check1.js'
+import Check2 from './check2.js'
+import Check3 from './check3.js'
+import {
+  getRoteImg
+} from '../utils/index'
+import {
+  type,
+  type2
+} from './enemyObjs.js'
 import {
   enImgs1,
   enImgs2,
@@ -11,36 +19,62 @@ import {
   bleed2,
   del1s2,
   bihu,
-  spider,
-  duobi
+  spider
 } from '../utils/common.js'
 const ENEMY_WIDTH = 50
 const ENEMY_HEIGHT = 50
 let databus = new DataBus()
+
 function rnd(start, end) {
   return Math.floor(Math.random() * (end - start) + start)
 }
 export default class CreateEnemyt {
   constructor() {
-    this.createEnemys = [
-      // this.createEnemy1,
-      this.createEnemy1,
-      // this.createEnemy3,
-      // this.createEnemy4,
-      // this.createEnemy5
-    ]
+    this.check1 = new Check1()
+    this.check2 = new Check2()
+    this.check3 = new Check3()
   }
-  createEnemy(){
-    
+  main() {
+    this.check1.creating(databus)
+    if (databus.score > 400) {
+      if(databus.enemys==30){
+        this.check1.creating(databus)
+        this.check2.creating(databus)
+        this.check3.creating(databus)
+      }
+      return 
+    } else if (databus.score > 200) {
+      if (databus.enemys == 20) {
+        this.check2.creating(databus)
+        this.check3.creating(databus)
+      }
+      return
+    } else if (databus.score > 50) {
+      if (databus.enemys == 10) {
+        this.check2.creating(databus)
+        this.check1.creating(databus)
+      }
+      
+      return 
+    }else{
+      if (databus.enemys ==10) {
+        this.check1.creating(databus)
+      }
+      
+      return
+    }
+  }
+  createEnemy() {
+
     // this.createEnemy1()
     // this.createEnemy1()
     // this.createEnemy1()
-    for (let i in this.createEnemys){
+    for (let i in this.createEnemys) {
       // if (databus.createEnemysStatus == +i+1) {
-        this.createEnemys[i]()
-        // if (databus.frame % 1e3 == 0) {
-        //   this.createEnemys[i]()
-        // }
+      this.createEnemys[i]()
+      // if (databus.frame % 1e3 == 0) {
+      //   this.createEnemys[i]()
+      // }
       // }
     }
   }
@@ -52,13 +86,13 @@ export default class CreateEnemyt {
   }
   createEnemy1() {
     let list = type()
-    for (let li of list){
+    for (let li of list) {
       databus.enemys.add(li)
     }
-      
-      // databus.enemys.add(type2())
-    
-    
+
+    // databus.enemys.add(type2())
+
+
     // if (databus.score>30){
     //   return 
     // }
@@ -150,11 +184,11 @@ export default class CreateEnemyt {
     }
   }
   createEnemy3() {
- 
+
     let enemy = databus.pools.getItemByClass('enemy', Enemy)
     let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
     let tempc = rnd(1, 3)
-    let findTime = rnd(0, 1)?200:50
+    let findTime = rnd(0, 1) ? 200 : 50
     // let stopSpeed = tempc==1?0:30
     let stopSpeed = rnd(10, 30)
     enemy.init(
@@ -167,7 +201,7 @@ export default class CreateEnemyt {
       stopSpeed,
       findTime
     )
-      databus.enemys.add(enemy)
+    databus.enemys.add(enemy)
   }
   // createEnemy3() {
   //   for (let i = 0; i < ~~(Math.random() * 30); i++) {
@@ -194,7 +228,7 @@ export default class CreateEnemyt {
   //         Math.round(Math.random()) ? window.innerHeight + ENEMY_HEIGHT + databus.transY : 0,
   //       )
   //     }
-      
+
   //     databus.enemys.push(databus.pools.getItemByClass('enemy', Enemy))
   //   }
   // }

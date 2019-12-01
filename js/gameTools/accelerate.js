@@ -5,7 +5,7 @@ import DataBus from '../databus'
 const screenWidth = window.innerWidth
 const screenHeight = window.innerHeight
 import {
-  boom1
+  speedIcon
 } from '../utils/common'
 
 let atlas4 = new Image()
@@ -20,11 +20,11 @@ export default class Boom {
     // 玩家默认处于屏幕底部居中位置
     // this.x = 100
     this.x = x
+    this.speedIcon = speedIcon()
     this.name='accelerate'
     this.y = y
     this.visible = true
     this.isBoom = false
-    this.boom1 = boom1
     this.boomTime = 1
     this.maxBoomTime = 1e2//最大爆炸范围
     this.width = PLAYER_WIDTH
@@ -35,10 +35,10 @@ export default class Boom {
       ctx.save()
       ctx.translate(this.x, this.y)
       if (databus.frame % 40 < 20) {
-        ctx.scale(databus.frame % 40 / 20, databus.frame % 40 / 20);
+        ctx.scale(databus.frame % 20 / 20, databus.frame % 20 / 20);
       }
       ctx.drawImage(
-        atlas4,
+        this.speedIcon,
         -this.width / 2,
         -this.height / 2,
         this.width,
@@ -60,8 +60,9 @@ export default class Boom {
     if (!this.visible)
       return 
     if (!this.checkIsFingerOnAir(player) && !this.isBoom) {
-      databus.createSpeed+=1
-      player.lifeValue++
+      // databus.createSpeed+=1
+      databus.playerSpeed++
+      // player.lifeValue++
       this.boomTime = 0
       this.isBoom = true
     }

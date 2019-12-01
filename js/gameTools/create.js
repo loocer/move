@@ -28,25 +28,42 @@ export default class Create {
     //   let boom = new Boom(rnd(0, groundWidth), rnd(0, screenHeight))
     //   databus.gameTools.push(boom)
     // }
-    if (databus.frame % 5e3 == 0) {
-      let boom = databus.pools.getItemByClass('boom', Boom)
-      boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
-      databus.gameTools.push(boom)
+    if (databus.enemys.size >5) {
+      let flag = false
+      databus.gameTools.forEach((item) => {
+        if (item.name =='boom'){
+          flag = true
+        }
+      })
+      if(!flag){
+        let boom = databus.pools.getItemByClass('boom', Boom)
+        boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
+        databus.gameTools.push(boom)
+      }
+      
     }
-    if (databus.frame % 3e3 == 0) {
-      let boom = databus.pools.getItemByClass('accelerate', Accelerate)
-      boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
-      databus.gameTools.push(boom)
+    if (databus.enemys.size > 10) {
+      let flag = false
+      databus.gameTools.forEach((item) => {
+        if (item.name == 'accelerate') {
+          flag = true
+        }
+      })
+      if (!flag) {
+        let boom = databus.pools.getItemByClass('accelerate', Accelerate)
+        boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
+        databus.gameTools.push(boom)
+      }
+
     }
-    if (databus.frame % 3e5 == 0) {
-      let boom = databus.pools.getItemByClass('changeBullet', ChangeBullet)
-      boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
-      databus.gameTools.push(boom)
-    }
-    // databus.gameTools.push(boom)
-    // databus.gameTools.push(enemy)
-    // for(let i=0;i<40;i++){
-    //   let boom = new Boom(rnd(0,1500),rnd(0,800))
+    // if (databus.frame % 3e3 == 0) {
+    //   let boom = databus.pools.getItemByClass('accelerate', Accelerate)
+    //   boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
+    //   databus.gameTools.push(boom)
+    // }
+    // if (databus.frame % 3e5 == 0) {
+    //   let boom = databus.pools.getItemByClass('changeBullet', ChangeBullet)
+    //   boom.init(rnd(0, groundWidth), rnd(0, screenHeight))
     //   databus.gameTools.push(boom)
     // }
   }

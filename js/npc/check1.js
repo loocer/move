@@ -11,8 +11,7 @@ import {
   bleed2,
   del1s2,
   bihu,
-  spider,
-  duobi
+  spider
 } from '../utils/common.js'
 const ENEMY_WIDTH = 50
 const ENEMY_HEIGHT = 50
@@ -30,18 +29,25 @@ export default class CreateEnemyt {
       // this.createEnemy5
     ]
   }
-  createEnemy(){
-    
+  createEnemy() {
+
     // this.createEnemy1()
     // this.createEnemy1()
     // this.createEnemy1()
-    for (let i in this.createEnemys){
+    for (let i in this.createEnemys) {
       // if (databus.createEnemysStatus == +i+1) {
-        this.createEnemys[i]()
-        // if (databus.frame % 1e3 == 0) {
-        //   this.createEnemys[i]()
-        // }
+      this.createEnemys[i]()
+      // if (databus.frame % 1e3 == 0) {
+      //   this.createEnemys[i]()
       // }
+      // }
+    }
+  }
+  creating(){
+    if (databus.frame % 5e1 === 0) {
+      if (databus.enemys.size < 20) {
+        this.createEnemy()
+      }
     }
   }
   createEnemy2() {
@@ -52,13 +58,13 @@ export default class CreateEnemyt {
   }
   createEnemy1() {
     let list = type()
-    for (let li of list){
+    for (let li of list) {
       databus.enemys.add(li)
     }
-      
-      // databus.enemys.add(type2())
-    
-    
+
+    // databus.enemys.add(type2())
+
+
     // if (databus.score>30){
     //   return 
     // }
@@ -150,11 +156,11 @@ export default class CreateEnemyt {
     }
   }
   createEnemy3() {
- 
+
     let enemy = databus.pools.getItemByClass('enemy', Enemy)
     let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
     let tempc = rnd(1, 3)
-    let findTime = rnd(0, 1)?200:50
+    let findTime = rnd(0, 1) ? 200 : 50
     // let stopSpeed = tempc==1?0:30
     let stopSpeed = rnd(10, 30)
     enemy.init(
@@ -167,7 +173,7 @@ export default class CreateEnemyt {
       stopSpeed,
       findTime
     )
-      databus.enemys.add(enemy)
+    databus.enemys.add(enemy)
   }
   // createEnemy3() {
   //   for (let i = 0; i < ~~(Math.random() * 30); i++) {
@@ -194,7 +200,7 @@ export default class CreateEnemyt {
   //         Math.round(Math.random()) ? window.innerHeight + ENEMY_HEIGHT + databus.transY : 0,
   //       )
   //     }
-      
+
   //     databus.enemys.push(databus.pools.getItemByClass('enemy', Enemy))
   //   }
   // }

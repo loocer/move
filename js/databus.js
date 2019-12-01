@@ -32,6 +32,7 @@ export default class DataBus {
     this.moveY = 0
     this.gameIndex = 0
     this.lifeValue = 200
+    this.allImages =[]
     this.createEnemysStatus = 1//关卡
     if ( instance )
       return instance
@@ -69,8 +70,9 @@ export default class DataBus {
     this.panelPosition = {
       rankingX:-400
     }
-    this.createSpeed = 20
-    this.lifeValue = 20
+    this.createSpeed = 10
+    this.lifeValue = 2e3
+    this.checkNum = 1
     this.corpses = new Set()
     this.animations = []
     this.gameOver   = false

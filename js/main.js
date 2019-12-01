@@ -11,6 +11,7 @@ import {
 import Bullet from './bullet/bullet2'
 import DataBus from './databus'
 import Gamecreate from './gameTools/create'
+import CreateIndex from './npc/createIndex.js'
 const worker = wx.createWorker('workers/request/index.js')
 
 import {
@@ -45,6 +46,7 @@ sharedCanvas.height = height * window.devicePixelRatio;
 sharedCanvas.width = width * window.devicePixelRatio;
 
 let databus = new DataBus(ctx)
+let createIndex = new CreateIndex(ctx)
 let createEnemy = new CreateEnemyt(ctx)
 let shareFlag = false
 /**
@@ -173,11 +175,10 @@ export default class Main {
    * 帧数取模定义成生成的频率
    */
   enemyGenerate() {
-    if (databus.frame % 5e1 === 0) {
-      if (databus.enemys.size < 20) {
-        createEnemy.createEnemy()
-      }
+    if (databus.checkNum==1){
+      createIndex.main(databus)
     }
+   
     // if (databus.frame % 2e3 === 0) {
 
     //   createEnemy.createEnemy()
@@ -222,6 +223,7 @@ export default class Main {
       let enemy = itemob
       databus.gameTools.forEach((item) => {
         if (item.checkIsFingerOnEnemy(enemy)) {
+          databus.score += enemy.score
           enemy.visible = false
           enemy.playOvers()
           databus.pools.recover('enemy', enemy)
@@ -268,7 +270,7 @@ export default class Main {
     }
     if (this.handShank.touched &&
       (this.player.y + databus.moveY) > 0 &&
-      (this.player.y + databus.moveY) < hground - 40
+      (this.player.y + databus.moveY) < hground
     ) {
       this.player.y += (databus.moveY)
     }

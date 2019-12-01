@@ -3,7 +3,7 @@ import './js/libs/symbol'
 
 import Main from './js/main'
 import DataBus from './js/databus'
-
+import { netResourse} from './js/utils/common.js'
 let databus = new DataBus()
 wx.showShareMenu({
   withShareTicket: true
@@ -27,16 +27,24 @@ wx.getSystemInfo({
 wx.cloud.init({
   env: 'test-x1dzi'
 })
-wx.cloud.downloadFile({
-  fileID: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/button/tittle.png', // 文件 ID
-  success: res => {
-    // 返回临时文件路径
-    databus.testImag = res.tempFilePath
-    console.log(res.tempFilePath)
-    new Main()
-  },
-  fail: console.error
-})
+let list = []
+for (let obb of netResourse){
+  wx.cloud.downloadFile({
+    fileID: obb.fileId, // 文件 ID
+    success: res => {
+      // 返回临时文件路径
+      let obj = obb
+      obj.url = res.tempFilePath
+      list.push(obj)
+      if (netResourse.length == list.length){
+        databus.allImages = list
+        new Main()
+      }
+    },
+    fail: console.error
+  })
+}
+
 
 // wx.cloud.downloadFile({
 //   fileID: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/runking-bg.png', // 文件 ID
