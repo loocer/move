@@ -5,8 +5,8 @@ import {
   getRoteImg
 } from '../utils/index'
 
-const ENEMY_WIDTH = 50
-const ENEMY_HEIGHT = 50
+const ENEMY_WIDTH = 20
+const ENEMY_HEIGHT = 20
 
 let databus = new DataBus()
 let atlas = new Image()

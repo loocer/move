@@ -62,34 +62,35 @@ export default class HandShank {
       this.y,
       this.width, this.height
     )
-    // ctx.drawImage(
-    //   atlas2,
-    //   0, 0, 300, 300,
-    //   this.tx,
-    //   this.ty,
-    //   this.width, this.heighewfrevrevbgvtrervfce
-    // )
+    
     ctx.save()
     ctx.translate(this.x + this.width/2, this.y + this.height/2)
     // console.log(player.rotate)
     ctx.rotate(this.rotate * Math.PI / 180)
+    // ctx.drawImage(
+    //   atlas4,
+    //   0, 0, 300, 184,
+    //   -60,
+    //   -74,
+    //   120, 94
+    // )
     ctx.drawImage(
-      atlas4,
-      0, 0, 300, 184,
+      atlas2,
+      0, 0, 300, 300,
       -60,
-      -74,
-      120, 94
+      -60,
+      120, 120
     )
     ctx.restore()
-   
+    
     if (this.touched && databus.x){
-      ctx.drawImage(
-        atlas3,
-        0, 0, 300, 300,
-        100 + databus.transX,
-        screenHeight - PLAYER_HEIGHT - 40 + databus.transY,
-        this.width, this.height
-      )
+      // ctx.drawImage(
+      //   atlas3,
+      //   0, 0, 300, 300,
+      //   100 + databus.transX,
+      //   screenHeight - PLAYER_HEIGHT - 40 + databus.transY,
+      //   this.width, this.height
+      // )
     }
     
   }

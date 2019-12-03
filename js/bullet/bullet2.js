@@ -8,7 +8,7 @@ import {
   screenWidth,
   screenHeight
 } from '../utils/common'
-const BULLET_WIDTH = 3
+const BULLET_WIDTH = 1
 const BULLET_HEIGHT = 20
 
 

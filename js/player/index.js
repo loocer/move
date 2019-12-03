@@ -34,7 +34,7 @@ export default class Player extends Sprite {
     this.lagImg1 = playerImag(2)
     this.lagImg2 = playerImag(3)
     this.lifeValue = databus.lifeValue
-    this.allLifeValue = 2e3
+    this.allLifeValue = 10
     // this.x = 0
     // this.y = 0
     // 用于在手指移动的时候标识手指是否已经在飞机上了
@@ -185,8 +185,6 @@ export default class Player extends Sprite {
    * 射击时机由外部决定
    */
   shoot() {
-    console.log(787878)
- 
     this.fireAcTime = this.handShank.touched?2: 5
     // if (databus.frame % 30 > 20) {
     //   return
@@ -209,8 +207,8 @@ export default class Player extends Sprite {
       // let bullet = databus.pool.getItemByClass('bullet', Bullet)
       let bullet = databus.pools.getItemByClass(databus.bulletClass.name, databus.bulletClass.class)
       // let bullet = new Bullet()
-      let px = this.x + 27 * Math.cos(this.rotateBody * Math.PI / 180 -45.3)
-      let py = this.y + 27 * Math.sin(this.rotateBody * Math.PI / 180 - 45.3)
+      let px = this.x + 10 * Math.cos(this.rotateBody * Math.PI / 180 -45.1)
+      let py = this.y + 10 * Math.sin(this.rotateBody * Math.PI / 180 - 45.1)
       bullet.init(
         px,
         py,

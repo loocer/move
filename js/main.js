@@ -352,7 +352,7 @@ export default class Main {
         //   destWidth: 500,
         //   destHeight: 400
         // })
-        imageUrl: 'images/bleed.png',
+        imageUrl: 'images/share.png',
         // imageUrlId:'EaPjTeGFSY-aOIUlhIIWOw'
       })
       if (shareFlag) {
@@ -371,6 +371,7 @@ export default class Main {
           })
         }, 2000)
       } else {
+        
         setTimeout(() => {
           let temp = this
           wx.showModal({
@@ -380,7 +381,7 @@ export default class Main {
               if (res.confirm) {
                 wx.shareAppMessage({
                   title: '孤独的828战士，会不会成为第829战死的将士呢？',
-                  imageUrl: 'images/bleed.png',
+                  imageUrl: 'images/share.png',
                 })
                 setTimeout(() => {
                   wx.showModal({

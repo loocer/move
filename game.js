@@ -5,6 +5,9 @@ import Main from './js/main'
 import DataBus from './js/databus'
 import { netResourse} from './js/utils/common.js'
 let databus = new DataBus()
+wx.setScreenBrightness({
+  value:.8
+})
 wx.showShareMenu({
   withShareTicket: true
 })
@@ -12,7 +15,7 @@ wx.onShareAppMessage(function () {
   return {
     title: '孤独的828战士，会不会成为第829个牺牲掉的战士呢？',
     // imageUrlId: 'EaPjTeGFSY-aOIUlhIIWOw',
-    imageUrl: 'images/bleed.png',
+    imageUrl: 'images/share.png',
   }
 })
 wx.getSystemInfo({

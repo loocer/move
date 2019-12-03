@@ -19,7 +19,7 @@ export default class GameInfo {
     this.button3 = this.tempIamg[3]
   }
   renderGameScore(ctx, score) {
-    ctx.fillStyle = "#ffffff"
+    ctx.fillStyle = "#82E4F2"
     ctx.font = "20px Arial"
     ctx.fillText(
       score,
@@ -90,7 +90,7 @@ export default class GameInfo {
     /*---------------------外框-------------------------》*/
 
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "#00ff00";
+    ctx.strokeStyle = "#82E4F2";
     ctx.beginPath();
     ctx.arc(leftP + databus.transX, databus.transY + 20, 8, Math.PI / 2, Math.PI / 2 * 3, false);
 
@@ -107,7 +107,7 @@ export default class GameInfo {
 
     /*---------------------外框-------------------------《*/
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "#00ff00";
+    ctx.strokeStyle = "#82E4F2";
     ctx.beginPath();
     ctx.arc(leftP + databus.transX, databus.transY + 20, 6, Math.PI / 2, Math.PI / 2 * 3, false);
     ctx.fill();
@@ -116,7 +116,7 @@ export default class GameInfo {
     // ctx.lineTo(screenWidth - leftP, databus.transY+30);
 
     ctx.fillRect(leftP + databus.transX, databus.transY + 14, 300 * (player.lifeValue / player.allLifeValue), 12);
-    ctx.strokeStyle = "#00ff00";
+    ctx.strokeStyle = "#82E4F2";
     // ctx.lineJoin = "round";
     ctx.stroke();
   }

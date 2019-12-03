@@ -26,7 +26,7 @@ export default class Boom {
     this.visible = true
     this.isBoom = false
     this.boomTime = 1
-    this.maxBoomTime = 1e2//最大爆炸范围
+    this.maxBoomTime = 1e3//最大爆炸范围
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT
   }
@@ -60,8 +60,8 @@ export default class Boom {
     if (!this.visible)
       return 
     if (!this.checkIsFingerOnAir(player) && !this.isBoom) {
-      // databus.createSpeed+=1
-      databus.playerSpeed++
+      databus.createSpeed=10
+      databus.playerSpeed=2
       // player.lifeValue++
       this.boomTime = 0
       this.isBoom = true
@@ -70,7 +70,8 @@ export default class Boom {
       this.boomTime += 1
     }
     if (this.boomTime > this.maxBoomTime) {
-      databus.playerSpeed-=.5
+      databus.playerSpeed = 1.3
+      databus.createSpeed=30
       this.visible = false
       databus.pools.recover(this.name, this)
     }

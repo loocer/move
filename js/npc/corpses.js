@@ -17,7 +17,7 @@ export default class Corpses {
     this.frame = 0
     this.del1s = del1s
     this.atlas = del1s[0]
-    this.showLong = 10000
+    this.showLong = 2000
     this.visible = true
     this.bodyPicS = biHuBody
     this.rote = rnd(0, 360)
