@@ -12,7 +12,7 @@ let databus = new DataBus()
 let atlas = new Image()
 atlas.src = 'images/on-fire.png'
 export default class Enemy extends Animation {
-  constructor(WIDTH=20, HEIGHT=20) {
+  constructor(WIDTH = 60, HEIGHT = 60) {
     super("", WIDTH, HEIGHT)
     this.initExplosionAnimation()
   }
@@ -25,7 +25,7 @@ export default class Enemy extends Animation {
     }
     return temps
   }
-  init(speed, lifeValue, x, y, imgSrcs, del1s, stopTime, findTime,finIndex) {
+  init(speed, lifeValue, x, y, imgSrcs, del1s, stopTime, findTime, finIndex) {
     this.x = x
     this.y = y
     // this.srcImg = srcImg
@@ -35,12 +35,12 @@ export default class Enemy extends Animation {
     this.time = 0
     this.finIndex = finIndex
     this.frame = 0
-    this.stopTime = stopTime //停留休息时间
-    this.findTime = findTime //停留休息时间
-    this.frameSpeed = 0
+    this.stopTime = 0 //停留休息时间
+    this.findTime = 0 //停留休息时间
+    this.frameSpeed = 1
     this.score = lifeValue
     this.lifeValue = lifeValue
-    this.speed = speed
+    this.speed = .2
     this.visible = true
     this.onlive = true
   }
@@ -80,11 +80,11 @@ export default class Enemy extends Animation {
     this.x = tempx
     this.y = tempy
     getRoteImg({
-        x1: this.x,
-        x2: player.x,
-        y1: this.y,
-        y2: player.y
-      },
+      x1: this.x,
+      x2: player.x,
+      y1: this.y,
+      y2: player.y
+    },
       this
     )
 
@@ -117,15 +117,15 @@ export default class Enemy extends Animation {
     ctx.restore()
   }
   getFrameTimeFlag() {
-    if (!this.player){
+    if (!this.player) {
       return true
     }
     return (Math.abs(this.x - this.player.x) +
       Math.abs(this.y - this.player.y)) > 10
 
   }
-  findTool1(player){
-    if (~~(this.time % 300/100)==0) {
+  findTool1(player) {
+    if (~~(this.time % 300 / 100) == 0) {
       this.player = {
         x: player.x,
         y: player.y,
@@ -169,7 +169,7 @@ export default class Enemy extends Animation {
     }
   }
   findTool3(player) {
-    if (~~(this.time % 300 / 100)<2) {
+    if (~~(this.time % 300 / 100) < 2) {
       this.player = {
         x: player.x,
         y: player.y,
@@ -182,7 +182,7 @@ export default class Enemy extends Animation {
   update(player) {
     if (!this.visible)
       return
-    if (this.time==0){
+    if (this.time == 0) {
       this.player = {
         x: player.x,
         y: player.y,
@@ -191,12 +191,12 @@ export default class Enemy extends Animation {
       }
     }
     this.time++
-      if (this.time % 300 < this.stopTime) {
-        return
-      }
-    if (this.finIndex==0){
+    if (this.time % 300 < this.stopTime) {
+      return
+    }
+    if (this.finIndex == 0) {
       this.findTool1(player)
-      }
+    }
     if (this.finIndex == 1) {
       this.findTool2(player)
     }
@@ -207,17 +207,17 @@ export default class Enemy extends Animation {
     if (!this.getFrameTimeFlag()) {
       return
     }
-   
+
 
     this.frame++
     //   this.width = ENEMY_WIDTH + this.lifeValue * 4
     // this.height = ENEMY_HEIGHT + this.lifeValue * 4
 
-    if (this.frame % 2 == 0) {
+    if (this.frame % 1 == 0) {
       this.frameSpeed++
-        if (this.frameSpeed > this.imgs.length - 1) {
-          this.frameSpeed = 0
-        }
+      if (this.frameSpeed > this.imgs.length - 1) {
+        this.frameSpeed = 0
+      }
     }
     this.getPosition()
     // this.y += this.speed

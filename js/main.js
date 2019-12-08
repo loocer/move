@@ -22,7 +22,7 @@ import {
 } from './utils/common'
 
 
-let ctx = canvas.getContext('2d')
+// let ctx = canvas.getContext('2d')
 const wground = groundWidth
 const hground = groundHeight
 
@@ -30,11 +30,11 @@ let sysInfo = wx.getSystemInfoSync(),
   width = sysInfo.windowWidth,
   height = sysInfo.windowHeight;
 
-canvas.style.width = width + "px";
-canvas.style.height = height + "px";
-canvas.height = height * window.devicePixelRatio;
-canvas.width = width * window.devicePixelRatio;
-ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+// canvas.style.width = width + "px";
+// canvas.style.height = height + "px";
+// canvas.height = height * window.devicePixelRatio;
+// canvas.width = width * window.devicePixelRatio;
+// ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
 
 
@@ -45,16 +45,18 @@ sharedCanvas.style.height = height + "px";
 sharedCanvas.height = height * window.devicePixelRatio;
 sharedCanvas.width = width * window.devicePixelRatio;
 
-let databus = new DataBus(ctx)
-let createIndex = new CreateIndex(ctx)
-let createEnemy = new CreateEnemyt(ctx)
+var databus, createIndex, createEnemy,ctx
 let shareFlag = false
 /**
  * 游戏主函数
  */
 
 export default class Main {
-  constructor() {
+  constructor(ctx) {
+    this.ctx = ctx
+    databus = new DataBus(ctx)
+    createIndex = new CreateIndex(ctx)
+    createEnemy = new CreateEnemyt(ctx)
     // 维护当前requestAnimationFrame的id
     this.aniId = 0
     this.init()
@@ -138,7 +140,7 @@ export default class Main {
   restart() {
     // wx.triggerGC()
 
-    databus.reset(ctx)
+    databus.reset(this.ctx)
     databus.state = 2
     canvas.removeEventListener(
       'touchstart',
@@ -148,7 +150,7 @@ export default class Main {
       name: 'bullet2',
       class: Bullet
     }
-    this.bg = new BackGround(ctx)
+    this.bg = new BackGround(this.ctx)
 
     this.righthandshank = new Righthandshank()
     this.handShank = new HandShank(this)
@@ -433,58 +435,58 @@ export default class Main {
 
   }
   initRender() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    this.gameinfo.initRender(ctx)
+    this.ctx.clearRect(0, 0, canvas.width, canvas.height)
+    this.gameinfo.initRender(this.ctx)
   }
   runKingRender() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    this.gameinfo.runKingRender(ctx)
+    this.ctx.clearRect(0, 0, canvas.width, canvas.height)
+    this.gameinfo.runKingRender(this.ctx)
   }
   doingRender() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    this.ctx.clearRect(0, 0, canvas.width, canvas.height)
     // ctx.translate(0, -1)
-    this.bg.render(ctx)
+    this.bg.render(this.ctx)
 
     Array.from(databus.corpses).forEach((item) => {
       if (item.visible) {
-        item.render(ctx)
+        item.render(this.ctx)
       }
     })
     Array.from(databus.bullets)
       .concat(Array.from(databus.enemys))
       .forEach((item) => {
         if (item.visible) {
-          item.drawToCanvas(ctx)
+          item.drawToCanvas(this.ctx)
         }
       })
     databus.gameTools.forEach((item) => {
       if (item.visible) {
-        item.drawToCanvas(ctx)
+        item.drawToCanvas(this.ctx)
       }
     })
 
 
     databus.animations.forEach((ani) => {
       if (ani.isPlaying) {
-        ani.aniRender(ctx)
+        ani.aniRender(this.ctx)
       }
     })
 
-    this.player.drawToCanvas(ctx)
-    this.gameinfo.renderGameScore(ctx, databus.score)
-    this.gameinfo.renderPlayerBleed(ctx, this.player)
-    this.handShank.renderHandShank(ctx, this.player)
-    this.righthandshank.renderHandShank(ctx)
-    // ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
+    this.player.drawToCanvas(this.ctx)
+    this.gameinfo.renderGameScore(this.ctx, databus.score)
+    this.gameinfo.renderPlayerBleed(this.ctx, this.player)
+    this.handShank.renderHandShank(this.ctx, this.player)
+    this.righthandshank.renderHandShank(this.ctx)
+    // this.ctx.drawImage(sharedCanvas, databus.transX, databus.transY, 1200, 800)
     // openDataContext.postMessage({
     //   data: databus,
     //   command: 'render'
     // })
     // 游戏结束停止帧循环
-    // this.gameinfo.renderGameOver(ctx, databus.score)
+    // this.gameinfo.renderGameOver(this.ctx, databus.score)
     if (databus.gameOver) {
       this.addScore()
-      this.gameinfo.renderGameOver(ctx, databus.score)
+      this.gameinfo.renderGameOver(this.ctx, databus.score)
       databus.state == 4
       databus.stopFlag = true
       if (!this.hasEventBind) {
@@ -494,7 +496,7 @@ export default class Main {
         canvas.addEventListener('touchstart', this.touchHandler)
       }
     }
-    this.toolPanel.drawToCanvas(ctx)
+    this.toolPanel.drawToCanvas(this.ctx)
 
   }
   addScore() {
@@ -509,7 +511,7 @@ export default class Main {
     let iniY = (screenHeight - panelWidth * (720 / 910)) / 2 + databus.transY
     let iniX = screenWidth / 2 - panelWidth / 2 + databus.transX
     this.toolPanel.updata()
-    ctx.drawImage(sharedCanvas, iniX + 130 * (panelWidth / 910), iniY + 200 * (panelWidth / 910), (panelWidth / 910) * 680, (panelWidth / 910) * 360)
+    this.ctx.drawImage(sharedCanvas, iniX + 130 * (panelWidth / 910), iniY + 200 * (panelWidth / 910), (panelWidth / 910) * 680, (panelWidth / 910) * 360)
 
   }
   /**
@@ -545,7 +547,7 @@ export default class Main {
     }
     if (databus.gameOver)
       return;
-    this.cameraMove(ctx)
+    this.cameraMove(this.ctx)
     this.gamecreate.createEnemy1()
     this.bg.update()
     databus.corpses.forEach((item) => {

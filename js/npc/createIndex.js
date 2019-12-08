@@ -36,33 +36,33 @@ export default class CreateEnemyt {
   }
   main() {
     this.check1.creating(databus)
-    if (databus.score > 400) {
-      if(databus.enemys==30){
-        this.check1.creating(databus)
-        this.check2.creating(databus)
-        this.check3.creating(databus)
-      }
-      return 
-    } else if (databus.score > 200) {
-      if (databus.enemys == 20) {
-        this.check2.creating(databus)
-        this.check3.creating(databus)
-      }
-      return
-    } else if (databus.score > 50) {
-      if (databus.enemys == 10) {
-        this.check2.creating(databus)
-        this.check1.creating(databus)
-      }
+    // if (databus.score > 400) {
+    //   if(databus.enemys==30){
+    //     this.check1.creating(databus)
+    //     this.check2.creating(databus)
+    //     this.check3.creating(databus)
+    //   }
+    //   return 
+    // } else if (databus.score > 200) {
+    //   if (databus.enemys == 20) {
+    //     this.check2.creating(databus)
+    //     this.check3.creating(databus)
+    //   }
+    //   return
+    // } else if (databus.score > 50) {
+    //   if (databus.enemys == 10) {
+    //     this.check2.creating(databus)
+    //     this.check1.creating(databus)
+    //   }
       
-      return 
-    }else{
-      if (databus.enemys ==10) {
-        this.check1.creating(databus)
-      }
+    //   return 
+    // }else{
+    //   if (databus.enemys ==10) {
+    //     this.check1.creating(databus)
+    //   }
       
-      return
-    }
+    //   return
+    // }
   }
   createEnemy() {
 

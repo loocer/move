@@ -5,7 +5,7 @@ import {
 } from '../utils/index'
 import Music from '../runtime/music'
 const BULLET_IMG_SRC = 'images/bullet.png'
-const BULLET_WIDTH = 16
+const BULLET_WIDTH = 2
 const BULLET_HEIGHT = 30
 import {
   groundWidth,
@@ -53,14 +53,14 @@ export default class Bullet extends Sprite {
       ctx.lineCap = "butt";
       // ctx.lineWidth = 2;
       if (i == 0) {
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(this.zx, this.zy)
         ctx.globalAlpha = rb;
         ctx.lineTo(this.points[0].x, this.points[0].y)
         ctx.stroke();
       } else {
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 1;
         if (i == this.points.length - 1) {
           ctx.lineCap = "round";
         }
@@ -94,7 +94,7 @@ export default class Bullet extends Sprite {
       x: this.x,
       y: this.y
     })
-    this.points = this.points.length > 3 ? this.points.slice(this.points.length - 3, this.points.length - 1) : this.points
+    this.points = this.points.length > 20 ? this.points.slice(this.points.length - 20, this.points.length - 1) : this.points
     // 超出屏幕外回收自身
     // console.log(this.points, '====================')
     if (this.y < 0 ||

@@ -64,7 +64,7 @@ export default class Boom {
         for (let i = 0; i < 20; i++) {
           ctx.rotate(rnd(0, 360) * Math.PI / 180)
           ctx.drawImage(
-            this.boom1[0], -r / 2, -r / 2,
+            this.boom1[rnd(0, 4)], -r / 2, -r / 2,
             r,
             r
           )
@@ -74,7 +74,7 @@ export default class Boom {
         for (let i = 0; i <(150-this.boomTime)/5; i++) {
           ctx.rotate(rnd(0, 360) * Math.PI / 180)
           ctx.drawImage(
-            this.boom1[0], -r / 2, -r / 2,
+            this.boom1[rnd(0, 4)], -r / 2, -r / 2,
             r,
             r
           )

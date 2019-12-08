@@ -94,7 +94,7 @@ export const bullets = (() => {
 })()
 export const boomsImage = () => {
   let list = []
-  for (let bo of booms){
+  for (let bo of booms) {
     let atlas = new Image()
     atlas.src = bo.url
     list.push(atlas)
@@ -141,7 +141,7 @@ export const biHuBody = (() => {
   atlas.src = `images/body/bihu.png`
   return atlas
 })()
-export const boomIcon = ()=>{
+export const boomIcon = () => {
   let atlas = new Image()
   atlas.src = getImgByName('boom-icon').url
   return atlas
@@ -151,8 +151,19 @@ export const speedIcon = () => {
   atlas.src = getImgByName('addspeed-icon').url
   return atlas
 }
-const icon = [
-  {
+export const yellowBug_Image = () => {
+  let list = []
+  for (let i = 1; i <21; i++) {
+    let atlas =  getImgByName('yellowBugs'+i).url
+    list.push(atlas)
+  }
+  for (let i = 20; i >0; i--) {
+    let atlas = getImgByName('yellowBugs' + i).url
+    list.push(atlas)
+  }
+  return list
+}
+const icon = [{
     name: 'boom-icon',
     fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/icon/boom.png',
   },
@@ -182,11 +193,20 @@ const booms = [{
     fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/5.png',
   }
 ]
+const yellowBug = (() => {
+  let list = []
+  for (let i = 1; i < 21; i++) {
+    list.push({
+      name: 'yellowBugs' + i,
+      fileId: `cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/enemy_yellowBug/${i}.png`,
+    })
+  }
+  return list
+})()
 export const netResourse = [{
-    name: 'title',
-    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/button/tittle.png',
-}, ...booms, ...icon
-]
+  name: 'title',
+  fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/button/tittle.png',
+}, ...booms, ...icon, ...yellowBug]
 const getImgByName = (name) => {
   for (let obj of databus.allImages) {
     if (obj.name == name) {

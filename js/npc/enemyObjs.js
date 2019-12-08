@@ -1,4 +1,5 @@
 import Enemy from './enemy'
+import Enemy2 from './enemy2'
 import DataBus from '../databus'
 let databus = new DataBus()
 import {
@@ -10,6 +11,7 @@ import {
   del1s2,
   bihu,
   duobi,
+  yellowBug_Image,
   spider
 } from '../utils/common.js'
 function rnd(start, end) {
@@ -52,11 +54,28 @@ const creademoTop = (tempc, findTime, stopSpeed, findIndex) => {
   )
   return enemy
 }
+const cread3 = (tempc, findTime, stopSpeed, findIndex) => {
+  let enemy = databus.pools.getItemByClass('enemy', Enemy2)
+  let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
+  let pic = yellowBug_Image()
+  console.log(yellowBug_Image)
+  enemy.init(
+    tempc,
+    1,
+    temp,
+    Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
+    pic,
+    bleed2,
+    stopSpeed,
+    findTime,
+    findIndex
+  )
+  return enemy
+}
 export const type = () => {
   return [
-    creademo(1,200,10,2),
-    creademoTop(1, 100, 60,2),
-    creademo(1, 200, 100, 2),
+    cread3(1,200,10,2),
+    creademo(1, 200, 10, 1),
   ]
 }
 
