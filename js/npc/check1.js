@@ -44,10 +44,10 @@ export default class CreateEnemyt {
     }
   }
   creating(){
-    if (databus.frame % 5e1 === 0) {
-      if (databus.enemys.size < 20) {
+    if (databus.frame % 2e1 === 0) {
+      // if (databus.enemys.size < 50) {
         this.createEnemy()
-      }
+      // }
     }
   }
   createEnemy2() {

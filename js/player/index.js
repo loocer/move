@@ -3,7 +3,8 @@ import Bullet from '../bullet/bullet1'
 import DataBus  from '../databus'
 import Halo from './halo'
 import {
-  playerImag
+  playerImag,
+  playerFire
 } from '../utils/common'
 const screenWidth    = window.innerWidth
 const screenHeight   = window.innerHeight
@@ -16,7 +17,7 @@ const PLAYER_HEIGHT  = 20
 
 let databus = new DataBus()
 
-export default class Player extends Sprite {
+export default class Player extends Sprite{
   constructor(main) {
     super(PLAYER_IMG_SRC, PLAYER_WIDTH, PLAYER_HEIGHT)
     this.handShank = main.handShank
@@ -26,13 +27,16 @@ export default class Player extends Sprite {
     // this.initEvent()
   }
   init(){
-    
+    this.visible= true
     this.x = databus.playTempX
     this.y = databus.playTempY
+    this.shootX = 0
+    this.shootY = 0
     this.fireAcTime = 0
     this.bodyImg = playerImag(1)
     this.lagImg1 = playerImag(2)
     this.lagImg2 = playerImag(3)
+    this.fireImag = playerFire()
     this.lifeValue = databus.lifeValue
     this.allLifeValue = 10
     // this.x = 0
@@ -54,6 +58,21 @@ export default class Player extends Sprite {
     }else{
       bu = this.lagImg1
     }
+    // if (databus.touched&&databus.frame % 10 > 5){
+    //   let x = this.shootX 
+    //   let y = this.shootY 
+    //   ctx.save()
+    //   ctx.translate(x, y)
+    //   ctx.rotate(this.rotateBody * Math.PI / 180 + 45.15)
+    //   ctx.drawImage(
+    //     this.fireImag,
+    //     -20,
+    //     -20,
+    //     40,
+    //     40
+    //   )
+    //   ctx.restore()
+    // }
     // let bu = this.lagImg1
     ctx.save()
     ctx.translate(this.x, this.y)
@@ -209,6 +228,8 @@ export default class Player extends Sprite {
       // let bullet = new Bullet()
       let px = this.x + 10 * Math.cos(this.rotateBody * Math.PI / 180 -45.1)
       let py = this.y + 10 * Math.sin(this.rotateBody * Math.PI / 180 - 45.1)
+      this.shootX = px
+      this.shootY = py
       bullet.init(
         px,
         py,

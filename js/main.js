@@ -280,14 +280,14 @@ export default class Main {
       (this.player.x + databus.moveX) > screenWidth / 2 &&
       (this.player.x + databus.moveX) < wground - screenWidth / 2
     ) {
-      this.rowMove(ctx)
+      // this.rowMove(ctx)
 
     }
     if (this.handShank.touched &&
       (this.player.y + databus.moveY) > screenHeight / 2 &&
       (this.player.y + databus.moveY) < hground - screenHeight / 2
     ) {
-      this.colMove(ctx)
+      // this.colMove(ctx)
 
     }
     // if (this.handShank.isInsite) {//点击在手柄内

@@ -15,6 +15,13 @@ import {
 let databus = new DataBus()
 const PLAYER_WIDTH = 30
 const PLAYER_HEIGHT = 30
+const esqk = [
+  [3, 3],
+  [-6, -10],
+  [11, 5],
+  [-8, 2],
+  
+]
 export default class Boom {
   constructor(x, y) {
     // 玩家默认处于屏幕底部居中位置
@@ -30,6 +37,7 @@ export default class Boom {
     this.boomIcon = boomIcon()
     this.boom1 = boomsImage()
     this.boomTime = 1
+    this.esqkTime =0
     this.maxBoomTime = 150 //最大爆炸范围
     this.width = PLAYER_WIDTH
     this.height = PLAYER_HEIGHT
@@ -48,6 +56,12 @@ export default class Boom {
       )
       ctx.restore()
     } else { ////be booming
+      if (this.esqkTime<4) {
+        let temp = esqk[this.esqkTime]
+        // databus.transX = temp[0]
+        // databus.transY = temp[1]
+        ctx.translate(temp[0], temp[1])
+      }
       ctx.save()
       ctx.translate(this.x, this.y)
       // for (let i in this.boom1) {
@@ -71,7 +85,7 @@ export default class Boom {
           // }
         }
       } else {
-        for (let i = 0; i <(150-this.boomTime)/5; i++) {
+        for (let i = 0; i < (150 - this.boomTime) / 5; i++) {
           ctx.rotate(rnd(0, 360) * Math.PI / 180)
           ctx.drawImage(
             this.boom1[rnd(0, 4)], -r / 2, -r / 2,
@@ -137,6 +151,7 @@ export default class Boom {
       this.isBoom = true
     }
     if (this.isBoom) {
+      this.esqkTime++
       this.boomTime += 4
     }
     if (this.boomTime > this.maxBoomTime) {

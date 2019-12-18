@@ -1,8 +1,8 @@
 // export const 
 export const screenWidth = window.innerWidth
 export const screenHeight = window.innerHeight
-export const groundWidth = screenWidth
-export const groundHeight = screenHeight
+export const groundWidth = screenWidth+100
+export const groundHeight = screenHeight+100
 import Bullet1 from '../bullet/bullet1'
 import Bullet2 from '../bullet/bullet2'
 import Bullet3 from '../bullet/bullet3'
@@ -77,6 +77,11 @@ export const spider = (() => {
 export const playerImag = (i) => {
   let img = new Image()
   img.src = 'images/player/p' + i + '.png'
+  return img
+}
+export const playerFire = ()=>{
+  let img = new Image()
+  img.src = getImgByName('fire-color').url
   return img
 }
 export const bullets = (() => {
@@ -170,6 +175,9 @@ const icon = [{
   {
     name: 'addspeed-icon',
     fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/icon/add-speed.png',
+  },{
+    name:'fire-color',
+    fileId:'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/icon/firing.png'
   }
 ]
 const booms = [{

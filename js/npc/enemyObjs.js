@@ -74,8 +74,8 @@ const cread3 = (tempc, findTime, stopSpeed, findIndex) => {
 }
 export const type = () => {
   return [
-    cread3(1,200,10,2),
-    creademo(1, 200, 10, 1),
+    // cread3(1,200,10,2),
+    creademo(1, 0, 10, 2),
   ]
 }
 
