@@ -1,40 +1,15 @@
 // export const 
 export const screenWidth = window.innerWidth
 export const screenHeight = window.innerHeight
-export const groundWidth = screenWidth+100
-export const groundHeight = screenHeight+100
+export const groundWidth = screenWidth + 100
+export const groundHeight = screenHeight + 100
 import Bullet1 from '../bullet/bullet1'
 import Bullet2 from '../bullet/bullet2'
 import Bullet3 from '../bullet/bullet3'
-// import Bullet2 from '../bullet/bullet2'
-const ENEMY_IMG_SRC = 'images/iPhone XS.png'
-const ENEMY_IMG_SRC1 = 'images/iPhone XS2.png'
-const ENEMY_IMG_SRC2 = 'images/iPhone XS3.png'
-const ENEMY_IMG_SRC3 = 'images/iPhone XS4.png'
-const ENEMY_IMG_SRC4 = 'images/e1.png'
 import DataBus from '../databus'
-
+import * as pics from './pics.js'
 let databus = new DataBus()
-export const enImgs1 = [
-  ENEMY_IMG_SRC4,
-  ENEMY_IMG_SRC4,
-  ENEMY_IMG_SRC4,
-  ENEMY_IMG_SRC4,
-  ENEMY_IMG_SRC4,
-]
-const ENEMY_IMG_SRC11 = 'images/e2.png'
-const ENEMY_IMG_SRC12 = 'images/2l.png'
-const ENEMY_IMG_SRC13 = 'images/3l.png'
-const ENEMY_IMG_SRC14 = 'images/4l.png'
-const ENEMY_IMG_SRC15 = 'images/5l.png'
-
-export const enImgs2 = [
-  ENEMY_IMG_SRC11,
-  ENEMY_IMG_SRC11,
-  ENEMY_IMG_SRC11,
-  ENEMY_IMG_SRC11,
-  ENEMY_IMG_SRC11,
-]
+export const GAME_IMG = new Map();
 const bulletImgs = [
   ["images/bullet.png", Bullet2, 'bullet2']
 ]
@@ -53,13 +28,7 @@ export const backButton = (() => {
   img.src = "images/return.png"
   return img
 })()
-export const bihu = (() => {
-  let imags = []
-  for (let i = 1; i < 5; i++) {
-    imags.push('images/bihu/' + i + '.png')
-  }
-  return imags
-})()
+
 export const duobi = (() => {
   let imags = []
   for (let i = 1; i < 5; i++) {
@@ -67,19 +36,13 @@ export const duobi = (() => {
   }
   return imags
 })()
-export const spider = (() => {
-  let imags = []
-  for (let i = 1; i < 5; i++) {
-    imags.push('images/spider/' + i + '.png')
-  }
-  return imags
-})()
+
 export const playerImag = (i) => {
   let img = new Image()
   img.src = 'images/player/p' + i + '.png'
   return img
 }
-export const playerFire = ()=>{
+export const playerFire = () => {
   let img = new Image()
   img.src = getImgByName('fire-color').url
   return img
@@ -99,7 +62,7 @@ export const bullets = (() => {
 })()
 export const boomsImage = () => {
   let list = []
-  for (let bo of booms) {
+  for (let bo of pics.booms) {
     let atlas = new Image()
     atlas.src = bo.url
     list.push(atlas)
@@ -158,63 +121,38 @@ export const speedIcon = () => {
 }
 export const yellowBug_Image = () => {
   let list = []
-  for (let i = 1; i <21; i++) {
-    let atlas =  getImgByName('yellowBugs'+i).url
+  for (let i = 1; i < 21; i++) {
+    let atlas = getImgByName('yellowBugs' + i).url
     list.push(atlas)
   }
-  for (let i = 20; i >0; i--) {
+  for (let i = 20; i > 0; i--) {
     let atlas = getImgByName('yellowBugs' + i).url
     list.push(atlas)
   }
   return list
 }
-const icon = [{
-    name: 'boom-icon',
-    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/icon/boom.png',
-  },
-  {
-    name: 'addspeed-icon',
-    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/icon/add-speed.png',
-  },{
-    name:'fire-color',
-    fileId:'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/icon/firing.png'
-  }
-]
-const booms = [{
-    name: 'boom1',
-    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/1.png',
-  },
-  {
-    name: 'boom2',
-    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/2.png',
-  },
-  {
-    name: 'boom3',
-    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/3.png',
-  },
-  {
-    name: 'boom4',
-    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/4.png',
-  },
-  {
-    name: 'boom5',
-    fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/booms/5.png',
-  }
-]
-const yellowBug = (() => {
+const spider = () => {
   let list = []
-  for (let i = 1; i < 21; i++) {
-    list.push({
-      name: 'yellowBugs' + i,
-      fileId: `cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/enemy_yellowBug/${i}.png`,
-    })
+  for (let i = 1; i < 6; i++) {
+    let atlas = getImgByName('antBugs' + i).url
+    list.push(atlas)
   }
   return list
-})()
-export const netResourse = [{
-  name: 'title',
-  fileId: 'cloud://imge8-5z6gt.696d-imge8-5z6gt-1300789023/button/tittle.png',
-}, ...booms, ...icon, ...yellowBug]
+}
+const bihu = () => {
+  let list = []
+  for (let i = 1; i < 6; i++) {
+    let atlas = getImgByName('bihuBugs' + i).url
+    list.push(atlas)
+  }
+  return list
+}
+export const loadingImage = ()=>{
+  GAME_IMG.set('spider', spider())
+  GAME_IMG.set('yellow_bugs', yellowBug_Image())
+  GAME_IMG.set('bihu_bugs', bihu())
+}
+
 const getImgByName = (name) => {
   for (let obj of databus.allImages) {
     if (obj.name == name) {

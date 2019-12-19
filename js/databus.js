@@ -60,7 +60,7 @@ export default class DataBus {
     this.playTempY = screenHeight / 2
     this.frame      = 0
     this.score      = 0
-    this.shootSpeed = 8
+    this.shootSpeed = 5
     this.playerSpeed = 2
     this.bulletClass = null
     this.bullets = new Set()
@@ -79,9 +79,6 @@ export default class DataBus {
     ctx&&ctx.translate(this.transX, this.transY)
     this.transX = 0//canvas平移距离
     this.transY = 0
-
-
-    
   }
 
   /**

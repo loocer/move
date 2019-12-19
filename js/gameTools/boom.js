@@ -16,11 +16,13 @@ let databus = new DataBus()
 const PLAYER_WIDTH = 30
 const PLAYER_HEIGHT = 30
 const esqk = [
+  [-22, 5],
   [3, 3],
   [-6, -10],
   [11, 5],
+  [22, -5],
   [-8, 2],
-  
+  [0, 0],
 ]
 export default class Boom {
   constructor(x, y) {
@@ -56,11 +58,11 @@ export default class Boom {
       )
       ctx.restore()
     } else { ////be booming
-      if (this.esqkTime<4) {
-        let temp = esqk[this.esqkTime]
-        // databus.transX = temp[0]
-        // databus.transY = temp[1]
-        ctx.translate(temp[0], temp[1])
+      if (this.esqkTime <= esqk.length) {
+        let temp = esqk[this.esqkTime-1]
+        databus.transX = temp[0]
+        databus.transY = temp[1]
+        ctx.translate(databus.transX,databus.transY)
       }
       ctx.save()
       ctx.translate(this.x, this.y)
@@ -152,7 +154,7 @@ export default class Boom {
     }
     if (this.isBoom) {
       this.esqkTime++
-      this.boomTime += 4
+      this.boomTime += 6
     }
     if (this.boomTime > this.maxBoomTime) {
       this.visible = false

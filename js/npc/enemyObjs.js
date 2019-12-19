@@ -1,18 +1,15 @@
 import Enemy from './enemy'
 import Enemy2 from './enemy2'
+import Enemy3 from './enemy3'
 import DataBus from '../databus'
 let databus = new DataBus()
 import {
-  enImgs1,
-  enImgs2,
-  enImgs3,
   bleed1,
   bleed2,
   del1s2,
   bihu,
   duobi,
-  yellowBug_Image,
-  spider
+  GAME_IMG,
 } from '../utils/common.js'
 function rnd(start, end) {
   return Math.floor(Math.random() * (end - start) + start)
@@ -37,16 +34,16 @@ const creademo = (tempc, findTime, stopSpeed, findIndex)=>{
   )
   return enemy
 }
-const creademoTop = (tempc, findTime, stopSpeed, findIndex) => {
+const create1 = (tempc, findTime, stopSpeed, findIndex,timePics) => {
   let enemy = databus.pools.getItemByClass('enemy', Enemy)
   let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
-  let pic = rnd(0, 1) ? bihu : spider
+  // let pic = rnd(0, 1) ? bihu : GAME_IMG.get('spider')
   enemy.init(
     tempc,
     1,
     temp,
     Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
-    pic,
+    timePics,
     bleed2,
     stopSpeed,
     findTime,
@@ -57,8 +54,7 @@ const creademoTop = (tempc, findTime, stopSpeed, findIndex) => {
 const cread3 = (tempc, findTime, stopSpeed, findIndex) => {
   let enemy = databus.pools.getItemByClass('enemy', Enemy2)
   let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
-  let pic = yellowBug_Image()
-  console.log(yellowBug_Image)
+  let pic = GAME_IMG.get('yellow_bugs')
   enemy.init(
     tempc,
     1,
@@ -72,30 +68,41 @@ const cread3 = (tempc, findTime, stopSpeed, findIndex) => {
   )
   return enemy
 }
+const create3 = (tempc, findTime, stopSpeed, findIndex, timePics) => {
+  let enemy = databus.pools.getItemByClass('enemy', Enemy3)
+  let temp = rnd(databus.transY, window.innerHeight + ENEMY_HEIGHT + databus.transY)
+  // let pic = rnd(0, 1) ? bihu : GAME_IMG.get('spider')
+  enemy.init(
+    tempc,
+    1,
+    temp,
+    Math.round(Math.random()) ? window.innerWidth + ENEMY_WIDTH + databus.transX : 0,
+    timePics,
+    bleed2,
+    stopSpeed,
+    findTime,
+    findIndex
+  )
+  return enemy
+}
 export const type = () => {
   return [
-    // cread3(1,200,10,2),
     creademo(1, 0, 10, 2),
   ]
 }
 
 export const type2 = () => {
   return [
-    // creademo(1, 200, 10,1),
-    // creademo(1, 100, 30,1),
-    // creademo(1, 100, 70,1),,
-    // creademoTop(1, 100, 5,1),
-    // creademoTop(1, 100, 40,1),
-    // creademoTop(1, 100, 5,1),
+    create1(1, 0, 10, 2, GAME_IMG.get('spider')),
   ]
 }
 export const type3=()=> {
   return [
-    creademo(1, 200, 10, 2),
-    // creademo(1, 100, 30,1),
-    // creademo(1, 100, 70,1),,
-    creademoTop(1, 100, 70, 2),
-    // creademoTop(1, 100, 40,1),
-    // creademoTop(1, 100, 5,1),
+    create3(1, 0, 70, 2, GAME_IMG.get('bihu_bugs')),
+  ]
+}
+export const type4 = () => {
+  return [
+    create3(1, 0, 70, 2, GAME_IMG.get('bihu_bugs')),
   ]
 }

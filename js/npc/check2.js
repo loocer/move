@@ -10,9 +10,6 @@ import {
   type3
 } from './enemyObjs.js'
 import {
-  enImgs1,
-  enImgs2,
-  enImgs3,
   bleed1,
   bleed2,
   del1s2,

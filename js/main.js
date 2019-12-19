@@ -547,6 +547,7 @@ export default class Main {
     }
     if (databus.gameOver)
       return;
+      console.log(databus.transY)
     this.cameraMove(this.ctx)
     this.gamecreate.createEnemy1()
     this.bg.update()
